@@ -1,0 +1,3 @@
+PREFIX bcf: <https://w3id.org/bigcontext-schema/facts/>
+# Every metric that column, table or metric ?subject feeds, directly or through other metrics.
+SELECT DISTINCT ?metric WHERE { ?subject bcf:feeds ?metric . }

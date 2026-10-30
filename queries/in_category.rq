@@ -1,0 +1,3 @@
+PREFIX bcf: <https://w3id.org/bigcontext-schema/facts/>
+# Everything in category or level ?subject, including what is in a kind of it.
+SELECT DISTINCT ?member WHERE { ?member bcf:is_a ?subject . }

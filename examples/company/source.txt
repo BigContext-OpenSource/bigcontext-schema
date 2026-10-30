@@ -1,0 +1,42 @@
+Acme Outdoor: who does what
+
+Organization
+The Operations department is part of Acme Outdoor. The Fulfillment team is part of Operations. The Returns desk is part of the Fulfillment team.
+Maya Chen holds the post of Operations head. Leo Park holds the post of Fulfillment team head.
+The Operations head heads Operations. The Fulfillment team head heads the Fulfillment team.
+The Fulfillment team head reports to the Operations head. The Operations head reports to the Chief Operating Officer.
+Ana Ruiz is acting head of the Fulfillment team. Omar Haddad is the backup for the Fulfillment team head.
+Sam Ito is a member of the Returns desk and reports to Leo Park. Priya Nair is a member of the Fulfillment team.
+Priya Nair has a dotted line to the Finance controller.
+During peak season, the Fulfillment team reports to the Peak Season Lead.
+Customer Care is probably part of Operations.
+It is proposed that the Analytics team move under Finance.
+From 2026-11-01, the Returns desk moves from the Fulfillment team to Customer Care.
+
+Data
+The Data team owns the Customer 360 data product, which combines the customers and orders tables.
+The customers table has the columns customer_id, email and signup_date.
+Priya Nair advises on Customer 360.
+The orders table has the columns order_id, customer_id, order_date, amount and status. Each order is identified by order_id.
+Orders join to customers on orders.customer_id = customers.customer_id.
+The refunds table has the columns refund_id, order_id and refund_amount. Refunds join to orders on refunds.order_id = orders.order_id.
+The orders table is built from the raw_orders table, which is loaded from the shop database.
+
+Metrics
+Revenue is the sum of amount in the orders table, excluding cancelled orders.
+Order count is the number of distinct order_id values in the orders table.
+Average order value is revenue divided by order count.
+Refund amount is the sum of refund_amount in the refunds table.
+Net revenue is revenue minus refund amount.
+More website traffic increases order count.
+
+Escalation
+The Returns desk escalates to the Fulfillment team head, who escalates to the Operations head.
+
+Rules
+Operations must log every refund in the refund register.
+Standard shipping rules: the Fulfillment team must ship orders within two days, unless the item is on backorder.
+Peak-season rules: the Fulfillment team must ship orders within four days.
+Peak-season rules override the standard shipping rules.
+The Returns desk may approve refunds up to $200.
+Only the Returns desk may use the refund tool.

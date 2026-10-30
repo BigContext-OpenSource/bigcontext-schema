@@ -1,0 +1,10 @@
+PREFIX bcf: <https://w3id.org/bigcontext-schema/facts/>
+# Who answers for ?subject (owns, is accountable for, manages or heads it or something it belongs to),
+# and who else has a stated responsibility for it, with the kind of responsibility.
+SELECT DISTINCT ?who ?relation WHERE {
+  { ?who bcf:answers_for ?subject . BIND(bcf:answers_for AS ?relation) }
+  UNION
+  { ?who ?relation ?subject .
+    VALUES ?relation { bcf:owns bcf:accountable_for bcf:manages bcf:heads bcf:approves bcf:decides bcf:supervises
+                       bcf:coordinates bcf:reviews bcf:advises bcf:assists bcf:performs bcf:responsible } }
+}

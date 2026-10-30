@@ -1,0 +1,3 @@
+PREFIX bcf: <https://w3id.org/bigcontext-schema/facts/>
+# Every rule that applies to ?subject: rules binding it, its units, or the units it is a member of.
+SELECT DISTINCT ?rule WHERE { ?rule bcf:applies_to ?subject . }

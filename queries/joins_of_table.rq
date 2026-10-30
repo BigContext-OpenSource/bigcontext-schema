@@ -1,0 +1,3 @@
+PREFIX bcf: <https://w3id.org/bigcontext-schema/facts/>
+# The tables ?subject joins to directly (path() gives a join path between two tables).
+SELECT DISTINCT ?table WHERE { ?subject bcf:joins_to ?table . }

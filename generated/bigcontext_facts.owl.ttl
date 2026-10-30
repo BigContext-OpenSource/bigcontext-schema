@@ -1,0 +1,297 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix bcf: <https://w3id.org/bigcontext-schema/facts/> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix pav: <http://purl.org/pav/> .
+<https://w3id.org/bigcontext-schema/facts.owl.ttl> dcterms:license "Apache-2.0" ;
+	dcterms:title "BigContext Schema facts (draft)" ;
+	pav:version "0.9.0-draft" ;
+	a owl:Ontology ;
+	rdfs:label "bigcontext_facts" ;
+	skos:definition "The direct links a BigContext Schema graph projects from statements in force, and the logic a reasoner applies to them: which links are transitive, which are the inverse of which, and which chains of links imply another. Statements stay the record of what was said, with their conditions, dates and quotes; facts are what reasoning follows. graph.md says which statements become which facts. A chain is written as the annotation property_chain (several separated by \";\"), which generation turns into OWL property chains." .
+bcf:Node a owl:Class ;
+	rdfs:label "Node" ;
+	skos:definition "Any element of a BigContext Schema document that a fact links." ;
+	skos:inScheme <https://w3id.org/bigcontext-schema/facts> .
+bcf:about a owl:ObjectProperty ;
+	rdfs:label "about" ;
+	skos:definition "A rule is about an element (its action's objects)." ;
+	skos:inScheme <https://w3id.org/bigcontext-schema/facts> .
+bcf:access_granted a owl:ObjectProperty ;
+	rdfs:label "access_granted" ;
+	rdfs:subPropertyOf bcf:has_access ;
+	skos:definition "Access the text grants without saying what kind." ;
+	skos:inScheme <https://w3id.org/bigcontext-schema/facts> .
+bcf:accountable_for a owl:ObjectProperty ;
+	rdfs:label "accountable_for" ;
+	rdfs:subPropertyOf bcf:answers_for , bcf:responsible_for ;
+	skos:inScheme <https://w3id.org/bigcontext-schema/facts> .
+bcf:advises a owl:ObjectProperty ;
+	rdfs:label "advises" ;
+	rdfs:subPropertyOf bcf:responsible_for ;
+	skos:inScheme <https://w3id.org/bigcontext-schema/facts> .
+bcf:aggregates_column a owl:ObjectProperty ;
+	rdfs:label "aggregates_column" ;
+	rdfs:subPropertyOf bcf:depends_on ;
+	skos:inScheme <https://w3id.org/bigcontext-schema/facts> .
+bcf:aggregates_over a owl:ObjectProperty ;
+	rdfs:label "aggregates_over" ;
+	rdfs:subPropertyOf bcf:depends_on ;
+	skos:inScheme <https://w3id.org/bigcontext-schema/facts> .
+bcf:answers_for a owl:ObjectProperty ;
+	rdfs:label "answers_for" ;
+	skos:definition "Worked out only: whoever owns, is accountable for, manages or heads something answers for it and for all its parts, columns and members. Advisers, reviewers, assistants and coordinators answer for nothing by inheritance." ;
+	skos:inScheme <https://w3id.org/bigcontext-schema/facts> ;
+	bcf:property_chain "answers_for has_part; answers_for has_column; answers_for has_member" .
+bcf:applies_to a owl:ObjectProperty ;
+	rdfs:label "applies_to" ;
+	skos:definition "Worked out only, from binds: a rule applies to whom it binds, their sub-units and their members." ;
+	skos:inScheme <https://w3id.org/bigcontext-schema/facts> ;
+	bcf:property_chain "applies_to has_part; applies_to has_party_member" .
+bcf:approves a owl:ObjectProperty ;
+	rdfs:label "approves" ;
+	rdfs:subPropertyOf bcf:responsible_for ;
+	skos:inScheme <https://w3id.org/bigcontext-schema/facts> .
+bcf:as_of a owl:DatatypeProperty ;
+	rdfs:label "as_of" ;
+	rdfs:range xsd:string ;
+	skos:definition "The date the stated facts hold on, as an ISO date (YYYY-MM-DD). Text, since OWL 2 has no plain date type." ;
+	skos:inScheme <https://w3id.org/bigcontext-schema/facts> .
+bcf:assists a owl:ObjectProperty ;
+	rdfs:label "assists" ;
+	rdfs:subPropertyOf bcf:responsible_for ;
+	skos:inScheme <https://w3id.org/bigcontext-schema/facts> .
+bcf:backs_up a owl:ObjectProperty ;
+	rdfs:label "backs_up" ;
+	skos:definition "A backup or delegate for a post, role or duty. Reasoning does not treat it as the holder." ;
+	skos:inScheme <https://w3id.org/bigcontext-schema/facts> .
+bcf:binds a owl:ObjectProperty ;
+	rdfs:label "binds" ;
+	rdfs:subPropertyOf bcf:applies_to ;
+	skos:definition "A rule binds a party (from binds, or a party in the rule's scope)." ;
+	skos:inScheme <https://w3id.org/bigcontext-schema/facts> .
+bcf:can_admin a owl:ObjectProperty ;
+	rdfs:label "can_admin" ;
+	rdfs:subPropertyOf bcf:has_access ;
+	skos:inScheme <https://w3id.org/bigcontext-schema/facts> .
+bcf:can_read a owl:ObjectProperty ;
+	rdfs:label "can_read" ;
+	rdfs:subPropertyOf bcf:has_access ;
+	skos:inScheme <https://w3id.org/bigcontext-schema/facts> .
+bcf:can_see_masked a owl:ObjectProperty ;
+	rdfs:label "can_see_masked" ;
+	rdfs:subPropertyOf bcf:has_access ;
+	skos:inScheme <https://w3id.org/bigcontext-schema/facts> .
+bcf:can_use a owl:ObjectProperty ;
+	rdfs:label "can_use" ;
+	rdfs:subPropertyOf bcf:has_access ;
+	skos:inScheme <https://w3id.org/bigcontext-schema/facts> .
+bcf:column_of a owl:ObjectProperty ;
+	rdfs:label "column_of" ;
+	owl:inverseOf bcf:has_column ;
+	skos:inScheme <https://w3id.org/bigcontext-schema/facts> .
+bcf:coordinates a owl:ObjectProperty ;
+	rdfs:label "coordinates" ;
+	rdfs:subPropertyOf bcf:responsible_for ;
+	skos:inScheme <https://w3id.org/bigcontext-schema/facts> .
+bcf:counted_by a owl:ObjectProperty ;
+	rdfs:label "counted_by" ;
+	rdfs:subPropertyOf bcf:depends_on ;
+	skos:inScheme <https://w3id.org/bigcontext-schema/facts> .
+bcf:decides a owl:ObjectProperty ;
+	rdfs:label "decides" ;
+	rdfs:subPropertyOf bcf:responsible_for ;
+	skos:inScheme <https://w3id.org/bigcontext-schema/facts> .
+bcf:decreases a owl:ObjectProperty ;
+	rdfs:label "decreases" ;
+	rdfs:subPropertyOf bcf:drives ;
+	skos:inScheme <https://w3id.org/bigcontext-schema/facts> .
+bcf:depends_on a owl:ObjectProperty , owl:TransitiveProperty ;
+	rdfs:label "depends_on" ;
+	owl:inverseOf bcf:feeds ;
+	skos:definition "A metric depends on another metric, a table or a column, through its formula." ;
+	skos:inScheme <https://w3id.org/bigcontext-schema/facts> .
+bcf:derived_from a owl:ObjectProperty , owl:TransitiveProperty ;
+	rdfs:label "derived_from" ;
+	skos:definition "An element is built or sourced from another (lineage)." ;
+	skos:inScheme <https://w3id.org/bigcontext-schema/facts> .
+bcf:dotted_line_to a owl:ObjectProperty ;
+	rdfs:label "dotted_line_to" ;
+	skos:definition "A dotted reporting line. Reasoning does not follow it." ;
+	skos:inScheme <https://w3id.org/bigcontext-schema/facts> .
+bcf:drives a owl:ObjectProperty ;
+	rdfs:label "drives" ;
+	skos:definition "One element drives another (a driver tree); kept apart from depends_on, which comes from formulas." ;
+	skos:inScheme <https://w3id.org/bigcontext-schema/facts> .
+bcf:escalates_to a owl:ObjectProperty ;
+	rdfs:label "escalates_to" ;
+	skos:definition "A party escalates to another; follow escalates_to+ for the whole path." ;
+	skos:inScheme <https://w3id.org/bigcontext-schema/facts> .
+bcf:feeds a owl:ObjectProperty ;
+	rdfs:label "feeds" ;
+	owl:inverseOf bcf:depends_on ;
+	skos:inScheme <https://w3id.org/bigcontext-schema/facts> .
+bcf:filters_on a owl:ObjectProperty ;
+	rdfs:label "filters_on" ;
+	rdfs:subPropertyOf bcf:depends_on ;
+	skos:inScheme <https://w3id.org/bigcontext-schema/facts> .
+bcf:governed_by a owl:ObjectProperty ;
+	rdfs:label "governed_by" ;
+	skos:definition "Something is governed by a law, policy, agreement or document." ;
+	skos:inScheme <https://w3id.org/bigcontext-schema/facts> .
+bcf:has_access a owl:ObjectProperty ;
+	rdfs:label "has_access" ;
+	skos:definition "A party can use or see a resource; each kind below is one of these." ;
+	skos:inScheme <https://w3id.org/bigcontext-schema/facts> .
+bcf:has_column a owl:ObjectProperty ;
+	rdfs:label "has_column" ;
+	owl:inverseOf bcf:column_of ;
+	skos:definition "A table has a column." ;
+	skos:inScheme <https://w3id.org/bigcontext-schema/facts> .
+bcf:has_denominator a owl:ObjectProperty ;
+	rdfs:label "has_denominator" ;
+	rdfs:subPropertyOf bcf:depends_on ;
+	skos:inScheme <https://w3id.org/bigcontext-schema/facts> .
+bcf:has_input a owl:ObjectProperty ;
+	rdfs:label "has_input" ;
+	rdfs:subPropertyOf bcf:depends_on ;
+	skos:inScheme <https://w3id.org/bigcontext-schema/facts> .
+bcf:has_member a owl:ObjectProperty ;
+	rdfs:label "has_member" ;
+	skos:definition "A group (a data product, a segment, a set of values) has a member." ;
+	skos:inScheme <https://w3id.org/bigcontext-schema/facts> .
+bcf:has_numerator a owl:ObjectProperty ;
+	rdfs:label "has_numerator" ;
+	rdfs:subPropertyOf bcf:depends_on ;
+	skos:inScheme <https://w3id.org/bigcontext-schema/facts> .
+bcf:has_part a owl:ObjectProperty ;
+	rdfs:label "has_part" ;
+	owl:inverseOf bcf:part_of ;
+	skos:inScheme <https://w3id.org/bigcontext-schema/facts> .
+bcf:has_party_member a owl:ObjectProperty ;
+	rdfs:label "has_party_member" ;
+	owl:inverseOf bcf:member_of ;
+	skos:inScheme <https://w3id.org/bigcontext-schema/facts> .
+bcf:has_report a owl:ObjectProperty ;
+	rdfs:label "has_report" ;
+	owl:inverseOf bcf:reports_to ;
+	skos:inScheme <https://w3id.org/bigcontext-schema/facts> .
+bcf:headed_by a owl:ObjectProperty ;
+	rdfs:label "headed_by" ;
+	owl:inverseOf bcf:heads ;
+	skos:inScheme <https://w3id.org/bigcontext-schema/facts> .
+bcf:heads a owl:ObjectProperty ;
+	rdfs:label "heads" ;
+	rdfs:subPropertyOf bcf:answers_for , bcf:responsible_for ;
+	owl:inverseOf bcf:headed_by ;
+	skos:definition "A person or post heads a unit, team or organization." ;
+	skos:inScheme <https://w3id.org/bigcontext-schema/facts> .
+bcf:holds_role a owl:ObjectProperty ;
+	rdfs:label "holds_role" ;
+	skos:definition "A person, agent or post holds a role or a post." ;
+	skos:inScheme <https://w3id.org/bigcontext-schema/facts> .
+bcf:implemented_by a owl:ObjectProperty ;
+	rdfs:label "implemented_by" ;
+	skos:definition "A business concept is represented in data by a column, table or filter." ;
+	skos:inScheme <https://w3id.org/bigcontext-schema/facts> .
+bcf:in_rule_set a owl:ObjectProperty ;
+	rdfs:label "in_rule_set" ;
+	skos:definition "A rule belongs to a rule set." ;
+	skos:inScheme <https://w3id.org/bigcontext-schema/facts> .
+bcf:increases a owl:ObjectProperty ;
+	rdfs:label "increases" ;
+	rdfs:subPropertyOf bcf:drives ;
+	skos:inScheme <https://w3id.org/bigcontext-schema/facts> .
+bcf:influences a owl:ObjectProperty ;
+	rdfs:label "influences" ;
+	rdfs:subPropertyOf bcf:drives ;
+	skos:inScheme <https://w3id.org/bigcontext-schema/facts> .
+bcf:is_a a owl:ObjectProperty , owl:TransitiveProperty ;
+	rdfs:label "is_a" ;
+	skos:definition "Something is in a category or level the source names, or is a kind of it; whatever is in a kind is in every category that kind is in." ;
+	skos:inScheme <https://w3id.org/bigcontext-schema/facts> .
+bcf:joins_to a owl:ObjectProperty , owl:SymmetricProperty ;
+	rdfs:label "joins_to" ;
+	skos:definition "Two tables join; the keys stay in the record. Follow it either way for a join path." ;
+	skos:inScheme <https://w3id.org/bigcontext-schema/facts> .
+bcf:key_column a owl:ObjectProperty ;
+	rdfs:label "key_column" ;
+	rdfs:subPropertyOf bcf:has_column ;
+	skos:definition "A table's key column; a composite key stays whole in the record." ;
+	skos:inScheme <https://w3id.org/bigcontext-schema/facts> .
+bcf:manages a owl:ObjectProperty ;
+	rdfs:label "manages" ;
+	rdfs:subPropertyOf bcf:answers_for , bcf:responsible_for ;
+	skos:inScheme <https://w3id.org/bigcontext-schema/facts> .
+bcf:member_of a owl:ObjectProperty ;
+	rdfs:label "member_of" ;
+	owl:inverseOf bcf:has_party_member ;
+	skos:definition "A person, agent or team is a member of a unit; a member of a team is a member of every unit it is part of." ;
+	skos:inScheme <https://w3id.org/bigcontext-schema/facts> ;
+	bcf:property_chain "member_of part_of" .
+bcf:overrides a owl:ObjectProperty , owl:TransitiveProperty ;
+	rdfs:label "overrides" ;
+	skos:definition "A rule takes precedence over another; lifted to member rules when a rule set overrides another." ;
+	skos:inScheme <https://w3id.org/bigcontext-schema/facts> .
+bcf:owns a owl:ObjectProperty ;
+	rdfs:label "owns" ;
+	rdfs:subPropertyOf bcf:answers_for , bcf:responsible_for ;
+	skos:inScheme <https://w3id.org/bigcontext-schema/facts> .
+bcf:part_of a owl:ObjectProperty , owl:TransitiveProperty ;
+	rdfs:label "part_of" ;
+	owl:inverseOf bcf:has_part ;
+	skos:definition "A unit, team, table or place is part of a larger one." ;
+	skos:inScheme <https://w3id.org/bigcontext-schema/facts> .
+bcf:performs a owl:ObjectProperty ;
+	rdfs:label "performs" ;
+	rdfs:subPropertyOf bcf:responsible_for ;
+	skos:inScheme <https://w3id.org/bigcontext-schema/facts> .
+bcf:reports_to a owl:ObjectProperty , owl:TransitiveProperty ;
+	rdfs:label "reports_to" ;
+	owl:inverseOf bcf:has_report ;
+	skos:definition "A person, post or unit reports to another; a person also reports along the line of the post they hold." ;
+	skos:inScheme <https://w3id.org/bigcontext-schema/facts> ;
+	bcf:property_chain "holds_role reports_to" .
+bcf:responsible a owl:ObjectProperty ;
+	rdfs:label "responsible" ;
+	rdfs:subPropertyOf bcf:responsible_for ;
+	skos:definition "A responsibility the text states without saying which kind." ;
+	skos:inScheme <https://w3id.org/bigcontext-schema/facts> .
+bcf:responsible_for a owl:ObjectProperty ;
+	rdfs:label "responsible_for" ;
+	skos:definition "Any responsibility; each kind below is one of these." ;
+	skos:inScheme <https://w3id.org/bigcontext-schema/facts> .
+bcf:reviews a owl:ObjectProperty ;
+	rdfs:label "reviews" ;
+	rdfs:subPropertyOf bcf:responsible_for ;
+	skos:inScheme <https://w3id.org/bigcontext-schema/facts> .
+bcf:same_as a owl:ObjectProperty , owl:SymmetricProperty , owl:TransitiveProperty ;
+	rdfs:label "same_as" ;
+	skos:definition "Two sources' elements stand for the same thing, decided by a person (an exact Mapping in force)." ;
+	skos:inScheme <https://w3id.org/bigcontext-schema/facts> .
+bcf:supervises a owl:ObjectProperty ;
+	rdfs:label "supervises" ;
+	rdfs:subPropertyOf bcf:responsible_for ;
+	skos:inScheme <https://w3id.org/bigcontext-schema/facts> .
+bcf:time_column a owl:ObjectProperty ;
+	rdfs:label "time_column" ;
+	rdfs:subPropertyOf bcf:has_column ;
+	skos:definition "A table's date or time column, which its measures can be counted by." ;
+	skos:inScheme <https://w3id.org/bigcontext-schema/facts> .
+bcf:worked_out_by a owl:DatatypeProperty ;
+	rdfs:label "worked_out_by" ;
+	rdfs:range xsd:string ;
+	skos:definition "How a worked-out fact follows from the facts it came from (\"part_of carries through\")." ;
+	skos:inScheme <https://w3id.org/bigcontext-schema/facts> .
+
+# property chains, from the property_chain annotations
+bcf:reports_to <http://www.w3.org/2002/07/owl#propertyChainAxiom> ( bcf:holds_role bcf:reports_to ) .
+bcf:member_of <http://www.w3.org/2002/07/owl#propertyChainAxiom> ( bcf:member_of bcf:part_of ) .
+bcf:answers_for <http://www.w3.org/2002/07/owl#propertyChainAxiom> ( bcf:answers_for bcf:has_part ) .
+bcf:answers_for <http://www.w3.org/2002/07/owl#propertyChainAxiom> ( bcf:answers_for bcf:has_column ) .
+bcf:answers_for <http://www.w3.org/2002/07/owl#propertyChainAxiom> ( bcf:answers_for bcf:has_member ) .
+bcf:applies_to <http://www.w3.org/2002/07/owl#propertyChainAxiom> ( bcf:applies_to bcf:has_part ) .
+bcf:applies_to <http://www.w3.org/2002/07/owl#propertyChainAxiom> ( bcf:applies_to bcf:has_party_member ) .

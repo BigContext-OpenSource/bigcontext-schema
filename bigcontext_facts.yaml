@@ -1,0 +1,167 @@
+# serves: F-057 — Ask questions across company structure, data, metrics and rules through standard graph formats
+id: https://w3id.org/bigcontext-schema/facts
+name: bigcontext_facts
+title: BigContext Schema facts (draft)
+version: 0.9.0-draft
+description: >-
+  The direct links a BigContext Schema graph projects from statements in force, and the logic a reasoner applies to
+  them: which links are transitive, which are the inverse of which, and which chains of links imply another.
+  Statements stay the record of what was said, with their conditions, dates and quotes; facts are what reasoning
+  follows. graph.md says which statements become which facts. A chain is written as the annotation property_chain
+  (several separated by ";"), which generation turns into OWL property chains.
+license: Apache-2.0
+prefixes:
+  linkml: https://w3id.org/linkml/
+  bcf: https://w3id.org/bigcontext-schema/facts/
+default_prefix: bcf
+default_range: Node
+imports:
+  - linkml:types
+
+classes:
+  Node:
+    description: Any element of a BigContext Schema document that a fact links.
+
+slots:
+  # company structure
+  part_of:
+    description: A unit, team, table or place is part of a larger one.
+    transitive: true
+    inverse: has_part
+  has_part:
+    inverse: part_of
+  reports_to:
+    description: A person, post or unit reports to another; a person also reports along the line of the post they hold.
+    transitive: true
+    inverse: has_report
+    annotations: {property_chain: "holds_role reports_to"}
+  has_report:
+    inverse: reports_to
+  member_of:
+    description: A person, agent or team is a member of a unit; a member of a team is a member of every unit it is part of.
+    inverse: has_party_member
+    annotations: {property_chain: "member_of part_of"}
+  has_party_member:
+    inverse: member_of
+  holds_role:
+    description: A person, agent or post holds a role or a post.
+  # meaning
+  is_a:
+    description: Something is in a category or level the source names, or is a kind of it; whatever is in a kind
+      is in every category that kind is in.
+    transitive: true
+  heads:
+    description: A person or post heads a unit, team or organization.
+    is_a: responsible_for
+    mixins: [answers_for]
+    inverse: headed_by
+  headed_by:
+    inverse: heads
+  escalates_to:
+    description: A party escalates to another; follow escalates_to+ for the whole path.
+  dotted_line_to:
+    description: A dotted reporting line. Reasoning does not follow it.
+  backs_up:
+    description: A backup or delegate for a post, role or duty. Reasoning does not treat it as the holder.
+
+  # responsibility
+  responsible_for:
+    description: Any responsibility; each kind below is one of these.
+  answers_for:
+    description: >-
+      Worked out only: whoever owns, is accountable for, manages or heads something answers for it and for all its
+      parts, columns and members. Advisers, reviewers, assistants and coordinators answer for nothing by inheritance.
+    annotations: {property_chain: "answers_for has_part; answers_for has_column; answers_for has_member"}
+  owns: {is_a: responsible_for, mixins: [answers_for]}
+  accountable_for: {is_a: responsible_for, mixins: [answers_for]}
+  manages: {is_a: responsible_for, mixins: [answers_for]}
+  approves: {is_a: responsible_for}
+  decides: {is_a: responsible_for}
+  supervises: {is_a: responsible_for}
+  coordinates: {is_a: responsible_for}
+  reviews: {is_a: responsible_for}
+  advises: {is_a: responsible_for}
+  assists: {is_a: responsible_for}
+  performs: {is_a: responsible_for}
+  responsible: {is_a: responsible_for, description: "A responsibility the text states without saying which kind."}
+
+  # access
+  has_access:
+    description: A party can use or see a resource; each kind below is one of these.
+  can_use: {is_a: has_access}
+  can_read: {is_a: has_access}
+  can_admin: {is_a: has_access}
+  can_see_masked: {is_a: has_access}
+  access_granted: {is_a: has_access, description: "Access the text grants without saying what kind."}
+
+  # data
+  has_column:
+    description: A table has a column.
+    inverse: column_of
+  column_of:
+    inverse: has_column
+  key_column:
+    description: A table's key column; a composite key stays whole in the record.
+    is_a: has_column
+  time_column:
+    description: A table's date or time column, which its measures can be counted by.
+    is_a: has_column
+  same_as:
+    description: Two sources' elements stand for the same thing, decided by a person (an exact Mapping in force).
+    symmetric: true
+    transitive: true
+  joins_to:
+    description: Two tables join; the keys stay in the record. Follow it either way for a join path.
+    symmetric: true
+  derived_from:
+    description: An element is built or sourced from another (lineage).
+    transitive: true
+  implemented_by:
+    description: A business concept is represented in data by a column, table or filter.
+  has_member:
+    description: A group (a data product, a segment, a set of values) has a member.
+
+  # metrics
+  depends_on:
+    description: A metric depends on another metric, a table or a column, through its formula.
+    transitive: true
+    inverse: feeds
+  feeds:
+    inverse: depends_on
+  has_input: {is_a: depends_on}
+  has_numerator: {is_a: depends_on}
+  has_denominator: {is_a: depends_on}
+  aggregates_over: {is_a: depends_on}
+  aggregates_column: {is_a: depends_on}
+  counted_by: {is_a: depends_on}
+  filters_on: {is_a: depends_on}
+  drives:
+    description: One element drives another (a driver tree); kept apart from depends_on, which comes from formulas.
+  increases: {is_a: drives}
+  decreases: {is_a: drives}
+  influences: {is_a: drives}
+
+  # rules
+  applies_to:
+    description: "Worked out only, from binds: a rule applies to whom it binds, their sub-units and their members."
+    annotations: {property_chain: "applies_to has_part; applies_to has_party_member"}
+  binds:
+    description: A rule binds a party (from binds, or a party in the rule's scope).
+    is_a: applies_to
+  about:
+    description: A rule is about an element (its action's objects).
+  overrides:
+    description: A rule takes precedence over another; lifted to member rules when a rule set overrides another.
+    transitive: true
+  in_rule_set:
+    description: A rule belongs to a rule set.
+  governed_by:
+    description: Something is governed by a law, policy, agreement or document.
+
+  # provenance
+  worked_out_by:
+    description: How a worked-out fact follows from the facts it came from ("part_of carries through").
+    range: string
+  as_of:
+    description: The date the stated facts hold on, as an ISO date (YYYY-MM-DD). Text, since OWL 2 has no plain date type.
+    range: string

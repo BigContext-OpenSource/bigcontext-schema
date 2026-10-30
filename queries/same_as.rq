@@ -1,0 +1,3 @@
+PREFIX bcf: <https://w3id.org/bigcontext-schema/facts/>
+# Every element, in this source or a linked one, decided to stand for the same thing as ?subject.
+SELECT DISTINCT ?same WHERE { ?subject bcf:same_as ?same . FILTER(?same != ?subject) }

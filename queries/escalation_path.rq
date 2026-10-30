@@ -1,0 +1,3 @@
+PREFIX bcf: <https://w3id.org/bigcontext-schema/facts/>
+# Everyone ?subject escalates to, along the escalation path (path() gives the order).
+SELECT DISTINCT ?next WHERE { ?subject bcf:escalates_to+ ?next . }

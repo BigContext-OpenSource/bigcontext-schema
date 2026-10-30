@@ -1,0 +1,5 @@
+PREFIX bcf: <https://w3id.org/bigcontext-schema/facts/>
+# The columns of table ?subject, each with its kind: has_column, and key_column or time_column where it is one.
+SELECT DISTINCT ?column ?kind WHERE {
+  ?subject ?kind ?column . VALUES ?kind { bcf:has_column bcf:key_column bcf:time_column }
+}

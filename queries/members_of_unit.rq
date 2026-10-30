@@ -1,0 +1,3 @@
+PREFIX bcf: <https://w3id.org/bigcontext-schema/facts/>
+# Everyone who is a member of ?subject, including members of the teams inside it.
+SELECT DISTINCT ?member WHERE { ?member bcf:member_of ?subject . }

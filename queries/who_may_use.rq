@@ -1,0 +1,5 @@
+PREFIX bcf: <https://w3id.org/bigcontext-schema/facts/>
+# Who may use or see ?subject, and how.
+SELECT DISTINCT ?who ?access WHERE {
+  ?who ?access ?subject . VALUES ?access { bcf:can_use bcf:can_read bcf:can_admin bcf:can_see_masked bcf:access_granted }
+}

@@ -1,0 +1,3 @@
+PREFIX bcf: <https://w3id.org/bigcontext-schema/facts/>
+# Everything metric ?subject depends on through its formula: metrics, tables and columns, all the way down.
+SELECT DISTINCT ?element WHERE { ?subject bcf:depends_on ?element . }

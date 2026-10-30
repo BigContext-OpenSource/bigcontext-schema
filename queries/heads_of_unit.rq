@@ -1,0 +1,3 @@
+PREFIX bcf: <https://w3id.org/bigcontext-schema/facts/>
+# Who heads ?subject: posts and people, including acting heads; backups are not heads.
+SELECT DISTINCT ?head WHERE { ?head bcf:heads ?subject . }

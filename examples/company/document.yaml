@@ -1,0 +1,162 @@
+source: {id: acme-outdoor-who-does-what, title: "Acme Outdoor: who does what", as_of: "2026-10-01"}
+things:
+  - {id: t.acme_outdoor, label: Acme Outdoor, thing_type: organization, evidence: [{quote: "The Operations department is part of Acme Outdoor."}]}
+  - {id: t.operations, label: Operations, thing_type: unit, evidence: [{quote: "The Operations department is part of Acme Outdoor."}]}
+  - {id: t.fulfillment_team, label: Fulfillment team, thing_type: team, evidence: [{quote: "The Fulfillment team is part of Operations."}]}
+  - {id: t.returns_desk, label: Returns desk, thing_type: team, evidence: [{quote: "The Returns desk is part of the Fulfillment team."}]}
+  - {id: t.customer_care, label: Customer Care, thing_type: unit, evidence: [{quote: "Customer Care is probably part of Operations."}]}
+  - {id: t.analytics_team, label: Analytics team, thing_type: team, evidence: [{quote: "It is proposed that the Analytics team move under Finance."}]}
+  - {id: t.finance, label: Finance, thing_type: unit, evidence: [{quote: "It is proposed that the Analytics team move under Finance."}]}
+  - {id: t.data_team, label: Data team, thing_type: team, evidence: [{quote: "The Data team owns the Customer 360 data product"}]}
+  - {id: t.maya_chen, label: Maya Chen, thing_type: person, evidence: [{quote: "Maya Chen holds the post of Operations head."}]}
+  - {id: t.leo_park, label: Leo Park, thing_type: person, evidence: [{quote: "Leo Park holds the post of Fulfillment team head."}]}
+  - {id: t.ana_ruiz, label: Ana Ruiz, thing_type: person, evidence: [{quote: "Ana Ruiz is acting head of the Fulfillment team."}]}
+  - {id: t.omar_haddad, label: Omar Haddad, thing_type: person, evidence: [{quote: "Omar Haddad is the backup for the Fulfillment team head."}]}
+  - {id: t.sam_ito, label: Sam Ito, thing_type: person, evidence: [{quote: "Sam Ito is a member of the Returns desk"}]}
+  - {id: t.priya_nair, label: Priya Nair, thing_type: person, evidence: [{quote: "Priya Nair is a member of the Fulfillment team."}]}
+  - {id: t.operations_head, label: Operations head, thing_type: post, evidence: [{quote: "Maya Chen holds the post of Operations head."}]}
+  - {id: t.fulfillment_head, label: Fulfillment team head, thing_type: post, evidence: [{quote: "Leo Park holds the post of Fulfillment team head."}]}
+  - {id: t.coo, label: Chief Operating Officer, thing_type: post, evidence: [{quote: "The Operations head reports to the Chief Operating Officer."}]}
+  - {id: t.finance_controller, label: Finance controller, thing_type: post, evidence: [{quote: "Priya Nair has a dotted line to the Finance controller."}]}
+  - {id: t.peak_season_lead, label: Peak Season Lead, thing_type: post, evidence: [{quote: "During peak season, the Fulfillment team reports to the Peak Season Lead."}]}
+  - {id: t.customer_360, label: Customer 360, thing_type: data_product, evidence: [{quote: "The Data team owns the Customer 360 data product"}]}
+  - {id: t.customers, label: customers table, thing_type: table, evidence: [{quote: "which combines the customers and orders tables."}]}
+  - {id: t.orders, label: orders table, thing_type: table, evidence: [{quote: "which combines the customers and orders tables."}]}
+  - {id: t.customers.customer_id, label: customer_id, thing_type: field, evidence: [{quote: "The customers table has the columns customer_id, email and signup_date."}]}
+  - {id: t.customers.email, label: email, thing_type: field, evidence: [{quote: "The customers table has the columns customer_id, email and signup_date."}]}
+  - {id: t.customers.signup_date, label: signup_date, thing_type: field, evidence: [{quote: "The customers table has the columns customer_id, email and signup_date."}]}
+  - {id: t.orders.order_id, label: order_id, thing_type: field, evidence: [{quote: "The orders table has the columns order_id, customer_id, order_date, amount and status."}]}
+  - {id: t.orders.customer_id, label: customer_id, thing_type: field, evidence: [{quote: "The orders table has the columns order_id, customer_id, order_date, amount and status."}]}
+  - {id: t.orders.order_date, label: order_date, thing_type: field, evidence: [{quote: "The orders table has the columns order_id, customer_id, order_date, amount and status."}]}
+  - {id: t.orders.amount, label: amount, thing_type: field, evidence: [{quote: "The orders table has the columns order_id, customer_id, order_date, amount and status."}]}
+  - {id: t.orders.status, label: status, thing_type: field, evidence: [{quote: "The orders table has the columns order_id, customer_id, order_date, amount and status."}]}
+  - {id: t.refunds.refund_id, label: refund_id, thing_type: field, evidence: [{quote: "The refunds table has the columns refund_id, order_id and refund_amount."}]}
+  - {id: t.refunds.order_id, label: order_id, thing_type: field, evidence: [{quote: "The refunds table has the columns refund_id, order_id and refund_amount."}]}
+  - {id: t.refunds.refund_amount, label: refund_amount, thing_type: field, evidence: [{quote: "The refunds table has the columns refund_id, order_id and refund_amount."}]}
+  - {id: t.refunds, label: refunds table, thing_type: table, evidence: [{quote: "The refunds table has the columns refund_id, order_id and refund_amount."}]}
+  - {id: t.raw_orders, label: raw_orders table, thing_type: table, evidence: [{quote: "The orders table is built from the raw_orders table"}]}
+  - {id: t.shop_database, label: shop database, thing_type: system, evidence: [{quote: "which is loaded from the shop database."}]}
+  - {id: t.refund_tool, label: refund tool, thing_type: tool, evidence: [{quote: "Only the Returns desk may use the refund tool."}]}
+  - {id: t.refund_register, label: refund register, thing_type: document, evidence: [{quote: "Operations must log every refund in the refund register."}]}
+concepts:
+  - {id: c.refund, label: refund, concept_type: entity_type, evidence: [{quote: "Operations must log every refund in the refund register."}]}
+  - {id: c.order, label: order, concept_type: entity_type, evidence: [{quote: "the Fulfillment team must ship orders within two days"}]}
+  - {id: c.standard_shipping_rules, label: Standard shipping rules, concept_type: term, evidence: [{quote: "Standard shipping rules:"}]}
+  - {id: c.peak_season_rules, label: Peak-season rules, concept_type: term, evidence: [{quote: "Peak-season rules:"}]}
+  - {id: c.revenue, label: Revenue, concept_type: metric, evidence: [{quote: "Revenue is the sum of amount in the orders table, excluding cancelled orders."}]}
+  - {id: c.order_count, label: Order count, concept_type: metric, evidence: [{quote: "Order count is the number of distinct order_id values in the orders table."}]}
+  - {id: c.average_order_value, label: Average order value, concept_type: metric, evidence: [{quote: "Average order value is revenue divided by order count."}]}
+  - {id: c.refund_amount, label: Refund amount, concept_type: metric, evidence: [{quote: "Refund amount is the sum of refund_amount in the refunds table."}]}
+  - {id: c.net_revenue, label: Net revenue, concept_type: metric, evidence: [{quote: "Net revenue is revenue minus refund amount."}]}
+  - {id: c.website_traffic, label: website traffic, concept_type: metric, evidence: [{quote: "More website traffic increases order count."}]}
+statements:
+  # organization
+  - {id: s.1, predicate: PartOf, subject: t.operations, object: t.acme_outdoor, evidence: [{quote: "The Operations department is part of Acme Outdoor."}]}
+  - {id: s.2, predicate: PartOf, subject: t.fulfillment_team, object: t.operations, evidence: [{quote: "The Fulfillment team is part of Operations."}]}
+  - {id: s.3, predicate: PartOf, subject: t.returns_desk, object: t.fulfillment_team, evidence: [{quote: "The Returns desk is part of the Fulfillment team."}]}
+  - {id: s.4, predicate: HoldsRole, subject: t.maya_chen, object: t.operations_head, evidence: [{quote: "Maya Chen holds the post of Operations head."}]}
+  - {id: s.5, predicate: HoldsRole, subject: t.leo_park, object: t.fulfillment_head, evidence: [{quote: "Leo Park holds the post of Fulfillment team head."}]}
+  - {id: s.6, predicate: Heads, subject: t.operations_head, object: t.operations, evidence: [{quote: "The Operations head heads Operations."}]}
+  - {id: s.7, predicate: Heads, subject: t.fulfillment_head, object: t.fulfillment_team, evidence: [{quote: "The Fulfillment team head heads the Fulfillment team."}]}
+  - {id: s.8, predicate: ReportsTo, subject: t.fulfillment_head, object: t.operations_head, evidence: [{quote: "The Fulfillment team head reports to the Operations head."}]}
+  - {id: s.9, predicate: ReportsTo, subject: t.operations_head, object: t.coo, evidence: [{quote: "The Operations head reports to the Chief Operating Officer."}]}
+  - {id: s.10, predicate: Heads, subject: t.ana_ruiz, object: t.fulfillment_team, capacity: acting, evidence: [{quote: "Ana Ruiz is acting head of the Fulfillment team."}]}
+  - {id: s.11, predicate: HoldsRole, subject: t.omar_haddad, object: t.fulfillment_head, capacity: backup, evidence: [{quote: "Omar Haddad is the backup for the Fulfillment team head."}]}
+  - {id: s.12, predicate: MemberOf, subject: t.sam_ito, object: t.returns_desk, evidence: [{quote: "Sam Ito is a member of the Returns desk"}]}
+  - {id: s.13, predicate: ReportsTo, subject: t.sam_ito, object: t.leo_park, evidence: [{quote: "and reports to Leo Park."}]}
+  - {id: s.14, predicate: MemberOf, subject: t.priya_nair, object: t.fulfillment_team, evidence: [{quote: "Priya Nair is a member of the Fulfillment team."}]}
+  - {id: s.15, predicate: ReportsTo, subject: t.priya_nair, object: t.finance_controller, line: dotted, evidence: [{quote: "Priya Nair has a dotted line to the Finance controller."}]}
+  - id: s.16
+    predicate: ReportsTo
+    subject: t.fulfillment_team
+    object: t.peak_season_lead
+    when: [{description: "it is peak season"}]
+    evidence: [{quote: "During peak season, the Fulfillment team reports to the Peak Season Lead."}]
+  - {id: s.17, predicate: PartOf, subject: t.customer_care, object: t.operations, certainty: likely, evidence: [{quote: "Customer Care is probably part of Operations."}]}
+  - {id: s.18, predicate: PartOf, subject: t.analytics_team, object: t.finance, decision_status: proposed, evidence: [{quote: "It is proposed that the Analytics team move under Finance."}]}
+  - {id: s.19, predicate: PartOf, subject: t.returns_desk, object: t.customer_care, valid_from: "2026-11-01", supersedes: [s.3], evidence: [{quote: "From 2026-11-01, the Returns desk moves from the Fulfillment team to Customer Care."}]}
+  # data
+  - {id: s.20, predicate: ResponsibleFor, subject: t.data_team, object: t.customer_360, responsibility: owns, evidence: [{quote: "The Data team owns the Customer 360 data product"}]}
+  - {id: s.21, predicate: Groups, subject: t.customer_360, members: [t.customers, t.orders], evidence: [{quote: "which combines the customers and orders tables."}]}
+  - {id: s.22, predicate: Contains, subject: t.customers, object: t.customers.customer_id, data_role: key, evidence: [{quote: "The customers table has the columns customer_id, email and signup_date."}]}
+  - {id: s.23, predicate: Contains, subject: t.customers, object: t.customers.email, evidence: [{quote: "The customers table has the columns customer_id, email and signup_date."}]}
+  - {id: s.24, predicate: Contains, subject: t.customers, object: t.customers.signup_date, data_role: time_dimension, evidence: [{quote: "The customers table has the columns customer_id, email and signup_date."}]}
+  - {id: s.25, predicate: ResponsibleFor, subject: t.priya_nair, object: t.customer_360, responsibility: advises, evidence: [{quote: "Priya Nair advises on Customer 360."}]}
+  - {id: s.35, predicate: Contains, subject: t.orders, object: t.orders.order_id, data_role: key, evidence: [{quote: "The orders table has the columns order_id, customer_id, order_date, amount and status."}]}
+  - {id: s.36, predicate: Contains, subject: t.orders, object: t.orders.customer_id, data_role: key, evidence: [{quote: "The orders table has the columns order_id, customer_id, order_date, amount and status."}]}
+  - {id: s.37, predicate: Contains, subject: t.orders, object: t.orders.order_date, data_role: time_dimension, evidence: [{quote: "The orders table has the columns order_id, customer_id, order_date, amount and status."}]}
+  - {id: s.38, predicate: Contains, subject: t.orders, object: t.orders.amount, data_role: measure, evidence: [{quote: "The orders table has the columns order_id, customer_id, order_date, amount and status."}]}
+  - {id: s.39, predicate: Contains, subject: t.orders, object: t.orders.status, data_role: dimension, evidence: [{quote: "The orders table has the columns order_id, customer_id, order_date, amount and status."}]}
+  - {id: s.40, predicate: Contains, subject: t.refunds, object: t.refunds.refund_id, data_role: key, evidence: [{quote: "The refunds table has the columns refund_id, order_id and refund_amount."}]}
+  - {id: s.41, predicate: Contains, subject: t.refunds, object: t.refunds.order_id, data_role: key, evidence: [{quote: "The refunds table has the columns refund_id, order_id and refund_amount."}]}
+  - {id: s.42, predicate: Contains, subject: t.refunds, object: t.refunds.refund_amount, data_role: measure, evidence: [{quote: "The refunds table has the columns refund_id, order_id and refund_amount."}]}
+  - {id: s.43, predicate: IdentifiedBy, subject: t.orders, members: [t.orders.order_id], evidence: [{quote: "Each order is identified by order_id."}]}
+  - id: s.44
+    predicate: JoinsTo
+    subject: t.orders
+    object: t.customers
+    key_pairs: [{from_field: t.orders.customer_id, to_field: t.customers.customer_id}]
+    evidence: [{quote: "Orders join to customers on orders.customer_id = customers.customer_id."}]
+  - id: s.45
+    predicate: JoinsTo
+    subject: t.refunds
+    object: t.orders
+    key_pairs: [{from_field: t.refunds.order_id, to_field: t.orders.order_id}]
+    evidence: [{quote: "Refunds join to orders on refunds.order_id = orders.order_id."}]
+  - {id: s.46, predicate: DerivedFrom, subject: t.orders, object: t.raw_orders, evidence: [{quote: "The orders table is built from the raw_orders table"}]}
+  - {id: s.47, predicate: DerivedFrom, subject: t.raw_orders, object: t.shop_database, evidence: [{quote: "which is loaded from the shop database."}]}
+  - id: s.48
+    predicate: ComputedAs
+    subject: c.revenue
+    metric_type: simple
+    aggregation: sum
+    expression: amount
+    base: t.orders
+    filters: [{description: "the order is not cancelled", field: t.orders.status, comparator: not_equal, values: [{value: Cancelled}]}]
+    evidence: [{quote: "Revenue is the sum of amount in the orders table, excluding cancelled orders."}]
+  - {id: s.49, predicate: ComputedAs, subject: c.order_count, metric_type: simple, aggregation: count_distinct, expression: order_id, base: t.orders, evidence: [{quote: "Order count is the number of distinct order_id values in the orders table."}]}
+  - {id: s.50, predicate: ComputedAs, subject: c.average_order_value, metric_type: ratio, expression: "revenue / order count", numerator: c.revenue, denominator: c.order_count, evidence: [{quote: "Average order value is revenue divided by order count."}]}
+  - {id: s.51, predicate: ComputedAs, subject: c.refund_amount, metric_type: simple, aggregation: sum, expression: refund_amount, base: t.refunds, evidence: [{quote: "Refund amount is the sum of refund_amount in the refunds table."}]}
+  - {id: s.52, predicate: ComputedAs, subject: c.net_revenue, metric_type: derived, expression: "revenue - refund_amount", inputs: [c.revenue, c.refund_amount], evidence: [{quote: "Net revenue is revenue minus refund amount."}]}
+  - {id: s.53, predicate: Influences, subject: c.website_traffic, object: c.order_count, direction: increases, evidence: [{quote: "More website traffic increases order count."}]}
+  # escalation
+  - {id: s.26, predicate: EscalatesTo, subject: t.returns_desk, object: t.fulfillment_head, evidence: [{quote: "The Returns desk escalates to the Fulfillment team head"}]}
+  - {id: s.27, predicate: EscalatesTo, subject: t.fulfillment_head, object: t.operations_head, evidence: [{quote: "who escalates to the Operations head."}]}
+  # rules
+  - id: s.28
+    predicate: Rule
+    modality: must
+    binds: [t.operations]
+    action: {verb: document, specific_verb: log, objects: [c.refund], via: [t.refund_register]}
+    evidence: [{quote: "Operations must log every refund in the refund register."}]
+  - id: s.29
+    predicate: Rule
+    modality: must
+    binds: [t.fulfillment_team]
+    action: {verb: other, specific_verb: ship, objects: [c.order]}
+    within: {value: "2", unit: days}
+    unless: [{description: "the item is on backorder"}]
+    evidence: [{quote: "the Fulfillment team must ship orders within two days, unless the item is on backorder."}]
+  - id: s.30
+    predicate: Rule
+    modality: must
+    binds: [t.fulfillment_team]
+    action: {verb: other, specific_verb: ship, objects: [c.order]}
+    within: {value: "4", unit: days}
+    evidence: [{quote: "the Fulfillment team must ship orders within four days."}]
+  - {id: s.31, predicate: RuleSet, subject: c.standard_shipping_rules, members: [s.29], evidence: [{quote: "Standard shipping rules:"}]}
+  - {id: s.32, predicate: RuleSet, subject: c.peak_season_rules, members: [s.30], overrides: [s.31], evidence: [{quote: "Peak-season rules:"}, {quote: "Peak-season rules override the standard shipping rules."}]}
+  - id: s.33
+    predicate: Rule
+    modality: may
+    binds: [t.returns_desk]
+    action: {verb: approve, objects: [c.refund], values: [{value: "200", unit: USD, role: maximum}]}
+    evidence: [{quote: "The Returns desk may approve refunds up to $200."}]
+  - {id: s.34, predicate: HasAccess, subject: t.returns_desk, object: t.refund_tool, access: use, exclusive: true, evidence: [{quote: "Only the Returns desk may use the refund tool."}]}
+skipped:
+  - {evidence: [{quote: "Acme Outdoor: who does what"}], reason: heading}
+  - {evidence: [{quote: "Organization"}], reason: heading}
+  - {evidence: [{quote: "Data"}], reason: heading}
+  - {evidence: [{quote: "Escalation"}], reason: heading}
+  - {evidence: [{quote: "Rules"}], reason: heading}
+  - {evidence: [{quote: "Metrics"}], reason: heading}

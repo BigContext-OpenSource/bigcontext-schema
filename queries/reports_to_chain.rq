@@ -1,0 +1,3 @@
+PREFIX bcf: <https://w3id.org/bigcontext-schema/facts/>
+# Everyone and every post ?subject reports to, all the way up (dotted lines are never followed).
+SELECT DISTINCT ?above WHERE { ?subject bcf:reports_to ?above . }

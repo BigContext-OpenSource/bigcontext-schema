@@ -1,0 +1,3 @@
+PREFIX bcf: <https://w3id.org/bigcontext-schema/facts/>
+# Everything ?subject is built or sourced from, all the way back.
+SELECT DISTINCT ?source WHERE { ?subject bcf:derived_from ?source . }

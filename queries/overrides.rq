@@ -1,0 +1,3 @@
+PREFIX bcf: <https://w3id.org/bigcontext-schema/facts/>
+# Every rule ?subject takes precedence over, including through rule sets.
+SELECT DISTINCT ?beaten WHERE { ?subject bcf:overrides ?beaten . }

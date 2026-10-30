@@ -1,0 +1,5 @@
+PREFIX bcf: <https://w3id.org/bigcontext-schema/facts/>
+# What drives ?subject (a driver tree), kept apart from what its formula depends on.
+SELECT DISTINCT ?driver ?how WHERE {
+  ?driver ?how ?subject . VALUES ?how { bcf:increases bcf:decreases bcf:influences }
+}

@@ -1,0 +1,932 @@
+# serves: F-056 — Express any context in BigContext Schema
+id: https://w3id.org/bigcontext-schema  # permanent identifier to be registered before publishing
+name: bigcontext_schema
+title: BigContext Schema (draft)
+version: 0.9.0-draft
+description: >-
+  A small, closed set of building blocks for expressing business context taken from natural language:
+  simple rules, long procedures, company structure, data and mappings. Tier 1 is the element types, tier 2 the
+  statement types (predicates) whose roles come from one shared dictionary of slots, tier 3 the qualifiers
+  every statement can carry. Kinds of a particular product (such as BigContext's 52) live in that product's
+  profile, not here. Shared groups of fields any statement can carry (decision, assignment, snapshot, data
+  profile) cover kinds of context that recur across many statement types. A computable core (key pairs, filters,
+  aggregations, metric types, time grains) lets metric and join definitions move to and from semantic-layer
+  formats.
+prefixes:
+  linkml: https://w3id.org/linkml/
+  bcs: https://w3id.org/bigcontext-schema/
+  # the W3C vocabularies BigContext Schema's building blocks correspond to (see the README's alignment table)
+  odrl: http://www.w3.org/ns/odrl/2/
+  org: http://www.w3.org/ns/org#
+  skos: http://www.w3.org/2004/02/skos/core#
+  prov: http://www.w3.org/ns/prov#
+  dcat: http://www.w3.org/ns/dcat#
+  dqv: http://www.w3.org/ns/dqv#
+  oa: http://www.w3.org/ns/oa#
+  dcterms: http://purl.org/dc/terms/
+default_prefix: bcs
+default_range: string
+imports:
+  - linkml:types
+
+# ---------------------------------------------------------------- tier 1: elements and shared structures
+classes:
+  ContextDocument:
+    tree_root: true
+    description: Everything expressed from one source document, or one section of it.
+    slots: [source, external, linked_sources, revisions, things, concepts, statements, procedures, conflicts, unmapped,
+      skipped]
+
+  Source:
+    slots: [id, title, version, date, as_of, location]
+
+  LinkedSource:
+    description: Another source whose elements this document refers to as prefix:id.
+    attributes:
+      prefix:
+        required: true
+        pattern: "^[a-z][a-z0-9_]*$"
+        description: The short name used before the colon (metrics in metrics:c.active_customer).
+      base_iri:
+        required: true
+        pattern: "^https?://.*[/#]$"
+        description: The other source's base IRI, ending in / or #.
+      title: {}
+
+  Evidence:
+    close_mappings: ["oa:TextQuoteSelector"]
+    description: An exact quote from the source that the element or statement came from.
+    attributes:
+      quote:
+        required: true
+        exact_mappings: ["oa:exact"]
+        description: Copied exactly from the source text.
+
+  Element:
+    abstract: true
+    slots: [id, label, evidence, note]
+
+  Thing:
+    is_a: Element
+    description: A named individual the context talks about (a person, a team, a post, a table, a system).
+    slots: [thing_type, aliases, physical_name]
+    slot_usage:
+      label: {required: true}
+      thing_type: {required: true}
+
+  Concept:
+    is_a: Element
+    description: A business word or category the context talks about (customer, revenue, approved refund).
+    slots: [concept_type, aliases]
+    slot_usage:
+      label: {required: true}
+      concept_type: {required: true}
+
+  Value:
+    description: A literal value, kept with its type, unit and the part it plays.
+    attributes:
+      value: {required: true}
+      datatype: {range: DatatypeEnum}
+      unit: {}
+      role:
+        range: ValueRoleEnum
+        description: The part this value plays (a weight, a threshold, a resulting score, a minimum).
+      comparator:
+        range: ComparatorEnum
+        description: For thresholds, how the value is compared (more than, at most).
+      applies_to:
+        range: Element
+        description: The element this value belongs to, when a statement has several (the input a weight is for).
+
+  Condition:
+    close_mappings: ["odrl:Constraint"]
+    description: >-
+      When something holds. The description is a short phrase; about names the elements it mentions. A condition
+      that is a data filter also gives field, comparator and values, so it can be run.
+    attributes:
+      description: {required: true}
+      about: {range: Element, multivalued: true}
+      field: {range: Element, description: "The column the filter tests."}
+      comparator: {range: FilterComparatorEnum}
+      values: {range: Value, multivalued: true, inlined_as_list: true}
+
+  Case:
+    description: One row of a step-wise calculation (when this holds, the result is that value).
+    attributes:
+      when: {range: Condition, required: true, inlined: true}
+      value: {range: Value, required: true, inlined: true}
+
+  KeyPair:
+    description: One pair of columns a join matches on.
+    attributes:
+      from_field: {range: Element, required: true}
+      to_field: {range: Element, required: true}
+
+  Action:
+    close_mappings: ["odrl:Action"]
+    description: What is done, with a closed verb class, the text's own verb and the elements involved.
+    attributes:
+      verb: {range: VerbEnum, required: true}
+      specific_verb:
+        description: >-
+          The verb as the text uses it, in lower case, when it is more specific than the closed class
+          (page, recommend, deduplicate, invite). It is the organization's vocabulary, not a closed list.
+      objects: {range: Element, multivalued: true}
+      values: {range: Value, multivalued: true, inlined_as_list: true}
+      via:
+        range: Element
+        multivalued: true
+        description: The channel, tool or intermediary the action goes through (PagerDuty, Slack, the account manager).
+      to:
+        range: Element
+        multivalued: true
+        description: Who receives the action or where its result goes.
+      by:
+        range: Element
+        multivalued: true
+        description: >-
+          The dimensions an analysis is broken down by ("spend by channel"). Never who does the action: a rule's
+          party goes in binds, a step's in performer.
+      options_in_order:
+        range: Element
+        multivalued: true
+        description: Alternatives in order of preference, first preferred.
+      detail:
+        description: Only what the rest cannot carry (a short phrase).
+      when:
+        range: Condition
+        multivalued: true
+        inlined_as_list: true
+        description: Conditions for this action, used when an action is one of several alternatives.
+      alternatives:
+        range: Action
+        multivalued: true
+        inlined_as_list: true
+        description: Actions any one of which satisfies this one ("either a or b"); each may carry its own when.
+      then:
+        range: Action
+        multivalued: true
+        inlined_as_list: true
+        description: Actions that follow this one within the same instruction ("stop and ask").
+
+  # ---------------------------------------------------------------- tier 2: statement types
+  Statement:
+    is_a: Element
+    abstract: true
+    description: One claim. Its type is the predicate; its roles come from the shared slot dictionary.
+    slots: [predicate, when, when_any, unless, even_if, because, so_that, scope, frequency, certainty, importance,
+            negated, currently, valid_from, valid_to, valid_while, as_of, within, via, exclusive, stated_by,
+            held_by, proposed_by, decided_by, decided_on, decided_in, ratified_by, endorsed_by, disputed_by,
+            informed, decision_status, supersedes, ratified_on, ratified_in, progress, due_by, recurrence,
+            answers, each, or_more_senior, automatic,
+            capacity, acting_for, line, share, cadence]
+    slot_usage:
+      evidence: {required: true}
+
+  # meaning
+  Definition:
+    close_mappings: ["skos:definition"]
+    is_a: Statement
+    description: What a term or a named thing is, in words.
+    slots: [subject, text, object]
+    slot_usage:
+      subject: {required: true, description: "The term or thing being defined or described."}
+      text: {required: true, description: "The meaning, as the source gives it."}
+      object: {description: "The broader category it belongs to, if the source names one."}
+  IsA:
+    close_mappings: ["skos:broader"]
+    is_a: Statement
+    description: Something is an instance or subtype of a category.
+    slots: [subject, object]
+    slot_usage:
+      subject: {required: true}
+      object: {required: true, description: "The category."}
+  SynonymOf:
+    close_mappings: ["skos:altLabel"]
+    is_a: Statement
+    description: A word or abbreviation that refers to an element.
+    slots: [term, subject, usage]
+    slot_usage:
+      term: {required: true, description: "The other word exactly as used."}
+      subject: {required: true, description: "What the word refers to."}
+  Groups:
+    is_a: Statement
+    description: A named group made of members.
+    slots: [subject, members, complete]
+    slot_usage:
+      subject: {required: true, description: "The group."}
+      members: {required: true}
+  HasValues:
+    is_a: Statement
+    description: The values a field or dimension can take, as literals or as concepts (at least one of the two).
+    slots: [subject, values, members, complete]
+    slot_usage:
+      subject: {required: true, description: "The field or dimension."}
+      members: {description: "Values that are concepts elsewhere in the context."}
+  ComputedAs:
+    is_a: Statement
+    description: How a measure, score or derived field is calculated.
+    slots: [subject, expression, inputs, values, cases, metric_type, aggregation, base, time_dimension, numerator,
+            denominator, filters, dialect]
+    slot_usage:
+      subject: {required: true, description: "What is calculated."}
+      expression: {required: true, description: "The calculation in the source's notation or plain words."}
+  Sequence:
+    is_a: Statement
+    description: Items in a meaningful order (a funnel, hierarchy levels, a derivation chain, a response format).
+    slots: [subject, items, sequence_type, complete]
+    slot_usage:
+      items: {required: true}
+      sequence_type: {required: true}
+  HasProperty:
+    is_a: Statement
+    description: >-
+      An element has a literal value for an attribute that no other statement type covers. Use the data statement
+      types for grain, coverage and status.
+    slots: [subject, attribute, standard_attribute, value]
+    slot_usage:
+      subject: {required: true}
+      attribute: {description: "A concept naming the attribute, when no standard attribute fits."}
+      standard_attribute: {description: "The attribute from the fixed vocabulary (give this or attribute)."}
+      value: {required: true}
+  UsedFor:
+    is_a: Statement
+    description: What an element is for (or, negated, not for).
+    slots: [subject, text, object]
+    slot_usage:
+      subject: {required: true}
+      text: {required: true, description: "The purpose, in words."}
+      object: {description: "The activity or question type it serves, if it is an element."}
+
+  # rules
+  Rule:
+    close_mappings: ["odrl:Rule"]
+    is_a: Statement
+    description: A norm. When the conditions hold, the action must, must not, should, may or by default is done.
+    slots: [modality, action, overrides, binds, absolute]
+    slot_usage:
+      modality: {required: true}
+      action: {required: true}
+  RuleSet:
+    close_mappings: ["odrl:Policy"]
+    is_a: Statement
+    description: A named group of rules that share a scope, a strength or a precedence ("these rules override team guidelines").
+    slots: [subject, members, overrides, absolute]
+    slot_usage:
+      members: {required: true, description: "The ids of the rules in the set."}
+      subject: {description: "A concept naming the set, if the source names it."}
+
+  # company structure
+  PartOf:
+    close_mappings: ["dcterms:isPartOf"]
+    related_mappings: ["org:unitOf"]
+    is_a: Statement
+    description: A part belongs to a whole (a team in a department, a market in a region). Transitive.
+    slots: [subject, object, cardinality, complete]
+    slot_usage:
+      subject: {required: true, description: "The part."}
+      object: {required: true, description: "The whole."}
+      complete: {description: "True when the source says these are all the parts of the whole."}
+  MemberOf:
+    exact_mappings: ["org:memberOf"]
+    is_a: Statement
+    description: A person, agent or team is a member of a unit, optionally in a role.
+    slots: [subject, object, role]
+    slot_usage:
+      subject: {required: true}
+      object: {required: true, description: "The unit."}
+  HoldsRole:
+    close_mappings: ["org:holds"]
+    is_a: Statement
+    description: A person, agent or post holds a role (the role may be a post or a kind of role).
+    slots: [subject, object]
+    slot_usage:
+      subject: {required: true}
+      object: {required: true, description: "The role or post."}
+  ReportsTo:
+    exact_mappings: ["org:reportsTo"]
+    is_a: Statement
+    description: A person, post or unit reports to another. Transitive.
+    slots: [subject, object, direct]
+    slot_usage:
+      subject: {required: true, description: "Who reports."}
+      object: {required: true, description: "Who is reported to."}
+  Heads:
+    exact_mappings: ["org:headOf"]
+    is_a: Statement
+    description: A person or post heads a unit, team or organization (a structure link, like reporting).
+    slots: [subject, object]
+    slot_usage:
+      subject: {required: true, description: "The person or post at the head."}
+      object: {required: true, description: "The unit, team or organization."}
+  ResponsibleFor:
+    is_a: Statement
+    description: A party has a responsibility for something, possibly answering to someone for it.
+    slots: [subject, object, responsibility, text, answers_to]
+    slot_usage:
+      subject: {required: true, description: "The person, post, team or unit."}
+      responsibility: {required: true}
+      text: {description: "The responsibility in words when no element names it."}
+  HasAccess:
+    close_mappings: ["odrl:Permission"]
+    is_a: Statement
+    description: A party can or cannot use a resource.
+    slots: [subject, object, access]
+    slot_usage:
+      subject: {required: true}
+      object: {required: true}
+      access: {required: true}
+  Appoints:
+    is_a: Statement
+    description: A party appoints or designates the holder of a post, possibly with another party's consent.
+    slots: [subject, object, with_consent_of]
+    slot_usage:
+      subject: {required: true, description: "Who appoints."}
+      object: {required: true, description: "The post or person appointed."}
+  EscalatesTo:
+    is_a: Statement
+    description: A party escalates to another (an escalation path, not a reporting line), usually under conditions.
+    slots: [subject, object]
+    slot_usage:
+      subject: {required: true}
+      object: {required: true}
+  WorksWith:
+    is_a: Statement
+    description: Two parties work together, coordinate or keep liaison, optionally on a topic.
+    slots: [subject, object, text]
+    slot_usage:
+      subject: {required: true}
+      object: {required: true}
+      text: {description: "What they work together on."}
+  Represents:
+    is_a: Statement
+    description: A party acts on behalf of another, optionally towards an audience.
+    slots: [subject, object, audience]
+    slot_usage:
+      subject: {required: true, description: "Who represents."}
+      object: {required: true, description: "Who is represented."}
+  Serves:
+    is_a: Statement
+    description: A unit serves or covers places, populations or other units (a region's states, a team's customers).
+    slots: [subject, members, complete]
+    slot_usage:
+      subject: {required: true}
+      members: {required: true, description: "What it serves."}
+  GovernedBy:
+    related_mappings: ["dcterms:conformsTo"]
+    is_a: Statement
+    description: Something is established, governed or constrained by a law, policy, agreement or document.
+    slots: [subject, object, text]
+    slot_usage:
+      subject: {required: true}
+      object: {required: true, description: "The law, policy, agreement or document."}
+
+  # lifecycles and automatic behaviour
+  Transition:
+    is_a: Statement
+    description: Something moves from one state to another, when something happens (one edge of a lifecycle).
+    slots: [subject, from_state, to_state, alternative_states, performer]
+    slot_usage:
+      subject: {required: true, description: "What changes state (an incident, an order)."}
+      to_state: {required: true}
+      alternative_states: {description: "Other states it may end in instead ('deleted, aggregated or de-identified')."}
+  Triggers:
+    is_a: Statement
+    description: When something happens, a system or party does something automatically (not a norm, a behaviour).
+    slots: [subject, action]
+    slot_usage:
+      subject: {required: true, description: "The system or party that acts."}
+      action: {required: true}
+
+  # mapping
+  Mapping:
+    close_mappings: ["skos:mappingRelation"]
+    is_a: Statement
+    description: Two elements correspond, with how close the match is and why.
+    slots: [subject, object, match, justification]
+    slot_usage:
+      subject: {required: true}
+      object: {required: true}
+      match: {required: true}
+  ImplementedBy:
+    is_a: Statement
+    description: A business concept is represented in data by a field, table or filter.
+    slots: [subject, object, expression, primary]
+    slot_usage:
+      subject: {required: true, description: "The concept."}
+      object: {required: true, description: "The field, table or other data element."}
+      expression: {description: "The filter or expression, if any."}
+  JoinsTo:
+    is_a: Statement
+    description: How two data elements join.
+    slots: [subject, object, keys, key_pairs, cardinality, dedup, join_type]
+    slot_usage:
+      subject: {required: true}
+      object: {required: true}
+
+  # data assets
+  Contains:
+    is_a: Statement
+    description: A table or dataset holds information about something, in a given role (a measure, a dimension, a key).
+    slots: [subject, object, data_role, time_grain]
+    slot_usage:
+      subject: {required: true, description: "The table or dataset."}
+      object: {required: true, description: "The field, concept or entity it holds information about."}
+  HasGrain:
+    is_a: Statement
+    description: What one row of a table stands for ("one row per order line").
+    slots: [subject, members, text]
+    slot_usage:
+      subject: {required: true}
+      text: {required: true, description: "The grain as the source gives it."}
+      members: {description: "The elements that together make up one row, when named."}
+  Covers:
+    close_mappings: ["dcterms:coverage"]
+    is_a: Statement
+    description: >-
+      Which rows a table or dataset covers: which platforms, populations, places or periods (use valid_from and
+      valid_to for the period).
+    slots: [subject, members, complete, primary]
+    slot_usage:
+      subject: {required: true}
+      complete: {description: "True when the source says it covers only these."}
+      primary: {description: "True when it is the source of truth for these."}
+  HasStatus:
+    is_a: Statement
+    description: The lifecycle status of an element (active, deprecated, retired, planned, experimental).
+    slots: [subject, status]
+    slot_usage:
+      subject: {required: true}
+      status: {required: true}
+  DerivedFrom:
+    exact_mappings: ["prov:wasDerivedFrom"]
+    is_a: Statement
+    description: An element is built or sourced from another (an aggregate built on a mart; a table built from a vendor's export).
+    slots: [subject, object, text]
+    slot_usage:
+      subject: {required: true}
+      object: {required: true, description: "What it is built or sourced from."}
+      text: {description: "How, if the source says."}
+  IdentifiedBy:
+    is_a: Statement
+    description: The elements that together identify each instance of the subject (a table's unique key).
+    slots: [subject, members]
+    slot_usage:
+      subject: {required: true}
+      members: {required: true, description: "The fields or elements that together identify it."}
+  Has:
+    is_a: Statement
+    description: Each subject has some number of the object (a boat has one owner; a user has many sessions).
+    slots: [subject, object, cardinality, role]
+    slot_usage:
+      subject: {required: true}
+      object: {required: true}
+      cardinality: {description: "How many of the object each subject has."}
+      role: {description: "The role the object plays, if named (captain)."}
+  Caveat:
+    close_mappings: ["dqv:QualityAnnotation"]
+    is_a: Statement
+    description: A known limitation or quality problem that a reader of the subject must allow for.
+    slots: [subject, text, object]
+    slot_usage:
+      subject: {required: true}
+      text: {required: true, description: "The limitation, as the source gives it."}
+      object: {description: "A second element the limitation is about (the table it will not tie to)."}
+
+  # belief
+  Indicates:
+    is_a: Statement
+    description: When a pattern is seen (the when conditions), it suggests a conclusion.
+    slots: [subject, text, values]
+    slot_usage:
+      text: {required: true, description: "The conclusion."}
+  Influences:
+    is_a: Statement
+    description: One element affects another.
+    slots: [subject, object, direction, text]
+    slot_usage:
+      subject: {required: true, description: "The cause."}
+      object: {required: true, description: "The effect."}
+
+  # patterns, gaps and examples
+  Template:
+    is_a: Statement
+    description: >-
+      A reusable pattern for a kind of task (a sample query, a message or report format), linked to the use case it
+      serves, with the elements it uses and the placeholders to fill. One-off values in a sample are values with
+      role example; placeholders are values with role parameter.
+    slots: [subject, text, inputs, values, outputs]
+    slot_usage:
+      subject: {required: true, description: "The use case: an activity concept or procedure the pattern is for."}
+      text: {required: true, description: "The pattern as given (the SQL, the message outline)."}
+      inputs: {description: "The tables, fields, metrics and joins it uses."}
+      outputs: {description: "What it produces (columns, sections), when named."}
+  Gap:
+    is_a: Statement
+    description: Something the source says is missing, unknown or future work.
+    slots: [subject, text]
+    slot_usage:
+      text: {required: true}
+  Example:
+    close_mappings: ["skos:example"]
+    is_a: Statement
+    description: An example the source gives, attached to what it illustrates.
+    slots: [subject, text]
+    slot_usage:
+      subject: {required: true, description: "What it illustrates (an element, statement or procedure)."}
+      text: {required: true, description: "The example, as given."}
+  CreatedBy:
+    close_mappings: ["dcterms:creator", "prov:wasAttributedTo"]
+    is_a: Statement
+    description: >-
+      Who created, founded or wrote something (a project, a document, a team). Several creators go in members;
+      unnamed ones ("numerous others") in text.
+    slots: [subject, object, members, text]
+    slot_usage:
+      subject: {required: true, description: "What was created."}
+      object: {description: "The creator, when there is one."}
+  DescribedIn:
+    is_a: Statement
+    description: >-
+      Where something is described in full: the text points to a document, page or section instead of saying it
+      ("the process is described in PEP 8000"; "see the cherry-pick process").
+    slots: [subject, object, text]
+    slot_usage:
+      subject: {required: true, description: "What is described."}
+      object: {required: true, description: "The document, page or section that describes it."}
+
+  # ---------------------------------------------------------------- procedures
+  Procedure:
+    is_a: Element
+    description: An ordered set of steps, written as instructions or as a description of how work happens.
+    slots: [mode, modality, goal, performer, trigger, scope, when, unless, because, so_that, inputs, outputs, steps]
+    slot_usage:
+      label: {required: true}
+      mode: {required: true}
+      steps: {required: true}
+  Step:
+    description: One step of a procedure.
+    slots: [id, order, source_label, modality, action, performer, also_performed_by, or_more_senior, automatic, when,
+            when_any, unless, even_if, because, so_that, within, due_by, recurrence, next, branches, calls, consumes,
+            produces, evidence, note]
+    slot_usage:
+      order: {required: true}
+      action: {required: true}
+      evidence: {required: true}
+  Branch:
+    attributes:
+      when: {range: Condition, required: true, inlined: true}
+      go_to: {description: "The id of the step to go to."}
+      outcome: {description: "Where the procedure ends up if it does not go to a step (stop, escalate, done)."}
+
+  # ---------------------------------------------------------------- accounting
+  Revision:
+    description: One entry of the source's own change history.
+    attributes:
+      version: {}
+      date: {}
+      by: {range: Element, multivalued: true}
+      summary: {required: true}
+      evidence: {range: Evidence, multivalued: true, inlined_as_list: true, required: true}
+  Conflict:
+    description: Two or more statements that contradict each other, noticed while expressing the source.
+    attributes:
+      statements: {range: Element, multivalued: true, required: true}
+      reason: {required: true}
+  Unmapped:
+    description: A statement BigContext Schema could not express. Kept, never dropped.
+    attributes:
+      evidence: {range: Evidence, multivalued: true, inlined_as_list: true, required: true}
+      proposed_predicate: {required: true, description: "The statement type you would have needed."}
+      reason: {required: true}
+  Skipped:
+    description: Source text that carries no context to express (a heading, formatting, navigation).
+    attributes:
+      evidence: {range: Evidence, multivalued: true, inlined_as_list: true, required: true}
+      reason: {range: SkipReasonEnum, required: true}
+
+# ---------------------------------------------------------------- the shared slot dictionary
+slots:
+  id: {identifier: true, required: true}
+  label: {}
+  note: {description: "A remark from whoever expressed the context; never part of its meaning."}
+  title: {}
+  version: {}
+  date: {}
+  location: {}
+  aliases: {multivalued: true}
+  evidence: {range: Evidence, multivalued: true, inlined_as_list: true}
+  source: {range: Source, inlined: true, required: true}
+  revisions: {range: Revision, multivalued: true, inlined_as_list: true}
+  as_of: {description: "The date a snapshot was true, as an ISO date (2026-10, 2026-10-01); on the source, the date every undated statement holds as of.", pattern: "^\\d{4}(-\\d{2}(-\\d{2})?)?$"}
+  standard_attribute: {range: StandardAttributeEnum}
+  within: {range: Value, inlined: true, description: "A time limit ('answer within 4 business hours')."}
+  exclusive: {range: boolean, description: "True when the source says only these (only analysts, the only channel with carts)."}
+  held_by: {range: Element, multivalued: true, description: "Whose preference, view or wish this is."}
+  proposed_by: {range: Element, multivalued: true}
+  decided_by: {range: Element, multivalued: true}
+  decided_on: {}
+  decided_in: {range: Element, description: "Where it was decided or recorded (a meeting, a channel, a ticket, a document)."}
+  ratified_by: {range: Element, multivalued: true}
+  ratified_on: {description: "When it was ratified."}
+  ratified_in: {range: Element, description: "Where it was ratified (a meeting, a council, a document)."}
+  endorsed_by: {range: Element, multivalued: true, description: "Who agreed or supported it (+1, 'fine for now')."}
+  disputed_by: {range: Element, multivalued: true, description: "Who disagreed or objected."}
+  informed: {range: Element, multivalued: true, description: "Who was told."}
+  decision_status: {range: DecisionStatusEnum, description: "How far it got: proposed, decided, ratified, rejected, withdrawn..."}
+  supersedes: {range: Element, multivalued: true, description: "Statements this one replaces."}
+  progress: {range: ProgressEnum, description: "How far an action item or piece of work has got."}
+  due_by: {description: "The deadline it must be done by, as the text gives it ('2026-11-30', 'the end of each fiscal quarter'); a duration goes in within."}
+  recurrence: {description: "How often a duty recurs ('every month', 'each Monday'); a rotation's turnover goes in cadence, how often something is true in frequency."}
+  answers: {range: Statement, description: "The open question (a Gap) this statement answers."}
+  each: {range: boolean, description: "True when the statement holds for each member of a class it names, not for the class itself ('nine offices, each headed by an Assistant Administrator')."}
+  or_more_senior: {range: boolean, description: "True when the posts or roles the statement names also cover anyone more senior ('a VP or higher')."}
+  capacity: {range: CapacityEnum, description: "In what capacity a role, membership or responsibility is held."}
+  acting_for: {range: Element, description: "Whom an acting or interim holder stands in for."}
+  line: {range: LineEnum, description: "Solid or dotted reporting or membership line."}
+  share: {range: Value, inlined: true, description: "The share of time (50%)."}
+  cadence: {description: "How a rotation turns over ('weekly, Monday 09:00 ET')."}
+  physical_name: {description: "The object's name in its system (tpcds.public.store_sales; a tool's name in its MCP server)."}
+  key_pairs: {range: KeyPair, multivalued: true, inlined_as_list: true}
+  metric_type: {range: MetricTypeEnum}
+  aggregation: {range: AggregationEnum}
+  base: {range: Element, description: "The table a measure aggregates over."}
+  time_dimension: {range: Element, description: "The time column a measure is counted by. Expected when the text says which date counts it, and when its base table has no time column or several; left out when the text does not say."}
+  numerator: {range: Element}
+  denominator: {range: Element}
+  filters: {range: Condition, multivalued: true, inlined_as_list: true, description: "Row filters applied before aggregating."}
+  dialect: {description: "The SQL dialect of the expression (ANSI_SQL, Snowflake, BigQuery)."}
+  time_grain: {range: TimeGrainEnum}
+  external:
+    multivalued: true
+    description: Ids this file refers to that another section of the same source declares.
+  linked_sources:
+    range: LinkedSource
+    multivalued: true
+    inlined_as_list: true
+    description: Other sources this document refers to as prefix:id, for links between sources.
+  things: {range: Thing, multivalued: true, inlined_as_list: true}
+  concepts: {range: Concept, multivalued: true, inlined_as_list: true}
+  statements: {range: Statement, multivalued: true, inlined_as_list: true}
+  procedures: {range: Procedure, multivalued: true, inlined_as_list: true}
+  conflicts: {range: Conflict, multivalued: true, inlined_as_list: true}
+  unmapped: {range: Unmapped, multivalued: true, inlined_as_list: true}
+  skipped: {range: Skipped, multivalued: true, inlined_as_list: true}
+  thing_type: {range: ThingTypeEnum}
+  concept_type: {range: ConceptTypeEnum}
+  predicate: {designates_type: true, range: string, required: true}
+
+  # roles
+  subject: {range: Element}
+  object: {range: Element}
+  term: {}
+  text: {}
+  members: {range: Element, multivalued: true}
+  items: {range: Element, multivalued: true}
+  inputs: {range: Element, multivalued: true}
+  outputs: {range: Element, multivalued: true}
+  values: {range: Value, multivalued: true, inlined_as_list: true}
+  value: {range: Value, inlined: true}
+  cases: {range: Case, multivalued: true, inlined_as_list: true}
+  attribute: {range: Concept}
+  expression: {}
+  complete: {range: boolean, description: "True when the source says the list is complete; false when it says 'such as'."}
+  usage: {range: SynonymUsageEnum}
+  sequence_type: {range: SequenceTypeEnum}
+  modality: {range: ModalityEnum}
+  action: {range: Action, inlined: true}
+  overrides: {range: Element, multivalued: true, description: "Statements this one takes precedence over."}
+  cardinality: {range: CardinalityEnum}
+  role: {range: Concept}
+  responsibility: {range: ResponsibilityEnum}
+  answers_to: {range: Element, multivalued: true, description: "Who the party answers to for this responsibility."}
+  access: {range: AccessEnum}
+  match: {range: MatchEnum}
+  justification: {}
+  keys: {multivalued: true, description: "Key pairs such as \"orders.customer_id = customers.customer_id\"."}
+  dedup: {}
+  join_type: {range: JoinTypeEnum}
+  primary: {range: boolean, description: "True when the source calls this the primary, core or canonical representation."}
+  binds: {range: Element, multivalued: true, description: "Who must comply, when it is not the reader of the context."}
+  absolute: {range: boolean, description: "True for a hard rule that nothing may override."}
+  direct: {range: boolean, description: "True when the source says the reporting line is direct."}
+  with_consent_of: {range: Element, multivalued: true}
+  audience: {range: Element, multivalued: true, description: "Who the representation is towards."}
+  via: {range: Element, multivalued: true}
+  from_state: {range: Concept}
+  to_state: {range: Concept}
+  alternative_states: {range: Concept, multivalued: true}
+  data_role: {range: DataRoleEnum}
+  status: {range: StatusEnum}
+  direction: {range: DirectionEnum}
+
+  # qualifiers
+  when: {range: Condition, multivalued: true, inlined_as_list: true, description: "Conditions that must all hold."}
+  when_any: {range: Condition, multivalued: true, inlined_as_list: true, description: "Conditions of which any one is enough."}
+  unless: {range: Condition, multivalued: true, inlined_as_list: true, description: "Exceptions; any one is enough to set the statement aside."}
+  even_if: {range: Condition, multivalued: true, inlined_as_list: true, description: "Conditions under which the statement still holds ('even if', 'including when')."}
+  because: {range: Condition, multivalued: true, inlined_as_list: true, description: "The reasons the source gives."}
+  so_that: {range: Condition, multivalued: true, inlined_as_list: true, description: "The purpose the source gives ('in order to', 'so that')."}
+  scope: {range: Element, multivalued: true, description: "The elements the statement is limited to."}
+  frequency: {range: FrequencyEnum, description: "How often, or how widely (most users, some owners), it holds."}
+  certainty: {range: CertaintyEnum}
+  importance: {range: ImportanceEnum, description: "How much it matters, when the source says (critical, very important, minor)."}
+  negated: {range: boolean}
+  currently: {range: boolean, description: "True when the source says it holds now and may change ('currently', 'right now'); false when it says it no longer holds without giving dates ('former', 'emeritus', 'previously')."}
+  valid_from: {description: "The first day it holds, as an ISO date: 2027-10 for 'October 2027' (a year or month means its first day).", pattern: "^\\d{4}(-\\d{2}(-\\d{2})?)?$"}
+  valid_to: {description: "The last day it holds, as an ISO date: 2027-10 for 'October 2027' (a year or month means its last day).", pattern: "^\\d{4}(-\\d{2}(-\\d{2})?)?$"}
+  valid_while: {range: Condition, inlined: true, description: "Holds only while this lasts ('for the duration of the incident')."}
+  stated_by: {range: Element}
+
+  # procedures
+  mode: {range: ProcedureModeEnum}
+  goal: {}
+  performer: {range: Element}
+  also_performed_by: {range: Element, multivalued: true, description: "Other parties who do the step together with the performer."}
+  automatic: {range: boolean, description: "True when it happens by itself, with no person acting (a system does the step; 'they are removed')."}
+  trigger: {range: Condition, inlined: true}
+  steps: {range: Step, multivalued: true, inlined_as_list: true}
+  order: {range: integer}
+  source_label: {description: "The step's own number or letter in the source (3a, 4.)."}
+  next: {multivalued: true, description: "Ids of the steps that follow."}
+  branches: {range: Branch, multivalued: true, inlined_as_list: true}
+  calls: {range: Procedure}
+  consumes: {range: Element, multivalued: true}
+  produces: {range: Element, multivalued: true}
+
+# ---------------------------------------------------------------- closed lists
+enums:
+  ThingTypeEnum:
+    permissible_values:
+      person: {}
+      team: {}
+      unit: {description: "An organizational unit inside an organization (an office, a division, a department).", exact_mappings: ["org:OrganizationalUnit"]}
+      post: {description: "A position that people hold or rotate through (Director of X, Engineer On Call).", exact_mappings: ["org:Post"]}
+      organization: {exact_mappings: ["org:Organization"]}
+      agent: {description: "A non-human actor (an AI agent, a bot, a service account)."}
+      system: {}
+      data_container: {description: "A database, project, schema or dataset."}
+      data_product: {description: "A curated, owned set of data assets offered for named uses (Customer 360).", close_mappings: ["dcat:Dataset"]}
+      table: {}
+      view: {}
+      field: {}
+      access_group: {description: "A group, database role, IAM role or policy tag that grants access."}
+      meeting: {description: "A meeting or other dated event."}
+      document: {}
+      tool: {description: "A tool an agent or person can call (an MCP tool, an API operation). Its physical_name is its name in its server, where its parameters are defined."}
+      channel: {description: "A communication channel (a Slack channel, a mailing list)."}
+      place: {}
+      product: {}
+      other: {}
+  ConceptTypeEnum:
+    permissible_values:
+      entity_type: {description: "A kind of thing the business deals in (customer, product)."}
+      metric: {}
+      dimension: {}
+      segment: {}
+      category_value: {description: "One value of a category (weather as a cancellation reason)."}
+      state: {description: "A status or stage (approved refund, resolved incident)."}
+      role: {exact_mappings: ["org:Role"]}
+      activity: {description: "A kind of work, analysis or question; the use case a pattern or procedure serves."}
+      area: {description: "A part of the business."}
+      calendar: {}
+      period: {}
+      term: {}
+      other: {}
+  DatatypeEnum:
+    permissible_values: {text: {}, number: {}, percent: {}, date: {}, duration: {}, boolean: {}, expression: {}, identifier: {}}
+  ValueRoleEnum:
+    permissible_values: {weight: {}, threshold: {}, result: {}, minimum: {}, maximum: {}, default: {}, target: {},
+                         parameter: {description: "A placeholder to fill when using a pattern."},
+                         example: {description: "A one-off value used only in this sample."},
+                         fixed: {description: "A constant that is part of the pattern itself (a fixed filter)."}}
+  ComparatorEnum:
+    permissible_values: {more_than: {}, at_least: {}, less_than: {}, at_most: {}, equal: {}}
+  VerbEnum:
+    permissible_values:
+      use: {exact_mappings: ["odrl:use"]}
+      include: {close_mappings: ["odrl:include"]}
+      exclude: {}
+      filter: {}
+      join: {}
+      group: {}
+      aggregate: {related_mappings: ["odrl:aggregate"]}
+      separate: {}
+      compute: {}
+      count: {}
+      compare: {}
+      analyze: {}
+      select: {}
+      interpret: {}
+      assume: {}
+      ask: {related_mappings: ["odrl:obtainConsent"]}
+      tell: {}
+      recommend: {}
+      show: {close_mappings: ["odrl:display"]}
+      label: {}
+      replace: {}
+      check: {}
+      run: {}
+      stop: {}
+      wait: {}
+      escalate: {}
+      notify: {related_mappings: ["odrl:inform"]}
+      assign: {}
+      approve: {}
+      create: {}
+      update: {close_mappings: ["odrl:modify"]}
+      close: {}
+      review: {}
+      contact: {}
+      document: {}
+      retain: {close_mappings: ["odrl:archive"]}
+      delete: {close_mappings: ["odrl:delete"]}
+      de_identify: {close_mappings: ["odrl:anonymize"]}
+      share: {description: "Make data or a result available to others (share, publish, send out).", close_mappings: ["odrl:distribute"]}
+      grant: {description: "Give someone access or a right (grant access).", close_mappings: ["odrl:grantUse"]}
+      copy: {description: "Make a copy of data (copy, duplicate).", close_mappings: ["odrl:reproduce"]}
+      export: {description: "Move data out of a system to a file, a device or another system."}
+      load: {description: "Bring data into a table or system (load, ingest, backfill)."}
+      other: {}
+  SynonymUsageEnum:
+    permissible_values: {always: {}, sometimes: {}, abbreviation: {}, former: {description: "A name it had before a renaming; give valid_to."}}
+  SequenceTypeEnum:
+    permissible_values: {lifecycle: {}, funnel: {}, levels: {}, derivation: {}, format: {}}
+  ModalityEnum:
+    permissible_values:
+      must: {close_mappings: ["odrl:Duty"]}
+      must_not: {close_mappings: ["odrl:Prohibition"]}
+      should: {}
+      should_not: {}
+      may: {close_mappings: ["odrl:Permission"]}
+      need_not: {}
+      by_default: {}
+  CardinalityEnum:
+    permissible_values: {one_to_many: {}, many_to_one: {}, exactly_one: {}, one_or_more: {}, zero_or_more: {}}
+  ResponsibilityEnum:
+    permissible_values: {owns: {}, manages: {}, accountable: {}, responsible: {}, performs: {}, approves: {}, decides: {}, supervises: {}, coordinates: {}, reviews: {}, advises: {}, assists: {}}
+  AccessEnum:
+    permissible_values: {admin: {}, read: {}, none: {}, masked: {description: "Can see the data with sensitive values masked."}, use: {description: "Can call or operate a tool, system or service."}, granted: {description: "Has access; the text does not say what kind."}}
+  MatchEnum:
+    permissible_values:
+      exact: {exact_mappings: ["skos:exactMatch"]}
+      close: {exact_mappings: ["skos:closeMatch"]}
+      broad: {exact_mappings: ["skos:broadMatch"]}
+      narrow: {exact_mappings: ["skos:narrowMatch"]}
+      related: {exact_mappings: ["skos:relatedMatch"]}
+  JoinTypeEnum:
+    permissible_values: {left: {}, semi: {description: "Keeps rows of the first that have a match in the second, without adding its columns."}}
+  DataRoleEnum:
+    permissible_values: {key: {}, attribute: {}, label: {}, dimension: {}, time_dimension: {}, measure: {}}
+  StatusEnum:
+    permissible_values: {canonical: {}, variant: {}, alias: {}, broken: {}, deprecated: {}, retired: {}}
+  DirectionEnum:
+    permissible_values: {increases: {}, decreases: {}, changes: {}}
+  FrequencyEnum:
+    permissible_values: {always: {}, usually: {}, often: {}, sometimes: {}, rarely: {}}
+  CertaintyEnum:
+    permissible_values: {stated: {}, likely: {}, possible: {}, estimated: {}}
+  ImportanceEnum:
+    permissible_values: {critical: {}, high: {}}
+  StandardAttributeEnum:
+    permissible_values:
+      row_count: {}
+      distinct_count: {}
+      null_rate: {}
+      minimum: {}
+      maximum: {}
+      data_type: {}
+      format: {}
+      unit: {}
+      time_zone: {}
+      freshness: {}
+      retention: {}
+      aggregation: {description: "How a measure is aggregated (SUM, AVG, distinct count)."}
+      sensitivity: {description: "A sensitivity classification (PII, financial cost)."}
+      response_time: {description: "How quickly a question or request is answered."}
+      location: {}
+      address: {}
+      headcount: {}
+      start: {description: "When a period or phase starts ('week 12')."}
+      web_address: {description: "Where something is on the web (a URL)."}
+      duration: {description: "How long a period or phase lasts ('about two weeks')."}
+  ProgressEnum:
+    permissible_values: {pending: {}, in_progress: {}, nearly_done: {}, done: {}, overdue: {}, blocked: {}, dropped: {}}
+  DecisionStatusEnum:
+    permissible_values: {proposed: {}, under_discussion: {}, decided: {}, ratified: {}, rejected: {}, withdrawn: {}, superseded: {}}
+  CapacityEnum:
+    permissible_values: {substantive: {}, acting: {}, interim: {}, primary: {}, backup: {}, delegate: {}}
+  LineEnum:
+    permissible_values: {solid: {}, dotted: {}}
+  MetricTypeEnum:
+    permissible_values: {simple: {}, ratio: {}, derived: {}}
+  AggregationEnum:
+    permissible_values: {sum: {}, count: {}, count_distinct: {}, average: {}, min: {}, max: {}, median: {}, percentile: {}, sum_boolean: {}}
+  FilterComparatorEnum:
+    permissible_values: {equal: {}, not_equal: {}, more_than: {}, at_least: {}, less_than: {}, at_most: {}, in: {}, not_in: {}, is_null: {}, is_not_null: {}}
+  TimeGrainEnum:
+    permissible_values: {second: {}, minute: {}, hour: {}, day: {}, week: {}, month: {}, quarter: {}, year: {}}
+  ProcedureModeEnum:
+    permissible_values: {instruction: {}, description: {}}
+  SkipReasonEnum:
+    permissible_values: {heading: {}, formatting: {}, navigation: {}, metadata: {}, log: {description: "A record of one run, call or conversation (an agent's tool call). Logs belong in a trace store; a learning a person approves from them is a statement."}}

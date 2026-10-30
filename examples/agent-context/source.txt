@@ -1,0 +1,34 @@
+Online store: context for the support agent
+
+1. Business process and organization
+The Refunds desk is part of Customer Care. Dana Ortiz heads Customer Care.
+Refunds over $500 must be approved by the Finance controller, unless the customer is on the VIP list.
+Refund review:
+1. Check the order status.
+2. If the item was damaged, issue the refund.
+3. Otherwise, ask the customer to return the item.
+
+2. Domain meaning
+In Marketing, a customer is anyone with an account. In Finance, a customer is anyone who has paid at least one invoice.
+Shoppers is another word for customers.
+Each customer can place many orders.
+
+3. Data products
+The Customer 360 data product combines the customers and orders tables. The Data team owns Customer 360.
+Customer 360 is approved for marketing segmentation.
+Repeat purchase rate is the number of customers with two or more orders divided by the number of customers.
+
+4. Physical systems
+The customers table lives in Snowflake as SHOP.CORE.CUSTOMERS, one row per customer.
+The F_NAME column holds the customer's first name.
+Orders join to customers on orders.customer_id = customers.id.
+
+5. Tools and integration
+The issue_refund tool issues a refund through the payments system.
+Only the Refunds desk may use issue_refund.
+Never use issue_refund for orders older than 90 days.
+Sample call: issue_refund(order_id, amount, reason).
+
+6. Runtime knowledge
+On 2026-10-20 the support agent proposed that refunds for damaged items skip the return step; Dana Ortiz approved it.
+Run 8812: the agent called issue_refund with order_id 4471 and amount 40, and the call succeeded.

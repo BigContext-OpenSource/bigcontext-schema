@@ -1,0 +1,111 @@
+source: {id: support-agent-context, title: "Online store: context for the support agent"}
+things:
+  - {id: t.refunds_desk, label: Refunds desk, thing_type: team, evidence: [{quote: "The Refunds desk is part of Customer Care."}]}
+  - {id: t.customer_care, label: Customer Care, thing_type: unit, evidence: [{quote: "Dana Ortiz heads Customer Care."}]}
+  - {id: t.dana_ortiz, label: Dana Ortiz, thing_type: person, evidence: [{quote: "Dana Ortiz heads Customer Care."}]}
+  - {id: t.finance_controller, label: Finance controller, thing_type: post, evidence: [{quote: "must be approved by the Finance controller"}]}
+  - {id: t.vip_list, label: VIP list, thing_type: document, evidence: [{quote: "unless the customer is on the VIP list"}]}
+  - {id: t.marketing, label: Marketing, thing_type: unit, evidence: [{quote: "In Marketing, a customer is anyone with an account."}]}
+  - {id: t.finance, label: Finance, thing_type: unit, evidence: [{quote: "In Finance, a customer is anyone who has paid at least one invoice."}]}
+  - {id: t.customer_360, label: Customer 360, thing_type: data_product, evidence: [{quote: "The Customer 360 data product combines the customers and orders tables."}]}
+  - {id: t.data_team, label: Data team, thing_type: team, evidence: [{quote: "The Data team owns Customer 360."}]}
+  - {id: t.snowflake, label: Snowflake, thing_type: system, evidence: [{quote: "The customers table lives in Snowflake"}]}
+  - {id: t.customers, label: customers table, thing_type: table, physical_name: SHOP.CORE.CUSTOMERS, evidence: [{quote: "The customers table lives in Snowflake as SHOP.CORE.CUSTOMERS"}]}
+  - {id: t.customers.id, label: customers.id, thing_type: field, evidence: [{quote: "customers.id"}]}
+  - {id: t.customers.f_name, label: F_NAME, thing_type: field, physical_name: F_NAME, evidence: [{quote: "The F_NAME column holds the customer's first name."}]}
+  - {id: t.orders, label: orders table, thing_type: table, evidence: [{quote: "combines the customers and orders tables"}]}
+  - {id: t.orders.customer_id, label: orders.customer_id, thing_type: field, evidence: [{quote: "orders.customer_id"}]}
+  - {id: t.payments, label: payments system, thing_type: system, evidence: [{quote: "through the payments system"}]}
+  - {id: t.issue_refund, label: issue_refund, thing_type: tool, physical_name: issue_refund, evidence: [{quote: "The issue_refund tool issues a refund through the payments system."}]}
+  - {id: t.support_agent, label: support agent, thing_type: agent, evidence: [{quote: "the support agent proposed"}]}
+concepts:
+  - {id: c.refund, label: refund, concept_type: entity_type, evidence: [{quote: "Refunds over $500"}]}
+  - {id: c.refund_amount, label: refund amount, concept_type: metric, evidence: [{quote: "Refunds over $500"}]}
+  - {id: c.customer, label: customer, concept_type: entity_type, evidence: [{quote: "a customer is anyone with an account"}]}
+  - {id: c.order, label: order, concept_type: entity_type, evidence: [{quote: "Each customer can place many orders."}]}
+  - {id: c.first_name, label: first name, concept_type: term, evidence: [{quote: "the customer's first name"}]}
+  - {id: c.marketing_segmentation, label: marketing segmentation, concept_type: activity, evidence: [{quote: "approved for marketing segmentation"}]}
+  - {id: c.repeat_purchase_rate, label: repeat purchase rate, concept_type: metric, evidence: [{quote: "Repeat purchase rate is the number of customers with two or more orders divided by the number of customers."}]}
+  - {id: c.damaged_item_refund, label: refund for a damaged item, concept_type: activity, evidence: [{quote: "refunds for damaged items skip the return step"}]}
+statements:
+  # how the organization works
+  - {id: s.1.1, predicate: PartOf, subject: t.refunds_desk, object: t.customer_care, evidence: [{quote: "The Refunds desk is part of Customer Care."}]}
+  - {id: s.1.2, predicate: Heads, subject: t.dana_ortiz, object: t.customer_care, evidence: [{quote: "Dana Ortiz heads Customer Care."}]}
+  - id: s.1.3
+    predicate: Rule
+    modality: must_not
+    action: {verb: other, specific_verb: issue, objects: [c.refund]}
+    when: [{description: "the refund is over $500", about: [c.refund_amount], values: [{value: "500", unit: USD, role: threshold, comparator: more_than}]}]
+    unless:
+      - {description: "the Finance controller has approved it", about: [t.finance_controller]}
+      - {description: "the customer is on the VIP list", about: [t.vip_list]}
+    evidence: [{quote: "Refunds over $500 must be approved by the Finance controller, unless the customer is on the VIP list."}]
+  # the same word meaning different things in different teams
+  - {id: s.2.1, predicate: Definition, subject: c.customer, text: "anyone with an account", scope: [t.marketing], evidence: [{quote: "In Marketing, a customer is anyone with an account."}]}
+  - {id: s.2.2, predicate: Definition, subject: c.customer, text: "anyone who has paid at least one invoice", scope: [t.finance], evidence: [{quote: "In Finance, a customer is anyone who has paid at least one invoice."}]}
+  - {id: s.2.3, predicate: SynonymOf, subject: c.customer, term: shoppers, evidence: [{quote: "Shoppers is another word for customers."}]}
+  - {id: s.2.4, predicate: Has, subject: c.customer, object: c.order, cardinality: zero_or_more, evidence: [{quote: "Each customer can place many orders."}]}
+  # a data product, its owner, approved use and a metric
+  - {id: s.3.1, predicate: Groups, subject: t.customer_360, members: [t.customers, t.orders], evidence: [{quote: "The Customer 360 data product combines the customers and orders tables."}]}
+  - {id: s.3.2, predicate: ResponsibleFor, subject: t.data_team, object: t.customer_360, responsibility: owns, evidence: [{quote: "The Data team owns Customer 360."}]}
+  - {id: s.3.3, predicate: UsedFor, subject: t.customer_360, text: marketing segmentation, object: c.marketing_segmentation, evidence: [{quote: "Customer 360 is approved for marketing segmentation."}]}
+  - id: s.3.4
+    predicate: ComputedAs
+    subject: c.repeat_purchase_rate
+    expression: "count of customers with two or more orders / count of customers"
+    metric_type: ratio
+    evidence: [{quote: "Repeat purchase rate is the number of customers with two or more orders divided by the number of customers."}]
+  # where the data lives and how business terms map to it
+  - {id: s.4.1, predicate: PartOf, subject: t.customers, object: t.snowflake, evidence: [{quote: "The customers table lives in Snowflake"}]}
+  - {id: s.4.2, predicate: HasGrain, subject: t.customers, text: one row per customer, evidence: [{quote: "one row per customer"}]}
+  - {id: s.4.3, predicate: ImplementedBy, subject: c.first_name, object: t.customers.f_name, evidence: [{quote: "The F_NAME column holds the customer's first name."}]}
+  - id: s.4.4
+    predicate: JoinsTo
+    subject: t.orders
+    object: t.customers
+    key_pairs: [{from_field: t.orders.customer_id, to_field: t.customers.id}]
+    evidence: [{quote: "Orders join to customers on orders.customer_id = customers.id."}]
+  # a tool: what it does, who may use it, when not to, how to call it
+  - {id: s.5.1, predicate: UsedFor, subject: t.issue_refund, text: issues a refund through the payments system, object: t.payments, evidence: [{quote: "The issue_refund tool issues a refund through the payments system."}]}
+  - {id: s.5.2, predicate: HasAccess, subject: t.refunds_desk, object: t.issue_refund, access: use, exclusive: true, evidence: [{quote: "Only the Refunds desk may use issue_refund."}]}
+  - id: s.5.3
+    predicate: Rule
+    modality: must_not
+    action: {verb: use, objects: [t.issue_refund]}
+    when: [{description: "the order is older than 90 days", about: [c.order], values: [{value: "90", datatype: duration, unit: days, role: threshold, comparator: more_than}]}]
+    evidence: [{quote: "Never use issue_refund for orders older than 90 days."}]
+  - {id: s.5.4, predicate: Template, subject: t.issue_refund, text: "issue_refund(order_id, amount, reason)", evidence: [{quote: "Sample call: issue_refund(order_id, amount, reason)."}]}
+  # a learning an agent proposed and a person approved
+  - id: s.6.1
+    predicate: Rule
+    modality: by_default
+    action: {verb: other, specific_verb: skip, detail: the return step, objects: [c.damaged_item_refund]}
+    proposed_by: [t.support_agent]
+    decided_by: [t.dana_ortiz]
+    decided_on: "2026-10-20"
+    decision_status: decided
+    evidence: [{quote: "On 2026-10-20 the support agent proposed that refunds for damaged items skip the return step; Dana Ortiz approved it."}]
+procedures:
+  - id: p.refund_review
+    label: Refund review
+    mode: instruction
+    steps:
+      - {id: p.refund_review.1, order: 1, source_label: "1.", action: {verb: check, detail: order status}, next: [p.refund_review.2], evidence: [{quote: "1. Check the order status."}]}
+      - id: p.refund_review.2
+        order: 2
+        source_label: "2."
+        action: {verb: other, specific_verb: issue, objects: [c.refund], via: [t.issue_refund]}
+        when: [{description: "the item was damaged"}]
+        branches: [{when: {description: "the item was not damaged"}, go_to: p.refund_review.3}]
+        evidence: [{quote: "2. If the item was damaged, issue the refund."}]
+      - {id: p.refund_review.3, order: 3, source_label: "3.", action: {verb: ask, to: [c.customer], detail: return the item}, evidence: [{quote: "3. Otherwise, ask the customer to return the item."}]}
+skipped:
+  - {evidence: [{quote: "Run 8812: the agent called issue_refund with order_id 4471 and amount 40, and the call succeeded."}], reason: log}
+  - {evidence: [{quote: "Online store: context for the support agent"}], reason: heading}
+  - {evidence: [{quote: "1. Business process and organization"}], reason: heading}
+  - {evidence: [{quote: "2. Domain meaning"}], reason: heading}
+  - {evidence: [{quote: "3. Data products"}], reason: heading}
+  - {evidence: [{quote: "4. Physical systems"}], reason: heading}
+  - {evidence: [{quote: "5. Tools and integration"}], reason: heading}
+  - {evidence: [{quote: "6. Runtime knowledge"}], reason: heading}
+  - {evidence: [{quote: "Refund review:"}], reason: heading}

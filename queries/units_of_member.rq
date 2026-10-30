@@ -1,0 +1,3 @@
+PREFIX bcf: <https://w3id.org/bigcontext-schema/facts/>
+# Every unit ?subject is a member of, up through the units its teams are part of.
+SELECT DISTINCT ?unit WHERE { ?subject bcf:member_of ?unit . }

@@ -1,0 +1,74 @@
+name: Propose an enhancement
+description: Something BigContext Schema cannot express, expresses only roughly or explains unclearly, or any other improvement.
+title: "[Enhancement]: "
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for helping the standard grow. One enhancement per issue works best.
+
+        **Issues are public: remove anything confidential before you paste text.** An invented or anonymised example
+        is fine, as long as it keeps the shape of the real sentence.
+
+        If you used `bigcontext-schema generate`, the `.unmapped.md` file beside your document already lists each
+        example with its line, its quote, the statement type it would need and why.
+  - type: dropdown
+    id: kind
+    attributes:
+      label: What kind of enhancement is it?
+      options:
+        - Something the standard cannot express
+        - Something it can express only roughly
+        - The guide is unclear or leads to different answers
+        - A mapping to another standard or format
+        - Documentation or examples
+        - Something else
+    validations:
+      required: true
+  - type: textarea
+    id: example
+    attributes:
+      label: Example text
+      description: The sentence or passage the standard should cover, as written, with anything confidential removed or replaced.
+      placeholder: A forecast is either re-run each month or flagged as stale on its dashboard.
+    validations:
+      required: true
+  - type: textarea
+    id: what
+    attributes:
+      label: What it should become
+      description: >-
+        How you would expect to express it: a new statement type, a new field or value on an existing one, a line in
+        the guide, or a mapping to another standard. A YAML sketch helps but is not needed.
+      placeholder: A way to state alternatives ("either X or Y"), with each option and when it applies.
+    validations:
+      required: true
+  - type: textarea
+    id: why
+    attributes:
+      label: Why the standard falls short today
+      description: What you tried and what was lost, such as the closest building block and what it could not say.
+      placeholder: Mapping takes one subject, so "Silver and Gold together" became two mappings and lost "together".
+  - type: input
+    id: version
+    attributes:
+      label: Version of BigContext Schema
+      description: The version at the top of bigcontext_schema.yaml, or the one named in the .unmapped.md file.
+      placeholder: 0.9.2-draft
+  - type: dropdown
+    id: source
+    attributes:
+      label: Where the example comes from
+      options:
+        - Written with bigcontext-schema generate
+        - Written by hand
+        - Another tool or AI model
+        - Not about a particular document
+  - type: checkboxes
+    id: confidential
+    attributes:
+      label: Before you submit
+      options:
+        - label: I removed anything confidential from the text above.
+          required: true

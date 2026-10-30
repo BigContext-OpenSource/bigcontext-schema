@@ -193,6 +193,14 @@ nothing is BigContext Schema's own: the evidence-bound statement, how strongly a
 | [DQV](https://www.w3.org/TR/vocab-dqv/) (data quality) | Caveat → `QualityAnnotation` (close) |
 | [Web Annotation](https://www.w3.org/TR/annotation-vocab/) | Evidence → `TextQuoteSelector` (close); its quote → `exact` (exact) |
 
+## Propose an enhancement
+
+Found something BigContext Schema cannot express, expresses only roughly, or explains unclearly? Open an issue with
+the [enhancement form](https://github.com/BigContext-OpenSource/bigcontext-schema/issues/new?template=enhancement.yml):
+the example text, what it should become, and why the standard falls short today. `bigcontext-schema generate`
+writes these examples for you, in a `.unmapped.md` file beside each document. Issues are public: remove anything
+confidential first.
+
 ## Versions
 
 The schema is a draft until 1.0. From 1.0 on, a version that only adds building blocks is a minor version (1.1, 1.2)

@@ -282,7 +282,7 @@ bcf:worked_out_by a owl:DatatypeProperty ;
 	skos:inScheme <https://w3id.org/bigcontext-schema/facts> .
 <https://w3id.org/bigcontext-schema/facts> dcterms:license "Apache-2.0" ;
 	dcterms:title "BigContext Schema facts (draft)" ;
-	pav:version "0.9.2-draft" ;
+	pav:version "0.9.3-draft" ;
 	a owl:Ontology ;
 	rdfs:label "bigcontext_facts" ;
 	skos:definition "The direct links a BigContext Schema graph projects from statements in force, and the logic a reasoner applies to them: which links are transitive, which are the inverse of which, and which chains of links imply another. Statements stay the record of what was said, with their conditions, dates and quotes; facts are what reasoning follows. graph.md says which statements become which facts. A chain is written as the annotation property_chain (several separated by \";\"), which generation turns into OWL property chains." .

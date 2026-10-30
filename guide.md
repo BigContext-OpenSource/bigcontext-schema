@@ -77,11 +77,11 @@ Meaning
   "this is a Sev2 incident") is `IsA` that category; `HasProperty` is only for literal values. `SynonymOf`: another
   word for an element (`term`, `subject`, `usage` always | sometimes | abbreviation; use `frequency` for "usually"
   or "often").
-- `Groups`: a named collection of things (a data product's tables, a region's countries). `HasValues`: the values a
-  field or dimension takes ("segments are Enterprise, Mid-market and SMB"; `values` literals and/or `members`
-  concepts). The people, teams or posts that make up a team or body are `MemberOf` it, one statement each. Groups
-  and HasValues take `complete`: true when the text says the list is complete, false when it says "such as",
-  "including" or "etc."
+- `Groups`: a named group made of members (a data product's tables, a region's countries, or several values that
+  together match another: see `Mapping`). `HasValues`: the values a field or dimension takes ("segments are Enterprise,
+  Mid-market and SMB"; `values` literals and/or `members` concepts). The people, teams or posts that make up a team or
+  body are `MemberOf` it, one statement each. Groups and HasValues take `complete`: true when the text says the list is
+  complete, false when it says "such as", "including" or "etc."
 - `ComputedAs`: how something is calculated: `expression`, `inputs`, `values` (weights, thresholds: each with
   `role`, `comparator`, `applies_to`), and `cases` for step-wise scoring ("over 10% gives -2 points": one case per
   row, `{when, value}`).
@@ -104,7 +104,7 @@ Rules
   | Text says | modality |
   |---|---|
   | must, shall, always, required, mandatory, will (in an instruction), a plain instruction ("use X for Y") | `must` |
-  | we pledge to, we commit to, is committed to, we will (an organization promising its readers) | `must`, binding the organization |
+  | we pledge to, we commit to, is committed to, we will (an organization promising its readers) | `must`, binding the organization: a promise is a duty it takes on, never `unmapped` |
   | it is your responsibility to ensure, you are responsible for (said to the reader) | `must` |
   | never, do not, must not, banned, not allowed, not permitted, prohibited, is not acceptable | `must_not` |
   | should, prefer, for preference, it is better to, can and should, generally/typically + an instruction | `should` |
@@ -175,6 +175,10 @@ Mapping and data
   term, narrow when it is the narrower one; `justification`), `ImplementedBy` (`expression`,
   `primary`; also code or a model that computes it: "the SQL lives in the dbt model churn_monthly"; a document that
   describes it is `DescribedIn`), `JoinsTo` (`keys`, `cardinality`, `dedup`, `join_type`).
+- Several elements that together correspond to one ("the Silver and Gold plans together roughly match the CRM's
+  Premium tier"): name the group as a concept, list its members with `Groups` (`complete: true` for "together"), and
+  map the group once (`match: close` for "roughly"). One mapping per member loses "together". When each maps on its
+  own ("Bronze is Basic and Platinum is Elite"), write one mapping each.
 - `Contains`: a table holds a field, concept or entity, as a key | attribute | label | dimension | time_dimension
   | measure, with `time_grain` for a time dimension. Use it for "the table includes X, Y, Z". Do not add a statement just because a field id names its table.
 - `HasGrain`: what one row stands for (`text`, `members` when named). `IdentifiedBy`: a unique key.

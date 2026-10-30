@@ -164,10 +164,11 @@ converters to dbt, OSI and ODRL.
 
 ## Checking a document
 
-Any JSON Schema validator (draft 7) checks a document's structure, for example:
+Any JSON Schema validator that supports draft 2019-09 checks a document's structure, for example (no install
+needed with [uv](https://docs.astral.sh/uv/)):
 
 ```bash
-check-jsonschema --schemafile generated/bigcontext_schema.schema.json examples/order-tracking/document.yaml
+uvx check-jsonschema --schemafile generated/bigcontext_schema.schema.json examples/order-tracking/document.yaml
 ```
 
 The free BigContext Schema tools add what a JSON Schema cannot: references that point at nothing, quotes that are
@@ -203,8 +204,20 @@ confidential first.
 
 ## Versions
 
-The schema is a draft until 1.0. From 1.0 on, a version that only adds building blocks is a minor version (1.1, 1.2)
-and leaves every existing document valid; any other change is a major version.
+Every document names the version of BigContext Schema it follows in `schema_version`; read and validate it against
+that version's files. From 1.0 on, versions follow [semantic versioning](https://semver.org):
+
+- a **patch** version (1.0.1) corrects wording, descriptions or generated files and changes nothing about which
+  documents are valid;
+- a **minor** version (1.1) only adds statement types, fields or allowed values, and never removes or narrows one,
+  so every document valid under 1.0 stays valid under 1.1;
+- a **major** version (2.0) is any other change.
+
+A reader that knows 1.0 and is given a 1.1 document validates it against the 1.1 files its `schema_version` names,
+or keeps what it understands and reports the rest. A company's own fields go under `extensions`, with keys that
+start with a prefix it owns (`acme:priority`); readers keep them and may ignore them, and they never change what the
+rest of the document means. A field many people need is proposed as an enhancement and can join the standard in a
+minor version. Until 1.0 the schema is a draft (`0.9.x-draft`), and anything may change.
 
 Permanent address: `https://w3id.org/bigcontext-schema` (being registered).
 

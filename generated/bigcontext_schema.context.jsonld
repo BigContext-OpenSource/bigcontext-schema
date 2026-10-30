@@ -97,10 +97,6 @@
       "aliases": {
          "@id": "aliases"
       },
-      "also_performed_by": {
-         "@type": "@id",
-         "@id": "also_performed_by"
-      },
       "alternative_states": {
          "@type": "@id",
          "@id": "alternative_states"
@@ -131,6 +127,9 @@
       "base": {
          "@type": "@id",
          "@id": "base"
+      },
+      "base_iri": {
+         "@id": "base_iri"
       },
       "because": {
          "@type": "@id",
@@ -173,8 +172,9 @@
          },
          "@id": "cardinality"
       },
-      "value": {
-         "@id": "value"
+      "result": {
+         "@type": "@id",
+         "@id": "result"
       },
       "cases": {
          "@type": "@id",
@@ -223,12 +223,12 @@
          "@type": "@id",
          "@id": "field"
       },
-      "reason": {
-         "@id": "reason"
-      },
       "statements": {
          "@type": "@id",
          "@id": "statements"
+      },
+      "why": {
+         "@id": "why"
       },
       "conflicts": {
          "@type": "@id",
@@ -237,6 +237,9 @@
       "consumes": {
          "@type": "@id",
          "@id": "consumes"
+      },
+      "created": {
+         "@id": "created"
       },
       "currently": {
          "@type": "xsd:boolean",
@@ -249,9 +252,6 @@
             "meaning": "@id"
          },
          "@id": "data_role"
-      },
-      "date": {
-         "@id": "date"
       },
       "decided_by": {
          "@type": "@id",
@@ -326,6 +326,10 @@
       },
       "expression": {
          "@id": "expression"
+      },
+      "extensions": {
+         "@type": "@id",
+         "@id": "extensions"
       },
       "external": {
          "@id": "external"
@@ -415,9 +419,6 @@
          "@type": "@id",
          "@id": "linked_sources"
       },
-      "base_iri": {
-         "@id": "base_iri"
-      },
       "prefix": {
          "@id": "prefix"
       },
@@ -462,6 +463,9 @@
             "meaning": "@id"
          },
          "@id": "mode"
+      },
+      "modified": {
+         "@id": "modified"
       },
       "negated": {
          "@type": "xsd:boolean",
@@ -525,6 +529,10 @@
          },
          "@id": "progress"
       },
+      "property_value": {
+         "@type": "@id",
+         "@id": "property_value"
+      },
       "proposed_by": {
          "@type": "@id",
          "@id": "proposed_by"
@@ -551,6 +559,16 @@
          },
          "@id": "responsibility"
       },
+      "reviewed": {
+         "@id": "reviewed"
+      },
+      "date": {
+         "@id": "date"
+      },
+      "revised_by": {
+         "@type": "@id",
+         "@id": "revised_by"
+      },
       "summary": {
          "@id": "summary"
       },
@@ -562,12 +580,11 @@
          "@id": "revisions"
       },
       "role": {
-         "@context": {
-            "text": "skos:notation",
-            "description": "skos:prefLabel",
-            "meaning": "@id"
-         },
+         "@type": "@id",
          "@id": "role"
+      },
+      "schema_version": {
+         "@id": "schema_version"
       },
       "scope": {
          "@type": "@id",
@@ -588,6 +605,14 @@
       "skipped": {
          "@type": "@id",
          "@id": "skipped"
+      },
+      "reason": {
+         "@context": {
+            "text": "skos:notation",
+            "description": "skos:prefLabel",
+            "meaning": "@id"
+         },
+         "@id": "reason"
       },
       "so_that": {
          "@type": "@id",
@@ -714,6 +739,17 @@
       "unit": {
          "@id": "unit"
       },
+      "value": {
+         "@id": "value"
+      },
+      "value_role": {
+         "@context": {
+            "text": "skos:notation",
+            "description": "skos:prefLabel",
+            "meaning": "@id"
+         },
+         "@id": "value_role"
+      },
       "when_any": {
          "@type": "@id",
          "@id": "when_any"
@@ -728,6 +764,9 @@
       },
       "Action": {
          "@id": "Action"
+      },
+      "Any": {
+         "@id": "linkml:Any"
       },
       "Appoints": {
          "@id": "Appoints"
@@ -913,12 +952,7 @@
          "@id": "UsedFor"
       },
       "Value": {
-         "@id": "Value",
-         "@context": {
-            "role": {
-               "@id": "role"
-            }
-         }
+         "@id": "Value"
       },
       "WorksWith": {
          "@id": "WorksWith"

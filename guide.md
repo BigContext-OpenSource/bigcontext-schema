@@ -12,15 +12,16 @@ The schema is `bigcontext_schema.yaml` (LinkML), beside this guide. This guide e
 One YAML file, a `ContextDocument`:
 
 ```yaml
+schema_version: "0.9.4-draft"   # the version of BigContext Schema this document follows
 source: {id: <corpus id>, title: <title>, as_of: <the date the source is true as of, if it says>}
-revisions: [...]     # the source's own change history: {version, date, by, summary, evidence}
+revisions: [...]     # the source's own change history: {version, date, revised_by, summary, evidence}
 external: [...]      # ids you refer to that another section of the same source declares (see Ids)
 things: [...]        # named individuals: people, teams, units, posts, organizations, agents, systems, tables, fields, channels
 concepts: [...]      # business words and categories: customer, revenue, approved refund, Paid Search, data analyst
 statements: [...]    # one claim each; the predicate is the statement type
 procedures: [...]    # ordered steps, as instructions (do this) or descriptions (how work happens)
-conflicts: [...]     # statements that contradict each other: {statements: [ids], reason}
-unmapped: [...]      # claims BigContext Schema could not express, with what would have been needed
+conflicts: [...]     # statements that contradict each other: {statements: [ids], why}
+unmapped: [...]      # claims BigContext Schema could not express: {evidence, proposed_predicate, why}
 skipped: [...]       # text with nothing to express: headings, formatting, metadata, navigation, logs
 ```
 
@@ -83,10 +84,10 @@ Meaning
   body are `MemberOf` it, one statement each. Groups and HasValues take `complete`: true when the text says the list is
   complete, false when it says "such as", "including" or "etc."
 - `ComputedAs`: how something is calculated: `expression`, `inputs`, `values` (weights, thresholds: each with
-  `role`, `comparator`, `applies_to`), and `cases` for step-wise scoring ("over 10% gives -2 points": one case per
-  row, `{when, value}`).
+  `value_role`, `comparator`, `applies_to`), and `cases` for step-wise scoring ("over 10% gives -2 points": one case
+  per row, `{when, result}`).
 - `Sequence`: items in order: funnel | levels | derivation | lifecycle | format, optional `complete`.
-- `HasProperty`: a literal value for an attribute **that no other statement type covers**. Use
+- `HasProperty`: a literal value (`property_value`) for an attribute **that no other statement type covers**. Use
   `standard_attribute` when one fits: row_count, distinct_count, null_rate, minimum, maximum, data_type, format,
   unit, time_zone, freshness, retention, aggregation, sensitivity, response_time, location, address, headcount.
   Only otherwise name an `attribute` concept. Grain, coverage and status have their own types below.
@@ -134,7 +135,7 @@ Rules
   conditions on X, not duties on Y: a `Rule` that X `must_not` go ahead `unless` Y approves (or nominates) it; Y is
   not bound to approve anything. "Y or higher" adds `or_more_senior: true`. A vote threshold ("passing requires a
   strict majority", "at least two-thirds") is a condition with a threshold value:
-  `{value: "2/3", role: threshold, comparator: at_least, unit: "of votes cast"}`. A consequence with no one named as acting ("they are removed", "the council
+  `{value: "2/3", value_role: threshold, comparator: at_least, unit: "of votes cast"}`. A consequence with no one named as acting ("they are removed", "the council
   is dissolved", "it is moved out automatically") is a `Transition` to the new state with `automatic: true` when
   the text says it happens by itself; never invent who does it. Which source wins over another ("the finance team's formula is the one that runs"; "Snowflake is the source of truth for fiscal revenue"; "tax filings use the ledger") is a
   `Rule` to use one source, with the purpose it is for ("fiscal revenue", "tax filings") in `scope`, not `when`,
@@ -197,8 +198,8 @@ Belief, patterns, gaps and examples
   what the conclusion is about), `Influences` (`direction`).
 - `Template`: a reusable pattern (a sample query, a message or report outline) **linked to its use case**:
   `subject` the use case (an activity concept or a procedure), `text` the pattern as given, `inputs` the
-  tables, fields, metrics and joins it uses, `outputs` what it produces, `values` its placeholders (`role:
-  parameter`) and its one-off sample values (`role: example`), `when` the situation it is for. An instruction to use
+  tables, fields, metrics and joins it uses, `outputs` what it produces, `values` its placeholders (`value_role:
+  parameter`) and its one-off sample values (`value_role: example`), `when` the situation it is for. An instruction to use
   it ("Use this query for ...") is also a `Rule` (must use) with the Template's id in its action's `objects`. Use
   `Example` only for an illustration that is not meant to be reused.
 - `Gap`: something missing, unknown or future work.
@@ -215,10 +216,10 @@ to `even_if`. Dates in `valid_from`, `valid_to` and `as_of` are ISO dates: "Octo
 ways ("deleted, aggregated or de-identified") is a `Transition` with `to_state` the first and `alternative_states` the
 others. A web address is `HasProperty` with `standard_attribute: web_address`. A source's own metadata
 line ("Status: Active", "Created: 2018-12-16") goes in `source` when it gives the source's date or version: "Last
-updated", "Last reviewed" and "Created" dates in `date`, "Effective" and "as of" dates in `as_of`, a version number in
+updated" in `modified`, "Last reviewed" in `reviewed`, "Created" in `created`, "Effective" and "as of" dates in `as_of`, a version number in
 `version`. The `source` block holds no quote, so list that line in `skipped` with `reason: metadata` as well. An
 "Owner:" line is a claim: `ResponsibleFor` with `responsibility: owns` from the owner to the document (a thing with
-`thing_type: document`). An "Approved by X on DATE" line is a `revisions` entry (`by`, `date`). Other metadata lines
+`thing_type: document`). An "Approved by X on DATE" line is a `revisions` entry (`revised_by`, `date`). Other metadata lines
 are `skipped` as metadata. A step's time limit is its `within`; a period's start and length
 are `HasProperty` with `standard_attribute` start or duration.
 
@@ -313,7 +314,7 @@ statement type.
   turns over; `frequency` is how often something is true. A step can carry `due_by` and `recurrence` too.
 - **Classes and questions**: a statement about each member of a class ("nine offices, each headed by an
   Assistant Administrator") names the class and has `each: true`. An open question is a `Gap`; a statement that
-  answers it has `answers` with the Gap's id.
+  answers it lists the Gap's id in `answers`.
 - **Meetings**: who attended is `MemberOf` from the person to the meeting with `role` an attendee, regrets or
   absent concept. A renaming is `SynonymOf` with `usage: former` and `valid_to`; a reorganization is the old and
   new `PartOf`, `ReportsTo` or `Heads` with their dates, the new one `supersedes` the old.
@@ -334,11 +335,11 @@ statement type.
 likely | possible | estimated, `importance` critical | high ("VERY IMPORTANT", "the core of your
 analysis", "of particular interest"), `negated`, `currently` ("right now", "currently"), `valid_from`,
 `valid_to`, `valid_while` ("for the duration of the incident": a named period or state the statement holds through,
-such as "during the freeze" or "while Jo is on leave"; a recurring window, "during business hours", is a `when`),
-`stated_by`.
+such as "during the freeze" or "while Jo is on leave"; a recurring window, "during business hours", is a `when`;
+a list, like the other conditions), `stated_by` (a list).
 
 A threshold in a condition ("if returns rise by more than 10%", "orders over $50") is a value in the condition's
-`values` that carries its own comparison: `{value: "10", datatype: percent, role: threshold, comparator: more_than}`.
+`values` that carries its own comparison: `{value: "10", datatype: percent, value_role: threshold, comparator: more_than}`.
 `value` is the number alone; its kind goes in `datatype` (percent, number) and anything else in `unit` ("USD", "of
 votes cast"). The condition's own `comparator` is only for a data filter, with `field`. A condition on a measured amount names what it
 measures in `about`: a metric concept ("returns", "p-value", "week-over-week change in orders"), with its
@@ -347,18 +348,28 @@ incident is Sev1", "the data is late") names that state concept. A time since an
 neither. This is what lets a rule's condition be checked against data.
 
 An amount an action must reach or stay within ("keep the page up for at least 30 days", "spend no more than $500") is
-a value on the action with `role` minimum or maximum and no comparator; add `comparator` more_than or less_than only
+a value on the action with `value_role` minimum or maximum and no comparator; add `comparator` more_than or less_than only
 when the amount itself does not count ("more than 3 days", "under $500"). A data-quality expectation ("the null rate
 of EMAIL should stay at most 1%", "SKU must be unique") is a `Rule` with the strength its words give, `verb: check`,
-the table or field in `objects`, what is checked in `detail`, and its tolerance as a value with `role` minimum or
+the table or field in `objects`, what is checked in `detail`, and its tolerance as a value with `value_role` minimum or
 maximum.
+
+## Fields of your own, and the document's address
+
+`schema_version` is required: the version of BigContext Schema the document follows. A company that needs a field
+the standard does not have puts it under `extensions`, on the document or on any thing, concept, statement or
+step, with a key that starts with a prefix it owns: `extensions: {acme:priority: high}`. Readers keep extensions
+and may ignore them; they never change what the rest of the document means, so use them only for what the standard
+cannot say (and propose it as an enhancement). The source may give `base_iri`, the web address its ids are joined to
+in a knowledge graph (`https://acme.example/context/policy/`); leave it out unless the text or your organization
+gives one.
 
 ## Procedures
 
 When the text gives steps, make a `procedure`: `mode` instruction | description, optional `modality`, `goal`,
 `performer`, `trigger`, `scope`, `when`, `unless`, `because`, `so_that`, `inputs`, `outputs`, `steps`. Each step:
 `order` (1, 2, 3 within your file), `source_label` (the text's own number or letter: "3a", "4."), optional
-`modality`, `action`, `performer`, `also_performed_by`, `automatic` (a system does it), `when`, `when_any`, `unless`,
+`modality`, `action`, `performer` (a list: who does it, several when they do it together), `automatic` (a system does it), `when`, `when_any`, `unless`,
 `even_if`, `because`, `so_that`, `next`, `branches` (`{when, go_to}` or `{when, outcome}`), `calls`, `consumes`,
 `produces`, `evidence`. A step that runs a sample query has the `Template` statement's id in its action's
 `objects`. If a procedure continues from or into another section, use the same procedure id; fragments are
@@ -377,7 +388,7 @@ short. `note` is never part of the meaning; use it only to flag a choice you wer
 ## Conflicts
 
 When two statements in your section contradict each other (two formulas for one metric, two defaults that
-cannot both hold), keep both and add `{statements: [ids], reason}` to `conflicts`. When the text itself says two
+cannot both hold), keep both and add `{statements: [ids], why}` to `conflicts`. When the text itself says two
 things conflict ("this does not match the figure above"), also quote that sentence in a `Caveat` on the element they
 disagree about.
 

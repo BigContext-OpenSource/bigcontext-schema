@@ -1,3 +1,4 @@
+schema_version: "0.9.4-draft"
 source: {id: support-agent-context, title: "Online store: context for the support agent"}
 things:
   - {id: t.refunds_desk, label: Refunds desk, thing_type: team, evidence: [{quote: "The Refunds desk is part of Customer Care."}]}
@@ -35,7 +36,7 @@ statements:
     predicate: Rule
     modality: must_not
     action: {verb: other, specific_verb: issue, objects: [c.refund]}
-    when: [{description: "the refund is over $500", about: [c.refund_amount], values: [{value: "500", unit: USD, role: threshold, comparator: more_than}]}]
+    when: [{description: "the refund is over $500", about: [c.refund_amount], values: [{value: "500", unit: USD, value_role: threshold, comparator: more_than}]}]
     unless:
       - {description: "the Finance controller has approved it", about: [t.finance_controller]}
       - {description: "the customer is on the VIP list", about: [t.vip_list]}
@@ -72,7 +73,7 @@ statements:
     predicate: Rule
     modality: must_not
     action: {verb: use, objects: [t.issue_refund]}
-    when: [{description: "the order is older than 90 days", about: [c.order], values: [{value: "90", datatype: duration, unit: days, role: threshold, comparator: more_than}]}]
+    when: [{description: "the order is older than 90 days", about: [c.order], values: [{value: "90", datatype: duration, unit: days, value_role: threshold, comparator: more_than}]}]
     evidence: [{quote: "Never use issue_refund for orders older than 90 days."}]
   - {id: s.5.4, predicate: Template, subject: t.issue_refund, text: "issue_refund(order_id, amount, reason)", evidence: [{quote: "Sample call: issue_refund(order_id, amount, reason)."}]}
   # a learning an agent proposed and a person approved

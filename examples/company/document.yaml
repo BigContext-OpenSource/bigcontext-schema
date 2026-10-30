@@ -1,3 +1,4 @@
+schema_version: "0.9.4-draft"
 source: {id: acme-outdoor-who-does-what, title: "Acme Outdoor: who does what", as_of: "2026-10-01"}
 things:
   - {id: t.acme_outdoor, label: Acme Outdoor, thing_type: organization, evidence: [{quote: "The Operations department is part of Acme Outdoor."}]}
@@ -150,7 +151,7 @@ statements:
     predicate: Rule
     modality: may
     binds: [t.returns_desk]
-    action: {verb: approve, objects: [c.refund], values: [{value: "200", unit: USD, role: maximum}]}
+    action: {verb: approve, objects: [c.refund], values: [{value: "200", unit: USD, value_role: maximum}]}
     evidence: [{quote: "The Returns desk may approve refunds up to $200."}]
   - {id: s.34, predicate: HasAccess, subject: t.returns_desk, object: t.refund_tool, access: use, exclusive: true, evidence: [{quote: "Only the Returns desk may use the refund tool."}]}
 skipped:

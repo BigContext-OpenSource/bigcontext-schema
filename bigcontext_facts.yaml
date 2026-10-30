@@ -2,7 +2,7 @@
 id: https://w3id.org/bigcontext-schema/facts
 name: bigcontext_facts
 title: BigContext Schema facts (draft)
-version: 0.9.3-draft
+version: 0.9.4-draft
 description: >-
   The direct links a BigContext Schema graph projects from statements in force, and the logic a reasoner applies to
   them: which links are transitive, which are the inverse of which, and which chains of links imply another.

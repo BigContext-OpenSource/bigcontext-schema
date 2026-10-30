@@ -11,8 +11,12 @@ from this description; the free tools do it with `bigcontext-schema graph`.
 | `<base>inferred` | What an OWL 2 RL reasoner works out from the stated facts with `generated/bigcontext_facts.owl.ttl`; never mixed into the stated graph |
 | `<base>provenance` | Each fact as a reified triple with `prov:wasDerivedFrom`: a stated fact names its statements, a worked-out fact names the facts it follows from (always facts reached earlier) and `bcf:worked_out_by` says how. `<base>stated bcf:as_of` gives the date |
 
-`<base>` is the source's address, such as `https://acme.example/context/order-tracking-policy/`; element and
-statement ids are appended to it, so the sections of one source share elements and different sources never merge.
+`<base>` is the source's address: its `base_iri` when the document gives one
+(`https://acme.example/context/order-tracking-policy/`), otherwise `urn:bigcontext-schema:<source id>/`, so every
+reader of the same document builds the same graph. Element and statement ids are appended to it, so the sections of
+one source share elements and different sources never merge. A reference `prefix:id` to a linked source's element
+is appended to that source's `base_iri` instead (`linked_sources`). Documents from different sources are turned
+into graphs one source at a time, unless one address is given for all of them.
 
 ## The record graph
 
@@ -26,13 +30,34 @@ classes, so a graph whose objects have no class is checked against nothing.
 
 ## Which statements become facts
 
-A statement becomes a fact only when, on the chosen date (the one asked for, else the source's `as_of`, else
-today), it holds: its `valid_from` and `valid_to` include the date (a year or month runs to the end of that
-period; a date that cannot be read leaves the statement out), it is not negated, the text does not say it no longer holds (`currently: false`), its certainty is stated (not
-likely, possible or unknown), it is not someone's view (`held_by`), its decision status is none, decided or
-ratified, and no statement in force on the date supersedes it. A link that is conditional (`when`, `when_any`,
-`unless`, `valid_while`), scoped (`scope`) or about each member of a class (`each`) stays in the record only. A
-dotted line becomes `dotted_line_to` and a backup or delegate becomes `backs_up`; reasoning follows neither.
+**The date.** Facts are worked out for one date: the one asked for, else the latest `as_of` of the source. When
+neither is given the date is unknown and no facts are worked out; a reader never assumes today, so the same
+documents always give the same facts.
+
+**In force on the date.** A statement is in force when all of these hold:
+
+- its `valid_from` and `valid_to` include the date (a year or a month runs to the end of that period); a date that
+  cannot be read leaves the statement out;
+- it is not `negated`, and the text does not say it no longer holds (`currently: false`);
+- its `certainty` is absent or `stated` (`likely`, `possible` and `estimated` are not facts);
+- it is not someone's view (`held_by`);
+- its `decision_status` is absent, `decided` or `ratified` (a `superseded` statement that gives its `valid_to`
+  stays in force up to that day);
+- no statement in force on the date names it in `supersedes`.
+
+A statement's own `as_of` says when what it describes was observed; it does not change whether it is in force.
+`HasStatus` (canonical, variant, deprecated, retired and so on) decides which metric definition is exported to a
+semantic layer, not which statements are facts.
+
+**Links and rules.** The link statement types are PartOf, ReportsTo, Heads, MemberOf, HoldsRole, EscalatesTo,
+DerivedFrom, ImplementedBy, GovernedBy, JoinsTo, ResponsibleFor, HasAccess, Contains, IdentifiedBy, Groups,
+Influences, IsA, Definition and Mapping. A link in force becomes a fact only when it is unconditional: one with
+`when`, `when_any`, `unless`, `valid_while` or `scope`, or about each member of a class (`each`), stays in the
+record only. A Rule is not a link: its conditions stay on the rule in the record, and in force it gives the facts
+in the table below, its parties being everyone in `binds` and every element of its `scope` whose `thing_type` is a
+party (person, team, unit, post, organization, agent or access_group); other elements of a rule's scope (a purpose,
+a section) stay in the record. A dotted line becomes `dotted_line_to` and a backup or delegate becomes
+`backs_up`; reasoning follows neither. Fields under `extensions` stay in the record and never become facts.
 
 | Statement | Facts (`bcf:`) |
 |---|---|

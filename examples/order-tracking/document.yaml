@@ -1,3 +1,4 @@
+schema_version: "0.9.4-draft"
 source: {id: order-tracking-policy, title: "Order tracking policy (online store)"}
 things:
   - {id: t.fulfillment_team, label: Fulfillment team, thing_type: team, evidence: [{quote: "The Fulfillment team is part of Operations"}]}
@@ -22,7 +23,7 @@ statements:
   - id: s.2
     predicate: Rule
     modality: should
-    action: {verb: other, specific_verb: ship, objects: [c.standard], values: [{value: "2", unit: business days, role: maximum}]}
+    action: {verb: other, specific_verb: ship, objects: [c.standard], values: [{value: "2", unit: business days, value_role: maximum}]}
     frequency: usually
     unless: [{description: "the item is on backorder"}]
     evidence: [{quote: "Standard orders usually ship within two business days, unless the item is on backorder."}]

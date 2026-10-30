@@ -1,15 +1,15 @@
 {
   "sources": {
-    "bigcontext_schema.yaml": "27246fdc09780abb65329f6b5ca24caf10f00e601515918417041e999c3dd283",
-    "bigcontext_facts.yaml": "5eec5fba187a56ee78e1ca33552ed2b1deda70e5e70d851a9f8df1f48968405a"
+    "bigcontext_schema.yaml": "a8436bbfeb496028e794f55d239c9162e5ff0ab4f383a5507719c54ae3efddcb",
+    "bigcontext_facts.yaml": "e6dec699e524f3ac12922f204c3b0a435cc8b73d16963bc68d6c792697804ef8"
   },
   "generator": "linkml",
   "linkml_version": "1.12.1",
   "outputs": {
-    "generated/bigcontext_schema.schema.json": "52c0cc7677a0bb8be040e56717ecbec3a85505b9edb4100d481a0bebd0dc649d",
-    "generated/bigcontext_schema.owl.ttl": "0a4572e1f1e9221ec197d5242b452f201e42ad1300ad68db17827b88331f28d4",
-    "generated/bigcontext_schema.context.jsonld": "f91a675cdd3622b09355901b66fee8f7260cdd9b05a1a02b8e419ac475c5808f",
-    "generated/bigcontext_schema.shacl.ttl": "e55e053a342f44cb85e67f3e1ac8d23f61d250aef02d52aae0f233b5bf18b8ad",
-    "generated/bigcontext_facts.owl.ttl": "55d2b89cfff79e758e06ad12ba635e47e6e20c932078a5c919101b2c78daf22c"
+    "generated/bigcontext_schema.schema.json": "25dacac4a35a481ce86a8f9ac5a2e69d2633c1f7a426f4432053ef40ef63abe5",
+    "generated/bigcontext_schema.owl.ttl": "8d20248c1137fe74597470e6e998f074180534198e8d73230a74f68885660a16",
+    "generated/bigcontext_schema.context.jsonld": "4e2c67d2c93076f9951e851b180758fcd3e5c40ac723fd2269a27d90b4f2ba62",
+    "generated/bigcontext_schema.shacl.ttl": "5dbb14d5a6c78572577f018a1539edabbabe2f6bda41c22e249456156f1684ff",
+    "generated/bigcontext_facts.owl.ttl": "07ae309e4c5e33cb51d048e9128ba32ee73ef1cb86d40602e7e8ab1676417d33"
   }
 }

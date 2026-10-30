@@ -2,13 +2,12 @@
 id: https://w3id.org/bigcontext-schema  # permanent identifier to be registered before publishing
 name: bigcontext_schema
 title: BigContext Schema (draft)
-version: 0.9.3-draft
+version: 0.9.4-draft
 description: >-
   A small, closed set of building blocks for expressing business context taken from natural language:
   simple rules, long procedures, company structure, data and mappings. Tier 1 is the element types, tier 2 the
   statement types (predicates) whose roles come from one shared dictionary of slots, tier 3 the qualifiers
-  every statement can carry. Kinds of a particular product (such as BigContext's 52) live in that product's
-  profile, not here. Shared groups of fields any statement can carry (decision, assignment, snapshot, data
+  every statement can carry. A document can carry fields of its own under `extensions`. Shared groups of fields any statement can carry (decision, assignment, snapshot, data
   profile) cover kinds of context that recur across many statement types. A computable core (key pairs, filters,
   aggregations, metric types, time grains) lets metric and join definitions move to and from semantic-layer
   formats.
@@ -31,14 +30,22 @@ imports:
 
 # ---------------------------------------------------------------- tier 1: elements and shared structures
 classes:
+  Any:
+    class_uri: linkml:Any
+    description: Any value, for fields a company adds under extensions.
+
   ContextDocument:
     tree_root: true
     description: Everything expressed from one source document, or one section of it.
-    slots: [source, external, linked_sources, revisions, things, concepts, statements, procedures, conflicts, unmapped,
-      skipped]
+    slots: [schema_version, source, external, linked_sources, revisions, things, concepts, statements, procedures,
+      conflicts, unmapped, skipped, extensions]
 
   Source:
-    slots: [id, title, version, date, as_of, location]
+    slots: [id, title, version, created, modified, reviewed, as_of, location, base_iri]
+    slot_usage:
+      id:
+        pattern: "^[a-z0-9][a-z0-9-]*$"
+        description: The source's short name, in lower case with hyphens (order-tracking-policy).
 
   LinkedSource:
     description: Another source whose elements this document refers to as prefix:id.
@@ -64,7 +71,7 @@ classes:
 
   Element:
     abstract: true
-    slots: [id, label, evidence, note]
+    slots: [id, label, evidence, note, extensions]
 
   Thing:
     is_a: Element
@@ -88,7 +95,7 @@ classes:
       value: {required: true}
       datatype: {range: DatatypeEnum}
       unit: {}
-      role:
+      value_role:
         range: ValueRoleEnum
         description: The part this value plays (a weight, a threshold, a resulting score, a minimum).
       comparator:
@@ -107,14 +114,14 @@ classes:
       description: {required: true}
       about: {range: Element, multivalued: true}
       field: {range: Element, description: "The column the filter tests."}
-      comparator: {range: FilterComparatorEnum}
+      comparator: {range: ComparatorEnum}
       values: {range: Value, multivalued: true, inlined_as_list: true}
 
   Case:
     description: One row of a step-wise calculation (when this holds, the result is that value).
     attributes:
       when: {range: Condition, required: true, inlined: true}
-      value: {range: Value, required: true, inlined: true}
+      result: {range: Value, required: true, inlined: true, description: "The result when the condition holds."}
 
   KeyPair:
     description: One pair of columns a join matches on.
@@ -243,12 +250,12 @@ classes:
     description: >-
       An element has a literal value for an attribute that no other statement type covers. Use the data statement
       types for grain, coverage and status.
-    slots: [subject, attribute, standard_attribute, value]
+    slots: [subject, attribute, standard_attribute, property_value]
     slot_usage:
       subject: {required: true}
       attribute: {description: "A concept naming the attribute, when no standard attribute fits."}
       standard_attribute: {description: "The attribute from the fixed vocabulary (give this or attribute)."}
-      value: {required: true}
+      property_value: {required: true}
   UsedFor:
     is_a: Statement
     description: What an element is for (or, negated, not for).
@@ -566,9 +573,9 @@ classes:
       steps: {required: true}
   Step:
     description: One step of a procedure.
-    slots: [id, order, source_label, modality, action, performer, also_performed_by, or_more_senior, automatic, when,
+    slots: [id, order, source_label, modality, action, performer, or_more_senior, automatic, when,
             when_any, unless, even_if, because, so_that, within, due_by, recurrence, next, branches, calls, consumes,
-            produces, evidence, note]
+            produces, evidence, note, extensions]
     slot_usage:
       order: {required: true}
       action: {required: true}
@@ -584,21 +591,21 @@ classes:
     description: One entry of the source's own change history.
     attributes:
       version: {}
-      date: {}
-      by: {range: Element, multivalued: true}
+      date: {pattern: "^\\d{4}(-\\d{2}(-\\d{2})?)?$"}
+      revised_by: {range: Element, multivalued: true, description: "Who made or approved this revision."}
       summary: {required: true}
       evidence: {range: Evidence, multivalued: true, inlined_as_list: true, required: true}
   Conflict:
     description: Two or more statements that contradict each other, noticed while expressing the source.
     attributes:
       statements: {range: Element, multivalued: true, required: true}
-      reason: {required: true}
+      why: {required: true, description: "Why they contradict each other."}
   Unmapped:
     description: A statement BigContext Schema could not express. Kept, never dropped.
     attributes:
       evidence: {range: Evidence, multivalued: true, inlined_as_list: true, required: true}
       proposed_predicate: {required: true, description: "The statement type you would have needed."}
-      reason: {required: true}
+      why: {required: true, description: "Why no building block fits."}
   Skipped:
     description: Source text that carries no context to express (a heading, formatting, navigation).
     attributes:
@@ -607,12 +614,28 @@ classes:
 
 # ---------------------------------------------------------------- the shared slot dictionary
 slots:
-  id: {identifier: true, required: true}
+  id: {identifier: true, required: true, pattern: "^[A-Za-z][A-Za-z0-9_-]*(\\.[A-Za-z0-9_-]+)*$"}
   label: {}
   note: {description: "A remark from whoever expressed the context; never part of its meaning."}
   title: {}
   version: {}
-  date: {}
+  schema_version:
+    required: true
+    pattern: "^\\d+\\.\\d+(\\.\\d+)?(-[a-z0-9.]+)?$"
+    description: The version of BigContext Schema the document follows (1.0, or 0.9.4-draft before 1.0).
+  extensions:
+    range: Any
+    description: >-
+      Fields of your own, under keys that start with a prefix you own (acme:priority). Readers keep them and may
+      ignore them; they never change what the rest of the document means.
+  created: {pattern: "^\\d{4}(-\\d{2}(-\\d{2})?)?$", description: "When the source was first written, as an ISO date."}
+  modified: {pattern: "^\\d{4}(-\\d{2}(-\\d{2})?)?$", description: "When the source was last changed (\"Last updated\"), as an ISO date."}
+  reviewed: {pattern: "^\\d{4}(-\\d{2}(-\\d{2})?)?$", description: "When the source was last reviewed, as an ISO date."}
+  base_iri:
+    pattern: "^https?://.*[/#]$"
+    description: >-
+      The web address the source's element ids are joined to in a knowledge graph, ending in / or #. Without it the
+      address is urn:bigcontext-schema:<source id>/ (see graph.md).
   location: {}
   aliases: {multivalued: true}
   evidence: {range: Evidence, multivalued: true, inlined_as_list: true}
@@ -638,7 +661,7 @@ slots:
   progress: {range: ProgressEnum, description: "How far an action item or piece of work has got."}
   due_by: {description: "The deadline it must be done by, as the text gives it ('2026-11-30', 'the end of each fiscal quarter'); a duration goes in within."}
   recurrence: {description: "How often a duty recurs ('every month', 'each Monday'); a rotation's turnover goes in cadence, how often something is true in frequency."}
-  answers: {range: Statement, description: "The open question (a Gap) this statement answers."}
+  answers: {range: Statement, multivalued: true, description: "The open questions (Gaps) this statement answers."}
   each: {range: boolean, description: "True when the statement holds for each member of a class it names, not for the class itself ('nine offices, each headed by an Assistant Administrator')."}
   or_more_senior: {range: boolean, description: "True when the posts or roles the statement names also cover anyone more senior ('a VP or higher')."}
   capacity: {range: CapacityEnum, description: "In what capacity a role, membership or responsibility is held."}
@@ -686,7 +709,7 @@ slots:
   inputs: {range: Element, multivalued: true}
   outputs: {range: Element, multivalued: true}
   values: {range: Value, multivalued: true, inlined_as_list: true}
-  value: {range: Value, inlined: true}
+  property_value: {range: Value, inlined: true, description: "The value the element has for the attribute."}
   cases: {range: Case, multivalued: true, inlined_as_list: true}
   attribute: {range: Concept}
   expression: {}
@@ -735,14 +758,13 @@ slots:
   currently: {range: boolean, description: "True when the source says it holds now and may change ('currently', 'right now'); false when it says it no longer holds without giving dates ('former', 'emeritus', 'previously')."}
   valid_from: {description: "The first day it holds, as an ISO date: 2027-10 for 'October 2027' (a year or month means its first day).", pattern: "^\\d{4}(-\\d{2}(-\\d{2})?)?$"}
   valid_to: {description: "The last day it holds, as an ISO date: 2027-10 for 'October 2027' (a year or month means its last day).", pattern: "^\\d{4}(-\\d{2}(-\\d{2})?)?$"}
-  valid_while: {range: Condition, inlined: true, description: "Holds only while this lasts ('for the duration of the incident')."}
-  stated_by: {range: Element}
+  valid_while: {range: Condition, multivalued: true, inlined_as_list: true, description: "Holds only while these last ('for the duration of the incident')."}
+  stated_by: {range: Element, multivalued: true}
 
   # procedures
   mode: {range: ProcedureModeEnum}
   goal: {}
-  performer: {range: Element}
-  also_performed_by: {range: Element, multivalued: true, description: "Other parties who do the step together with the performer."}
+  performer: {range: Element, multivalued: true, description: "Who does it; several when they do it together."}
   automatic: {range: boolean, description: "True when it happens by itself, with no person acting (a system does the step; 'they are removed')."}
   trigger: {range: Condition, inlined: true}
   steps: {range: Step, multivalued: true, inlined_as_list: true}
@@ -800,8 +822,6 @@ enums:
                          parameter: {description: "A placeholder to fill when using a pattern."},
                          example: {description: "A one-off value used only in this sample."},
                          fixed: {description: "A constant that is part of the pattern itself (a fixed filter)."}}
-  ComparatorEnum:
-    permissible_values: {more_than: {}, at_least: {}, less_than: {}, at_most: {}, equal: {}}
   VerbEnum:
     permissible_values:
       use: {exact_mappings: ["odrl:use"]}
@@ -922,7 +942,7 @@ enums:
     permissible_values: {simple: {}, ratio: {}, derived: {}}
   AggregationEnum:
     permissible_values: {sum: {}, count: {}, count_distinct: {}, average: {}, min: {}, max: {}, median: {}, percentile: {}, sum_boolean: {}}
-  FilterComparatorEnum:
+  ComparatorEnum:
     permissible_values: {equal: {}, not_equal: {}, more_than: {}, at_least: {}, less_than: {}, at_most: {}, in: {}, not_in: {}, is_null: {}, is_not_null: {}}
   TimeGrainEnum:
     permissible_values: {second: {}, minute: {}, hour: {}, day: {}, week: {}, month: {}, quarter: {}, year: {}}

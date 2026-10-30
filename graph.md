@@ -14,6 +14,16 @@ from this description; the free tools do it with `bigcontext-schema graph`.
 `<base>` is the source's address, such as `https://acme.example/context/order-tracking-policy/`; element and
 statement ids are appended to it, so the sections of one source share elements and different sources never merge.
 
+## The record graph
+
+The record graph is the document read as JSON-LD with `generated/bigcontext_schema.context.jsonld` and `@base` set
+to `<base>`, once every object in it has its class. A statement's class is the one its `predicate` names; the
+context maps `predicate` to `@type`, so this needs no extra step. Any other object takes the class that the JSON
+Schema gives the field it sits in: a `things` entry is a `bcs:Thing`, an `action` a `bcs:Action`, a `when` entry a
+`bcs:Condition`, an `evidence` entry a `bcs:Evidence`. Each node is then also typed with the parent classes in
+`generated/bigcontext_schema.owl.ttl` (a `bcs:Rule` is a `bcs:Statement`). The SHACL shapes select nodes by these
+classes, so a graph whose objects have no class is checked against nothing.
+
 ## Which statements become facts
 
 A statement becomes a fact only when, on the chosen date (the one asked for, else the source's `as_of`, else

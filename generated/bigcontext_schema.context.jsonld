@@ -504,9 +504,7 @@
       "physical_name": {
          "@id": "physical_name"
       },
-      "predicate": {
-         "@id": "predicate"
-      },
+      "predicate": "@type",
       "primary": {
          "@type": "xsd:boolean",
          "@id": "primary"

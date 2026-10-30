@@ -14,7 +14,7 @@
 @prefix oa: <http://www.w3.org/ns/oa#> .
 @prefix pav: <http://purl.org/pav/> .
 <https://w3id.org/bigcontext-schema.owl.ttl> dcterms:title "BigContext Schema (draft)" ;
-	pav:version "0.9.0-draft" ;
+	pav:version "0.9.1-draft" ;
 	a owl:Ontology ;
 	rdfs:label "bigcontext_schema" ;
 	skos:definition "A small, closed set of building blocks for expressing business context taken from natural language: simple rules, long procedures, company structure, data and mappings. Tier 1 is the element types, tier 2 the statement types (predicates) whose roles come from one shared dictionary of slots, tier 3 the qualifiers every statement can carry. Kinds of a particular product (such as BigContext's 52) live in that product's profile, not here. Shared groups of fields any statement can carry (decision, assignment, snapshot, data profile) cover kinds of context that recur across many statement types. A computable core (key pairs, filters, aggregations, metric types, time grains) lets metric and join definitions move to and from semantic-layer formats." .

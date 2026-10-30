@@ -1,4 +1,4 @@
-schema_version: "0.9.4-draft"
+schema_version: "0.9.5-draft"
 source: {id: support-agent-context, title: "Online store: context for the support agent"}
 things:
   - {id: t.refunds_desk, label: Refunds desk, thing_type: team, evidence: [{quote: "The Refunds desk is part of Customer Care."}]}

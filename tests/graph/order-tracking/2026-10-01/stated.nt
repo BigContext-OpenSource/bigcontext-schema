@@ -1,0 +1,6 @@
+<urn:bigcontext-schema:order-tracking-policy/c.shipping_options> <https://w3id.org/bigcontext-schema/facts/has_member> <urn:bigcontext-schema:order-tracking-policy/c.express> .
+<urn:bigcontext-schema:order-tracking-policy/c.shipping_options> <https://w3id.org/bigcontext-schema/facts/has_member> <urn:bigcontext-schema:order-tracking-policy/c.standard> .
+<urn:bigcontext-schema:order-tracking-policy/s.2> <https://w3id.org/bigcontext-schema/facts/about> <urn:bigcontext-schema:order-tracking-policy/c.standard> .
+<urn:bigcontext-schema:order-tracking-policy/t.fulfillment_team> <https://w3id.org/bigcontext-schema/facts/part_of> <urn:bigcontext-schema:order-tracking-policy/t.operations> .
+<urn:bigcontext-schema:order-tracking-policy/t.fulfillment_team> <https://w3id.org/bigcontext-schema/facts/responsible> <urn:bigcontext-schema:order-tracking-policy/c.shipping> .
+<urn:bigcontext-schema:order-tracking-policy/t.support_team> <https://w3id.org/bigcontext-schema/facts/performs> <urn:bigcontext-schema:order-tracking-policy/c.delivery_question> .

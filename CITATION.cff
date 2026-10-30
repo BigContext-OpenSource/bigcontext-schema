@@ -1,0 +1,20 @@
+cff-version: 1.2.0
+message: "If you use BigContext Schema, please cite it as below."
+title: "BigContext Schema"
+abstract: >-
+  An open specification for writing down business context (rules, procedures, organizations, metric and data
+  definitions, mappings and decisions) as statements, each tied to the exact words of the source it came from.
+type: software
+authors:
+  - name: "Big Context & Company"
+version: "0.9.5-draft"
+date-released: "2026-10-30"
+license: Apache-2.0
+repository-code: "https://github.com/BigContext-OpenSource/bigcontext-schema"
+url: "https://w3id.org/bigcontext-schema"
+keywords:
+  - business context
+  - knowledge graph
+  - LinkML
+  - semantic layer
+  - AI agents

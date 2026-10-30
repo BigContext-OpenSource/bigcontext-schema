@@ -255,6 +255,8 @@
                     ]
                 },
                 "decided_on": {
+                    "description": "When it was decided, as an ISO date.",
+                    "pattern": "^\\d{4}(-\\d{2}(-\\d{2})?)?$",
                     "type": [
                         "string",
                         "null"
@@ -282,7 +284,7 @@
                     ]
                 },
                 "due_by": {
-                    "description": "The deadline it must be done by, as the text gives it ('2026-11-30', 'the end of each fiscal quarter'); a duration goes in within.",
+                    "description": "The deadline it must be done by, in the text's own words ('2026-11-30', '30 November', 'the end of each fiscal quarter', 'two weeks before launch'); a duration goes in within.",
                     "type": [
                         "string",
                         "null"
@@ -316,10 +318,15 @@
                     ]
                 },
                 "evidence": {
+                    "description": "The exact words of the source this statement came from. A statement with no source text to quote names who stated it in stated_by instead; one of the two is always given (conformance rule D10).",
                     "items": {
                         "$ref": "#/$defs/Evidence"
                     },
-                    "type": "array"
+                    "minItems": 1,
+                    "type": [
+                        "array",
+                        "null"
+                    ]
                 },
                 "exclusive": {
                     "description": "True when the source says only these (only analysts, the only channel with carts).",
@@ -469,7 +476,8 @@
                     ]
                 },
                 "ratified_on": {
-                    "description": "When it was ratified.",
+                    "description": "When it was ratified, as an ISO date.",
+                    "pattern": "^\\d{4}(-\\d{2}(-\\d{2})?)?$",
                     "type": [
                         "string",
                         "null"
@@ -573,6 +581,7 @@
                     ]
                 },
                 "via": {
+                    "description": "The channel, tool or intermediary (an escalation through #help); for a Rule it goes in its action's via.",
                     "items": {
                         "type": "string"
                     },
@@ -626,8 +635,7 @@
                 "subject",
                 "object",
                 "predicate",
-                "id",
-                "evidence"
+                "id"
             ],
             "title": "Appoints",
             "type": "object"
@@ -802,6 +810,8 @@
                     ]
                 },
                 "decided_on": {
+                    "description": "When it was decided, as an ISO date.",
+                    "pattern": "^\\d{4}(-\\d{2}(-\\d{2})?)?$",
                     "type": [
                         "string",
                         "null"
@@ -829,7 +839,7 @@
                     ]
                 },
                 "due_by": {
-                    "description": "The deadline it must be done by, as the text gives it ('2026-11-30', 'the end of each fiscal quarter'); a duration goes in within.",
+                    "description": "The deadline it must be done by, in the text's own words ('2026-11-30', '30 November', 'the end of each fiscal quarter', 'two weeks before launch'); a duration goes in within.",
                     "type": [
                         "string",
                         "null"
@@ -863,10 +873,15 @@
                     ]
                 },
                 "evidence": {
+                    "description": "The exact words of the source this statement came from. A statement with no source text to quote names who stated it in stated_by instead; one of the two is always given (conformance rule D10).",
                     "items": {
                         "$ref": "#/$defs/Evidence"
                     },
-                    "type": "array"
+                    "minItems": 1,
+                    "type": [
+                        "array",
+                        "null"
+                    ]
                 },
                 "exclusive": {
                     "description": "True when the source says only these (only analysts, the only channel with carts).",
@@ -1019,7 +1034,8 @@
                     ]
                 },
                 "ratified_on": {
-                    "description": "When it was ratified.",
+                    "description": "When it was ratified, as an ISO date.",
+                    "pattern": "^\\d{4}(-\\d{2}(-\\d{2})?)?$",
                     "type": [
                         "string",
                         "null"
@@ -1126,6 +1142,7 @@
                     ]
                 },
                 "via": {
+                    "description": "The channel, tool or intermediary (an escalation through #help); for a Rule it goes in its action's via.",
                     "items": {
                         "type": "string"
                     },
@@ -1170,8 +1187,7 @@
                 "subject",
                 "text",
                 "predicate",
-                "id",
-                "evidence"
+                "id"
             ],
             "title": "Caveat",
             "type": "object"
@@ -1328,6 +1344,8 @@
                     ]
                 },
                 "decided_on": {
+                    "description": "When it was decided, as an ISO date.",
+                    "pattern": "^\\d{4}(-\\d{2}(-\\d{2})?)?$",
                     "type": [
                         "string",
                         "null"
@@ -1368,7 +1386,7 @@
                     ]
                 },
                 "due_by": {
-                    "description": "The deadline it must be done by, as the text gives it ('2026-11-30', 'the end of each fiscal quarter'); a duration goes in within.",
+                    "description": "The deadline it must be done by, in the text's own words ('2026-11-30', '30 November', 'the end of each fiscal quarter', 'two weeks before launch'); a duration goes in within.",
                     "type": [
                         "string",
                         "null"
@@ -1402,10 +1420,15 @@
                     ]
                 },
                 "evidence": {
+                    "description": "The exact words of the source this statement came from. A statement with no source text to quote names who stated it in stated_by instead; one of the two is always given (conformance rule D10).",
                     "items": {
                         "$ref": "#/$defs/Evidence"
                     },
-                    "type": "array"
+                    "minItems": 1,
+                    "type": [
+                        "array",
+                        "null"
+                    ]
                 },
                 "exclusive": {
                     "description": "True when the source says only these (only analysts, the only channel with carts).",
@@ -1590,7 +1613,8 @@
                     ]
                 },
                 "ratified_on": {
-                    "description": "When it was ratified.",
+                    "description": "When it was ratified, as an ISO date.",
+                    "pattern": "^\\d{4}(-\\d{2}(-\\d{2})?)?$",
                     "type": [
                         "string",
                         "null"
@@ -1710,6 +1734,7 @@
                     ]
                 },
                 "via": {
+                    "description": "The channel, tool or intermediary (an escalation through #help); for a Rule it goes in its action's via.",
                     "items": {
                         "type": "string"
                     },
@@ -1754,8 +1779,7 @@
                 "subject",
                 "expression",
                 "predicate",
-                "id",
-                "evidence"
+                "id"
             ],
             "title": "ComputedAs",
             "type": "object"
@@ -1765,6 +1789,7 @@
             "description": "A business word or category the context talks about (customer, revenue, approved refund).",
             "properties": {
                 "aliases": {
+                    "description": "Other names the text gives the element where it names it (EMEA for Europe, Middle East and Africa); a sentence that claims a synonym, with its own quote, how often or for whom, is a SynonymOf statement.",
                     "items": {
                         "type": "string"
                     },
@@ -2018,6 +2043,8 @@
                     ]
                 },
                 "decided_on": {
+                    "description": "When it was decided, as an ISO date.",
+                    "pattern": "^\\d{4}(-\\d{2}(-\\d{2})?)?$",
                     "type": [
                         "string",
                         "null"
@@ -2045,7 +2072,7 @@
                     ]
                 },
                 "due_by": {
-                    "description": "The deadline it must be done by, as the text gives it ('2026-11-30', 'the end of each fiscal quarter'); a duration goes in within.",
+                    "description": "The deadline it must be done by, in the text's own words ('2026-11-30', '30 November', 'the end of each fiscal quarter', 'two weeks before launch'); a duration goes in within.",
                     "type": [
                         "string",
                         "null"
@@ -2079,10 +2106,15 @@
                     ]
                 },
                 "evidence": {
+                    "description": "The exact words of the source this statement came from. A statement with no source text to quote names who stated it in stated_by instead; one of the two is always given (conformance rule D10).",
                     "items": {
                         "$ref": "#/$defs/Evidence"
                     },
-                    "type": "array"
+                    "minItems": 1,
+                    "type": [
+                        "array",
+                        "null"
+                    ]
                 },
                 "exclusive": {
                     "description": "True when the source says only these (only analysts, the only channel with carts).",
@@ -2232,7 +2264,8 @@
                     ]
                 },
                 "ratified_on": {
-                    "description": "When it was ratified.",
+                    "description": "When it was ratified, as an ISO date.",
+                    "pattern": "^\\d{4}(-\\d{2}(-\\d{2})?)?$",
                     "type": [
                         "string",
                         "null"
@@ -2346,6 +2379,7 @@
                     ]
                 },
                 "via": {
+                    "description": "The channel, tool or intermediary (an escalation through #help); for a Rule it goes in its action's via.",
                     "items": {
                         "type": "string"
                     },
@@ -2390,8 +2424,7 @@
                 "subject",
                 "object",
                 "predicate",
-                "id",
-                "evidence"
+                "id"
             ],
             "title": "Contains",
             "type": "object"
@@ -2468,7 +2501,7 @@
                     ]
                 },
                 "schema_version": {
-                    "description": "The version of BigContext Schema the document follows (1.0, or 0.9.4-draft before 1.0).",
+                    "description": "The version of BigContext Schema the document follows (1.0, or 0.9.5-draft before 1.0).",
                     "pattern": "^\\d+\\.\\d+(\\.\\d+)?(-[a-z0-9.]+)?$",
                     "type": "string"
                 },
@@ -2757,6 +2790,8 @@
                     ]
                 },
                 "decided_on": {
+                    "description": "When it was decided, as an ISO date.",
+                    "pattern": "^\\d{4}(-\\d{2}(-\\d{2})?)?$",
                     "type": [
                         "string",
                         "null"
@@ -2784,7 +2819,7 @@
                     ]
                 },
                 "due_by": {
-                    "description": "The deadline it must be done by, as the text gives it ('2026-11-30', 'the end of each fiscal quarter'); a duration goes in within.",
+                    "description": "The deadline it must be done by, in the text's own words ('2026-11-30', '30 November', 'the end of each fiscal quarter', 'two weeks before launch'); a duration goes in within.",
                     "type": [
                         "string",
                         "null"
@@ -2818,10 +2853,15 @@
                     ]
                 },
                 "evidence": {
+                    "description": "The exact words of the source this statement came from. A statement with no source text to quote names who stated it in stated_by instead; one of the two is always given (conformance rule D10).",
                     "items": {
                         "$ref": "#/$defs/Evidence"
                     },
-                    "type": "array"
+                    "minItems": 1,
+                    "type": [
+                        "array",
+                        "null"
+                    ]
                 },
                 "exclusive": {
                     "description": "True when the source says only these (only analysts, the only channel with carts).",
@@ -2983,7 +3023,8 @@
                     ]
                 },
                 "ratified_on": {
-                    "description": "When it was ratified.",
+                    "description": "When it was ratified, as an ISO date.",
+                    "pattern": "^\\d{4}(-\\d{2}(-\\d{2})?)?$",
                     "type": [
                         "string",
                         "null"
@@ -3086,6 +3127,7 @@
                     ]
                 },
                 "via": {
+                    "description": "The channel, tool or intermediary (an escalation through #help); for a Rule it goes in its action's via.",
                     "items": {
                         "type": "string"
                     },
@@ -3129,8 +3171,7 @@
             "required": [
                 "subject",
                 "predicate",
-                "id",
-                "evidence"
+                "id"
             ],
             "title": "Covers",
             "type": "object"
@@ -3233,6 +3274,8 @@
                     ]
                 },
                 "decided_on": {
+                    "description": "When it was decided, as an ISO date.",
+                    "pattern": "^\\d{4}(-\\d{2}(-\\d{2})?)?$",
                     "type": [
                         "string",
                         "null"
@@ -3260,7 +3303,7 @@
                     ]
                 },
                 "due_by": {
-                    "description": "The deadline it must be done by, as the text gives it ('2026-11-30', 'the end of each fiscal quarter'); a duration goes in within.",
+                    "description": "The deadline it must be done by, in the text's own words ('2026-11-30', '30 November', 'the end of each fiscal quarter', 'two weeks before launch'); a duration goes in within.",
                     "type": [
                         "string",
                         "null"
@@ -3294,10 +3337,15 @@
                     ]
                 },
                 "evidence": {
+                    "description": "The exact words of the source this statement came from. A statement with no source text to quote names who stated it in stated_by instead; one of the two is always given (conformance rule D10).",
                     "items": {
                         "$ref": "#/$defs/Evidence"
                     },
-                    "type": "array"
+                    "minItems": 1,
+                    "type": [
+                        "array",
+                        "null"
+                    ]
                 },
                 "exclusive": {
                     "description": "True when the source says only these (only analysts, the only channel with carts).",
@@ -3459,7 +3507,8 @@
                     ]
                 },
                 "ratified_on": {
-                    "description": "When it was ratified.",
+                    "description": "When it was ratified, as an ISO date.",
+                    "pattern": "^\\d{4}(-\\d{2}(-\\d{2})?)?$",
                     "type": [
                         "string",
                         "null"
@@ -3569,6 +3618,7 @@
                     ]
                 },
                 "via": {
+                    "description": "The channel, tool or intermediary (an escalation through #help); for a Rule it goes in its action's via.",
                     "items": {
                         "type": "string"
                     },
@@ -3612,8 +3662,7 @@
             "required": [
                 "subject",
                 "predicate",
-                "id",
-                "evidence"
+                "id"
             ],
             "title": "CreatedBy",
             "type": "object"
@@ -3758,6 +3807,8 @@
                     ]
                 },
                 "decided_on": {
+                    "description": "When it was decided, as an ISO date.",
+                    "pattern": "^\\d{4}(-\\d{2}(-\\d{2})?)?$",
                     "type": [
                         "string",
                         "null"
@@ -3785,7 +3836,7 @@
                     ]
                 },
                 "due_by": {
-                    "description": "The deadline it must be done by, as the text gives it ('2026-11-30', 'the end of each fiscal quarter'); a duration goes in within.",
+                    "description": "The deadline it must be done by, in the text's own words ('2026-11-30', '30 November', 'the end of each fiscal quarter', 'two weeks before launch'); a duration goes in within.",
                     "type": [
                         "string",
                         "null"
@@ -3819,10 +3870,15 @@
                     ]
                 },
                 "evidence": {
+                    "description": "The exact words of the source this statement came from. A statement with no source text to quote names who stated it in stated_by instead; one of the two is always given (conformance rule D10).",
                     "items": {
                         "$ref": "#/$defs/Evidence"
                     },
-                    "type": "array"
+                    "minItems": 1,
+                    "type": [
+                        "array",
+                        "null"
+                    ]
                 },
                 "exclusive": {
                     "description": "True when the source says only these (only analysts, the only channel with carts).",
@@ -3975,7 +4031,8 @@
                     ]
                 },
                 "ratified_on": {
-                    "description": "When it was ratified.",
+                    "description": "When it was ratified, as an ISO date.",
+                    "pattern": "^\\d{4}(-\\d{2}(-\\d{2})?)?$",
                     "type": [
                         "string",
                         "null"
@@ -4083,6 +4140,7 @@
                     ]
                 },
                 "via": {
+                    "description": "The channel, tool or intermediary (an escalation through #help); for a Rule it goes in its action's via.",
                     "items": {
                         "type": "string"
                     },
@@ -4127,8 +4185,7 @@
                 "subject",
                 "text",
                 "predicate",
-                "id",
-                "evidence"
+                "id"
             ],
             "title": "Definition",
             "type": "object"
@@ -4231,6 +4288,8 @@
                     ]
                 },
                 "decided_on": {
+                    "description": "When it was decided, as an ISO date.",
+                    "pattern": "^\\d{4}(-\\d{2}(-\\d{2})?)?$",
                     "type": [
                         "string",
                         "null"
@@ -4258,7 +4317,7 @@
                     ]
                 },
                 "due_by": {
-                    "description": "The deadline it must be done by, as the text gives it ('2026-11-30', 'the end of each fiscal quarter'); a duration goes in within.",
+                    "description": "The deadline it must be done by, in the text's own words ('2026-11-30', '30 November', 'the end of each fiscal quarter', 'two weeks before launch'); a duration goes in within.",
                     "type": [
                         "string",
                         "null"
@@ -4292,10 +4351,15 @@
                     ]
                 },
                 "evidence": {
+                    "description": "The exact words of the source this statement came from. A statement with no source text to quote names who stated it in stated_by instead; one of the two is always given (conformance rule D10).",
                     "items": {
                         "$ref": "#/$defs/Evidence"
                     },
-                    "type": "array"
+                    "minItems": 1,
+                    "type": [
+                        "array",
+                        "null"
+                    ]
                 },
                 "exclusive": {
                     "description": "True when the source says only these (only analysts, the only channel with carts).",
@@ -4445,7 +4509,8 @@
                     ]
                 },
                 "ratified_on": {
-                    "description": "When it was ratified.",
+                    "description": "When it was ratified, as an ISO date.",
+                    "pattern": "^\\d{4}(-\\d{2}(-\\d{2})?)?$",
                     "type": [
                         "string",
                         "null"
@@ -4555,6 +4620,7 @@
                     ]
                 },
                 "via": {
+                    "description": "The channel, tool or intermediary (an escalation through #help); for a Rule it goes in its action's via.",
                     "items": {
                         "type": "string"
                     },
@@ -4599,8 +4665,7 @@
                 "subject",
                 "object",
                 "predicate",
-                "id",
-                "evidence"
+                "id"
             ],
             "title": "DerivedFrom",
             "type": "object"
@@ -4703,6 +4768,8 @@
                     ]
                 },
                 "decided_on": {
+                    "description": "When it was decided, as an ISO date.",
+                    "pattern": "^\\d{4}(-\\d{2}(-\\d{2})?)?$",
                     "type": [
                         "string",
                         "null"
@@ -4730,7 +4797,7 @@
                     ]
                 },
                 "due_by": {
-                    "description": "The deadline it must be done by, as the text gives it ('2026-11-30', 'the end of each fiscal quarter'); a duration goes in within.",
+                    "description": "The deadline it must be done by, in the text's own words ('2026-11-30', '30 November', 'the end of each fiscal quarter', 'two weeks before launch'); a duration goes in within.",
                     "type": [
                         "string",
                         "null"
@@ -4764,10 +4831,15 @@
                     ]
                 },
                 "evidence": {
+                    "description": "The exact words of the source this statement came from. A statement with no source text to quote names who stated it in stated_by instead; one of the two is always given (conformance rule D10).",
                     "items": {
                         "$ref": "#/$defs/Evidence"
                     },
-                    "type": "array"
+                    "minItems": 1,
+                    "type": [
+                        "array",
+                        "null"
+                    ]
                 },
                 "exclusive": {
                     "description": "True when the source says only these (only analysts, the only channel with carts).",
@@ -4917,7 +4989,8 @@
                     ]
                 },
                 "ratified_on": {
-                    "description": "When it was ratified.",
+                    "description": "When it was ratified, as an ISO date.",
+                    "pattern": "^\\d{4}(-\\d{2}(-\\d{2})?)?$",
                     "type": [
                         "string",
                         "null"
@@ -5027,6 +5100,7 @@
                     ]
                 },
                 "via": {
+                    "description": "The channel, tool or intermediary (an escalation through #help); for a Rule it goes in its action's via.",
                     "items": {
                         "type": "string"
                     },
@@ -5071,8 +5145,7 @@
                 "subject",
                 "object",
                 "predicate",
-                "id",
-                "evidence"
+                "id"
             ],
             "title": "DescribedIn",
             "type": "object"
@@ -5233,6 +5306,8 @@
                     ]
                 },
                 "decided_on": {
+                    "description": "When it was decided, as an ISO date.",
+                    "pattern": "^\\d{4}(-\\d{2}(-\\d{2})?)?$",
                     "type": [
                         "string",
                         "null"
@@ -5260,7 +5335,7 @@
                     ]
                 },
                 "due_by": {
-                    "description": "The deadline it must be done by, as the text gives it ('2026-11-30', 'the end of each fiscal quarter'); a duration goes in within.",
+                    "description": "The deadline it must be done by, in the text's own words ('2026-11-30', '30 November', 'the end of each fiscal quarter', 'two weeks before launch'); a duration goes in within.",
                     "type": [
                         "string",
                         "null"
@@ -5294,10 +5369,15 @@
                     ]
                 },
                 "evidence": {
+                    "description": "The exact words of the source this statement came from. A statement with no source text to quote names who stated it in stated_by instead; one of the two is always given (conformance rule D10).",
                     "items": {
                         "$ref": "#/$defs/Evidence"
                     },
-                    "type": "array"
+                    "minItems": 1,
+                    "type": [
+                        "array",
+                        "null"
+                    ]
                 },
                 "exclusive": {
                     "description": "True when the source says only these (only analysts, the only channel with carts).",
@@ -5446,7 +5526,8 @@
                     ]
                 },
                 "ratified_on": {
-                    "description": "When it was ratified.",
+                    "description": "When it was ratified, as an ISO date.",
+                    "pattern": "^\\d{4}(-\\d{2}(-\\d{2})?)?$",
                     "type": [
                         "string",
                         "null"
@@ -5549,6 +5630,7 @@
                     ]
                 },
                 "via": {
+                    "description": "The channel, tool or intermediary (an escalation through #help); for a Rule it goes in its action's via.",
                     "items": {
                         "type": "string"
                     },
@@ -5593,8 +5675,7 @@
                 "subject",
                 "object",
                 "predicate",
-                "id",
-                "evidence"
+                "id"
             ],
             "title": "EscalatesTo",
             "type": "object"
@@ -5604,7 +5685,8 @@
             "description": "An exact quote from the source that the element or statement came from.",
             "properties": {
                 "quote": {
-                    "description": "Copied exactly from the source text.",
+                    "description": "Copied exactly from the source text; never blank.",
+                    "pattern": "\\S",
                     "type": "string"
                 }
             },
@@ -5712,6 +5794,8 @@
                     ]
                 },
                 "decided_on": {
+                    "description": "When it was decided, as an ISO date.",
+                    "pattern": "^\\d{4}(-\\d{2}(-\\d{2})?)?$",
                     "type": [
                         "string",
                         "null"
@@ -5739,7 +5823,7 @@
                     ]
                 },
                 "due_by": {
-                    "description": "The deadline it must be done by, as the text gives it ('2026-11-30', 'the end of each fiscal quarter'); a duration goes in within.",
+                    "description": "The deadline it must be done by, in the text's own words ('2026-11-30', '30 November', 'the end of each fiscal quarter', 'two weeks before launch'); a duration goes in within.",
                     "type": [
                         "string",
                         "null"
@@ -5773,10 +5857,15 @@
                     ]
                 },
                 "evidence": {
+                    "description": "The exact words of the source this statement came from. A statement with no source text to quote names who stated it in stated_by instead; one of the two is always given (conformance rule D10).",
                     "items": {
                         "$ref": "#/$defs/Evidence"
                     },
-                    "type": "array"
+                    "minItems": 1,
+                    "type": [
+                        "array",
+                        "null"
+                    ]
                 },
                 "exclusive": {
                     "description": "True when the source says only these (only analysts, the only channel with carts).",
@@ -5922,7 +6011,8 @@
                     ]
                 },
                 "ratified_on": {
-                    "description": "When it was ratified.",
+                    "description": "When it was ratified, as an ISO date.",
+                    "pattern": "^\\d{4}(-\\d{2}(-\\d{2})?)?$",
                     "type": [
                         "string",
                         "null"
@@ -6030,6 +6120,7 @@
                     ]
                 },
                 "via": {
+                    "description": "The channel, tool or intermediary (an escalation through #help); for a Rule it goes in its action's via.",
                     "items": {
                         "type": "string"
                     },
@@ -6074,8 +6165,7 @@
                 "subject",
                 "text",
                 "predicate",
-                "id",
-                "evidence"
+                "id"
             ],
             "title": "Example",
             "type": "object"
@@ -6190,6 +6280,8 @@
                     ]
                 },
                 "decided_on": {
+                    "description": "When it was decided, as an ISO date.",
+                    "pattern": "^\\d{4}(-\\d{2}(-\\d{2})?)?$",
                     "type": [
                         "string",
                         "null"
@@ -6217,7 +6309,7 @@
                     ]
                 },
                 "due_by": {
-                    "description": "The deadline it must be done by, as the text gives it ('2026-11-30', 'the end of each fiscal quarter'); a duration goes in within.",
+                    "description": "The deadline it must be done by, in the text's own words ('2026-11-30', '30 November', 'the end of each fiscal quarter', 'two weeks before launch'); a duration goes in within.",
                     "type": [
                         "string",
                         "null"
@@ -6251,10 +6343,15 @@
                     ]
                 },
                 "evidence": {
+                    "description": "The exact words of the source this statement came from. A statement with no source text to quote names who stated it in stated_by instead; one of the two is always given (conformance rule D10).",
                     "items": {
                         "$ref": "#/$defs/Evidence"
                     },
-                    "type": "array"
+                    "minItems": 1,
+                    "type": [
+                        "array",
+                        "null"
+                    ]
                 },
                 "exclusive": {
                     "description": "True when the source says only these (only analysts, the only channel with carts).",
@@ -6400,7 +6497,8 @@
                     ]
                 },
                 "ratified_on": {
-                    "description": "When it was ratified.",
+                    "description": "When it was ratified, as an ISO date.",
+                    "pattern": "^\\d{4}(-\\d{2}(-\\d{2})?)?$",
                     "type": [
                         "string",
                         "null"
@@ -6509,6 +6607,7 @@
                     ]
                 },
                 "via": {
+                    "description": "The channel, tool or intermediary (an escalation through #help); for a Rule it goes in its action's via.",
                     "items": {
                         "type": "string"
                     },
@@ -6552,8 +6651,7 @@
             "required": [
                 "text",
                 "predicate",
-                "id",
-                "evidence"
+                "id"
             ],
             "title": "Gap",
             "type": "object"
@@ -6656,6 +6754,8 @@
                     ]
                 },
                 "decided_on": {
+                    "description": "When it was decided, as an ISO date.",
+                    "pattern": "^\\d{4}(-\\d{2}(-\\d{2})?)?$",
                     "type": [
                         "string",
                         "null"
@@ -6683,7 +6783,7 @@
                     ]
                 },
                 "due_by": {
-                    "description": "The deadline it must be done by, as the text gives it ('2026-11-30', 'the end of each fiscal quarter'); a duration goes in within.",
+                    "description": "The deadline it must be done by, in the text's own words ('2026-11-30', '30 November', 'the end of each fiscal quarter', 'two weeks before launch'); a duration goes in within.",
                     "type": [
                         "string",
                         "null"
@@ -6717,10 +6817,15 @@
                     ]
                 },
                 "evidence": {
+                    "description": "The exact words of the source this statement came from. A statement with no source text to quote names who stated it in stated_by instead; one of the two is always given (conformance rule D10).",
                     "items": {
                         "$ref": "#/$defs/Evidence"
                     },
-                    "type": "array"
+                    "minItems": 1,
+                    "type": [
+                        "array",
+                        "null"
+                    ]
                 },
                 "exclusive": {
                     "description": "True when the source says only these (only analysts, the only channel with carts).",
@@ -6870,7 +6975,8 @@
                     ]
                 },
                 "ratified_on": {
-                    "description": "When it was ratified.",
+                    "description": "When it was ratified, as an ISO date.",
+                    "pattern": "^\\d{4}(-\\d{2}(-\\d{2})?)?$",
                     "type": [
                         "string",
                         "null"
@@ -6979,6 +7085,7 @@
                     ]
                 },
                 "via": {
+                    "description": "The channel, tool or intermediary (an escalation through #help); for a Rule it goes in its action's via.",
                     "items": {
                         "type": "string"
                     },
@@ -7023,8 +7130,7 @@
                 "subject",
                 "object",
                 "predicate",
-                "id",
-                "evidence"
+                "id"
             ],
             "title": "GovernedBy",
             "type": "object"
@@ -7134,6 +7240,8 @@
                     ]
                 },
                 "decided_on": {
+                    "description": "When it was decided, as an ISO date.",
+                    "pattern": "^\\d{4}(-\\d{2}(-\\d{2})?)?$",
                     "type": [
                         "string",
                         "null"
@@ -7161,7 +7269,7 @@
                     ]
                 },
                 "due_by": {
-                    "description": "The deadline it must be done by, as the text gives it ('2026-11-30', 'the end of each fiscal quarter'); a duration goes in within.",
+                    "description": "The deadline it must be done by, in the text's own words ('2026-11-30', '30 November', 'the end of each fiscal quarter', 'two weeks before launch'); a duration goes in within.",
                     "type": [
                         "string",
                         "null"
@@ -7195,10 +7303,15 @@
                     ]
                 },
                 "evidence": {
+                    "description": "The exact words of the source this statement came from. A statement with no source text to quote names who stated it in stated_by instead; one of the two is always given (conformance rule D10).",
                     "items": {
                         "$ref": "#/$defs/Evidence"
                     },
-                    "type": "array"
+                    "minItems": 1,
+                    "type": [
+                        "array",
+                        "null"
+                    ]
                 },
                 "exclusive": {
                     "description": "True when the source says only these (only analysts, the only channel with carts).",
@@ -7350,7 +7463,8 @@
                     ]
                 },
                 "ratified_on": {
-                    "description": "When it was ratified.",
+                    "description": "When it was ratified, as an ISO date.",
+                    "pattern": "^\\d{4}(-\\d{2}(-\\d{2})?)?$",
                     "type": [
                         "string",
                         "null"
@@ -7454,6 +7568,7 @@
                     ]
                 },
                 "via": {
+                    "description": "The channel, tool or intermediary (an escalation through #help); for a Rule it goes in its action's via.",
                     "items": {
                         "type": "string"
                     },
@@ -7498,8 +7613,7 @@
                 "subject",
                 "members",
                 "predicate",
-                "id",
-                "evidence"
+                "id"
             ],
             "title": "Groups",
             "type": "object"
@@ -7613,6 +7727,8 @@
                     ]
                 },
                 "decided_on": {
+                    "description": "When it was decided, as an ISO date.",
+                    "pattern": "^\\d{4}(-\\d{2}(-\\d{2})?)?$",
                     "type": [
                         "string",
                         "null"
@@ -7640,7 +7756,7 @@
                     ]
                 },
                 "due_by": {
-                    "description": "The deadline it must be done by, as the text gives it ('2026-11-30', 'the end of each fiscal quarter'); a duration goes in within.",
+                    "description": "The deadline it must be done by, in the text's own words ('2026-11-30', '30 November', 'the end of each fiscal quarter', 'two weeks before launch'); a duration goes in within.",
                     "type": [
                         "string",
                         "null"
@@ -7674,10 +7790,15 @@
                     ]
                 },
                 "evidence": {
+                    "description": "The exact words of the source this statement came from. A statement with no source text to quote names who stated it in stated_by instead; one of the two is always given (conformance rule D10).",
                     "items": {
                         "$ref": "#/$defs/Evidence"
                     },
-                    "type": "array"
+                    "minItems": 1,
+                    "type": [
+                        "array",
+                        "null"
+                    ]
                 },
                 "exclusive": {
                     "description": "True when the source says only these (only analysts, the only channel with carts).",
@@ -7826,7 +7947,8 @@
                     ]
                 },
                 "ratified_on": {
-                    "description": "When it was ratified.",
+                    "description": "When it was ratified, as an ISO date.",
+                    "pattern": "^\\d{4}(-\\d{2}(-\\d{2})?)?$",
                     "type": [
                         "string",
                         "null"
@@ -7936,6 +8058,7 @@
                     ]
                 },
                 "via": {
+                    "description": "The channel, tool or intermediary (an escalation through #help); for a Rule it goes in its action's via.",
                     "items": {
                         "type": "string"
                     },
@@ -7980,8 +8103,7 @@
                 "subject",
                 "object",
                 "predicate",
-                "id",
-                "evidence"
+                "id"
             ],
             "title": "Has",
             "type": "object"
@@ -8087,6 +8209,8 @@
                     ]
                 },
                 "decided_on": {
+                    "description": "When it was decided, as an ISO date.",
+                    "pattern": "^\\d{4}(-\\d{2}(-\\d{2})?)?$",
                     "type": [
                         "string",
                         "null"
@@ -8114,7 +8238,7 @@
                     ]
                 },
                 "due_by": {
-                    "description": "The deadline it must be done by, as the text gives it ('2026-11-30', 'the end of each fiscal quarter'); a duration goes in within.",
+                    "description": "The deadline it must be done by, in the text's own words ('2026-11-30', '30 November', 'the end of each fiscal quarter', 'two weeks before launch'); a duration goes in within.",
                     "type": [
                         "string",
                         "null"
@@ -8148,10 +8272,15 @@
                     ]
                 },
                 "evidence": {
+                    "description": "The exact words of the source this statement came from. A statement with no source text to quote names who stated it in stated_by instead; one of the two is always given (conformance rule D10).",
                     "items": {
                         "$ref": "#/$defs/Evidence"
                     },
-                    "type": "array"
+                    "minItems": 1,
+                    "type": [
+                        "array",
+                        "null"
+                    ]
                 },
                 "exclusive": {
                     "description": "True when the source says only these (only analysts, the only channel with carts).",
@@ -8300,7 +8429,8 @@
                     ]
                 },
                 "ratified_on": {
-                    "description": "When it was ratified.",
+                    "description": "When it was ratified, as an ISO date.",
+                    "pattern": "^\\d{4}(-\\d{2}(-\\d{2})?)?$",
                     "type": [
                         "string",
                         "null"
@@ -8403,6 +8533,7 @@
                     ]
                 },
                 "via": {
+                    "description": "The channel, tool or intermediary (an escalation through #help); for a Rule it goes in its action's via.",
                     "items": {
                         "type": "string"
                     },
@@ -8448,8 +8579,7 @@
                 "object",
                 "access",
                 "predicate",
-                "id",
-                "evidence"
+                "id"
             ],
             "title": "HasAccess",
             "type": "object"
@@ -8552,6 +8682,8 @@
                     ]
                 },
                 "decided_on": {
+                    "description": "When it was decided, as an ISO date.",
+                    "pattern": "^\\d{4}(-\\d{2}(-\\d{2})?)?$",
                     "type": [
                         "string",
                         "null"
@@ -8579,7 +8711,7 @@
                     ]
                 },
                 "due_by": {
-                    "description": "The deadline it must be done by, as the text gives it ('2026-11-30', 'the end of each fiscal quarter'); a duration goes in within.",
+                    "description": "The deadline it must be done by, in the text's own words ('2026-11-30', '30 November', 'the end of each fiscal quarter', 'two weeks before launch'); a duration goes in within.",
                     "type": [
                         "string",
                         "null"
@@ -8613,10 +8745,15 @@
                     ]
                 },
                 "evidence": {
+                    "description": "The exact words of the source this statement came from. A statement with no source text to quote names who stated it in stated_by instead; one of the two is always given (conformance rule D10).",
                     "items": {
                         "$ref": "#/$defs/Evidence"
                     },
-                    "type": "array"
+                    "minItems": 1,
+                    "type": [
+                        "array",
+                        "null"
+                    ]
                 },
                 "exclusive": {
                     "description": "True when the source says only these (only analysts, the only channel with carts).",
@@ -8772,7 +8909,8 @@
                     ]
                 },
                 "ratified_on": {
-                    "description": "When it was ratified.",
+                    "description": "When it was ratified, as an ISO date.",
+                    "pattern": "^\\d{4}(-\\d{2}(-\\d{2})?)?$",
                     "type": [
                         "string",
                         "null"
@@ -8879,6 +9017,7 @@
                     ]
                 },
                 "via": {
+                    "description": "The channel, tool or intermediary (an escalation through #help); for a Rule it goes in its action's via.",
                     "items": {
                         "type": "string"
                     },
@@ -8923,8 +9062,7 @@
                 "subject",
                 "text",
                 "predicate",
-                "id",
-                "evidence"
+                "id"
             ],
             "title": "HasGrain",
             "type": "object"
@@ -9034,6 +9172,8 @@
                     ]
                 },
                 "decided_on": {
+                    "description": "When it was decided, as an ISO date.",
+                    "pattern": "^\\d{4}(-\\d{2}(-\\d{2})?)?$",
                     "type": [
                         "string",
                         "null"
@@ -9061,7 +9201,7 @@
                     ]
                 },
                 "due_by": {
-                    "description": "The deadline it must be done by, as the text gives it ('2026-11-30', 'the end of each fiscal quarter'); a duration goes in within.",
+                    "description": "The deadline it must be done by, in the text's own words ('2026-11-30', '30 November', 'the end of each fiscal quarter', 'two weeks before launch'); a duration goes in within.",
                     "type": [
                         "string",
                         "null"
@@ -9095,10 +9235,15 @@
                     ]
                 },
                 "evidence": {
+                    "description": "The exact words of the source this statement came from. A statement with no source text to quote names who stated it in stated_by instead; one of the two is always given (conformance rule D10).",
                     "items": {
                         "$ref": "#/$defs/Evidence"
                     },
-                    "type": "array"
+                    "minItems": 1,
+                    "type": [
+                        "array",
+                        "null"
+                    ]
                 },
                 "exclusive": {
                     "description": "True when the source says only these (only analysts, the only channel with carts).",
@@ -9248,7 +9393,8 @@
                     ]
                 },
                 "ratified_on": {
-                    "description": "When it was ratified.",
+                    "description": "When it was ratified, as an ISO date.",
+                    "pattern": "^\\d{4}(-\\d{2}(-\\d{2})?)?$",
                     "type": [
                         "string",
                         "null"
@@ -9362,6 +9508,7 @@
                     ]
                 },
                 "via": {
+                    "description": "The channel, tool or intermediary (an escalation through #help); for a Rule it goes in its action's via.",
                     "items": {
                         "type": "string"
                     },
@@ -9406,8 +9553,7 @@
                 "subject",
                 "property_value",
                 "predicate",
-                "id",
-                "evidence"
+                "id"
             ],
             "title": "HasProperty",
             "type": "object"
@@ -9510,6 +9656,8 @@
                     ]
                 },
                 "decided_on": {
+                    "description": "When it was decided, as an ISO date.",
+                    "pattern": "^\\d{4}(-\\d{2}(-\\d{2})?)?$",
                     "type": [
                         "string",
                         "null"
@@ -9537,7 +9685,7 @@
                     ]
                 },
                 "due_by": {
-                    "description": "The deadline it must be done by, as the text gives it ('2026-11-30', 'the end of each fiscal quarter'); a duration goes in within.",
+                    "description": "The deadline it must be done by, in the text's own words ('2026-11-30', '30 November', 'the end of each fiscal quarter', 'two weeks before launch'); a duration goes in within.",
                     "type": [
                         "string",
                         "null"
@@ -9571,10 +9719,15 @@
                     ]
                 },
                 "evidence": {
+                    "description": "The exact words of the source this statement came from. A statement with no source text to quote names who stated it in stated_by instead; one of the two is always given (conformance rule D10).",
                     "items": {
                         "$ref": "#/$defs/Evidence"
                     },
-                    "type": "array"
+                    "minItems": 1,
+                    "type": [
+                        "array",
+                        "null"
+                    ]
                 },
                 "exclusive": {
                     "description": "True when the source says only these (only analysts, the only channel with carts).",
@@ -9720,7 +9873,8 @@
                     ]
                 },
                 "ratified_on": {
-                    "description": "When it was ratified.",
+                    "description": "When it was ratified, as an ISO date.",
+                    "pattern": "^\\d{4}(-\\d{2}(-\\d{2})?)?$",
                     "type": [
                         "string",
                         "null"
@@ -9826,6 +9980,7 @@
                     ]
                 },
                 "via": {
+                    "description": "The channel, tool or intermediary (an escalation through #help); for a Rule it goes in its action's via.",
                     "items": {
                         "type": "string"
                     },
@@ -9870,8 +10025,7 @@
                 "subject",
                 "status",
                 "predicate",
-                "id",
-                "evidence"
+                "id"
             ],
             "title": "HasStatus",
             "type": "object"
@@ -9981,6 +10135,8 @@
                     ]
                 },
                 "decided_on": {
+                    "description": "When it was decided, as an ISO date.",
+                    "pattern": "^\\d{4}(-\\d{2}(-\\d{2})?)?$",
                     "type": [
                         "string",
                         "null"
@@ -10008,7 +10164,7 @@
                     ]
                 },
                 "due_by": {
-                    "description": "The deadline it must be done by, as the text gives it ('2026-11-30', 'the end of each fiscal quarter'); a duration goes in within.",
+                    "description": "The deadline it must be done by, in the text's own words ('2026-11-30', '30 November', 'the end of each fiscal quarter', 'two weeks before launch'); a duration goes in within.",
                     "type": [
                         "string",
                         "null"
@@ -10042,10 +10198,15 @@
                     ]
                 },
                 "evidence": {
+                    "description": "The exact words of the source this statement came from. A statement with no source text to quote names who stated it in stated_by instead; one of the two is always given (conformance rule D10).",
                     "items": {
                         "$ref": "#/$defs/Evidence"
                     },
-                    "type": "array"
+                    "minItems": 1,
+                    "type": [
+                        "array",
+                        "null"
+                    ]
                 },
                 "exclusive": {
                     "description": "True when the source says only these (only analysts, the only channel with carts).",
@@ -10201,7 +10362,8 @@
                     ]
                 },
                 "ratified_on": {
-                    "description": "When it was ratified.",
+                    "description": "When it was ratified, as an ISO date.",
+                    "pattern": "^\\d{4}(-\\d{2}(-\\d{2})?)?$",
                     "type": [
                         "string",
                         "null"
@@ -10314,6 +10476,7 @@
                     ]
                 },
                 "via": {
+                    "description": "The channel, tool or intermediary (an escalation through #help); for a Rule it goes in its action's via.",
                     "items": {
                         "type": "string"
                     },
@@ -10357,8 +10520,7 @@
             "required": [
                 "subject",
                 "predicate",
-                "id",
-                "evidence"
+                "id"
             ],
             "title": "HasValues",
             "type": "object"
@@ -10461,6 +10623,8 @@
                     ]
                 },
                 "decided_on": {
+                    "description": "When it was decided, as an ISO date.",
+                    "pattern": "^\\d{4}(-\\d{2}(-\\d{2})?)?$",
                     "type": [
                         "string",
                         "null"
@@ -10488,7 +10652,7 @@
                     ]
                 },
                 "due_by": {
-                    "description": "The deadline it must be done by, as the text gives it ('2026-11-30', 'the end of each fiscal quarter'); a duration goes in within.",
+                    "description": "The deadline it must be done by, in the text's own words ('2026-11-30', '30 November', 'the end of each fiscal quarter', 'two weeks before launch'); a duration goes in within.",
                     "type": [
                         "string",
                         "null"
@@ -10522,10 +10686,15 @@
                     ]
                 },
                 "evidence": {
+                    "description": "The exact words of the source this statement came from. A statement with no source text to quote names who stated it in stated_by instead; one of the two is always given (conformance rule D10).",
                     "items": {
                         "$ref": "#/$defs/Evidence"
                     },
-                    "type": "array"
+                    "minItems": 1,
+                    "type": [
+                        "array",
+                        "null"
+                    ]
                 },
                 "exclusive": {
                     "description": "True when the source says only these (only analysts, the only channel with carts).",
@@ -10675,7 +10844,8 @@
                     ]
                 },
                 "ratified_on": {
-                    "description": "When it was ratified.",
+                    "description": "When it was ratified, as an ISO date.",
+                    "pattern": "^\\d{4}(-\\d{2}(-\\d{2})?)?$",
                     "type": [
                         "string",
                         "null"
@@ -10779,6 +10949,7 @@
                     ]
                 },
                 "via": {
+                    "description": "The channel, tool or intermediary (an escalation through #help); for a Rule it goes in its action's via.",
                     "items": {
                         "type": "string"
                     },
@@ -10823,8 +10994,7 @@
                 "subject",
                 "object",
                 "predicate",
-                "id",
-                "evidence"
+                "id"
             ],
             "title": "Heads",
             "type": "object"
@@ -10927,6 +11097,8 @@
                     ]
                 },
                 "decided_on": {
+                    "description": "When it was decided, as an ISO date.",
+                    "pattern": "^\\d{4}(-\\d{2}(-\\d{2})?)?$",
                     "type": [
                         "string",
                         "null"
@@ -10954,7 +11126,7 @@
                     ]
                 },
                 "due_by": {
-                    "description": "The deadline it must be done by, as the text gives it ('2026-11-30', 'the end of each fiscal quarter'); a duration goes in within.",
+                    "description": "The deadline it must be done by, in the text's own words ('2026-11-30', '30 November', 'the end of each fiscal quarter', 'two weeks before launch'); a duration goes in within.",
                     "type": [
                         "string",
                         "null"
@@ -10988,10 +11160,15 @@
                     ]
                 },
                 "evidence": {
+                    "description": "The exact words of the source this statement came from. A statement with no source text to quote names who stated it in stated_by instead; one of the two is always given (conformance rule D10).",
                     "items": {
                         "$ref": "#/$defs/Evidence"
                     },
-                    "type": "array"
+                    "minItems": 1,
+                    "type": [
+                        "array",
+                        "null"
+                    ]
                 },
                 "exclusive": {
                     "description": "True when the source says only these (only analysts, the only channel with carts).",
@@ -11141,7 +11318,8 @@
                     ]
                 },
                 "ratified_on": {
-                    "description": "When it was ratified.",
+                    "description": "When it was ratified, as an ISO date.",
+                    "pattern": "^\\d{4}(-\\d{2}(-\\d{2})?)?$",
                     "type": [
                         "string",
                         "null"
@@ -11244,6 +11422,7 @@
                     ]
                 },
                 "via": {
+                    "description": "The channel, tool or intermediary (an escalation through #help); for a Rule it goes in its action's via.",
                     "items": {
                         "type": "string"
                     },
@@ -11288,8 +11467,7 @@
                 "subject",
                 "object",
                 "predicate",
-                "id",
-                "evidence"
+                "id"
             ],
             "title": "HoldsRole",
             "type": "object"
@@ -11392,6 +11570,8 @@
                     ]
                 },
                 "decided_on": {
+                    "description": "When it was decided, as an ISO date.",
+                    "pattern": "^\\d{4}(-\\d{2}(-\\d{2})?)?$",
                     "type": [
                         "string",
                         "null"
@@ -11419,7 +11599,7 @@
                     ]
                 },
                 "due_by": {
-                    "description": "The deadline it must be done by, as the text gives it ('2026-11-30', 'the end of each fiscal quarter'); a duration goes in within.",
+                    "description": "The deadline it must be done by, in the text's own words ('2026-11-30', '30 November', 'the end of each fiscal quarter', 'two weeks before launch'); a duration goes in within.",
                     "type": [
                         "string",
                         "null"
@@ -11453,10 +11633,15 @@
                     ]
                 },
                 "evidence": {
+                    "description": "The exact words of the source this statement came from. A statement with no source text to quote names who stated it in stated_by instead; one of the two is always given (conformance rule D10).",
                     "items": {
                         "$ref": "#/$defs/Evidence"
                     },
-                    "type": "array"
+                    "minItems": 1,
+                    "type": [
+                        "array",
+                        "null"
+                    ]
                 },
                 "exclusive": {
                     "description": "True when the source says only these (only analysts, the only channel with carts).",
@@ -11609,7 +11794,8 @@
                     ]
                 },
                 "ratified_on": {
-                    "description": "When it was ratified.",
+                    "description": "When it was ratified, as an ISO date.",
+                    "pattern": "^\\d{4}(-\\d{2}(-\\d{2})?)?$",
                     "type": [
                         "string",
                         "null"
@@ -11712,6 +11898,7 @@
                     ]
                 },
                 "via": {
+                    "description": "The channel, tool or intermediary (an escalation through #help); for a Rule it goes in its action's via.",
                     "items": {
                         "type": "string"
                     },
@@ -11756,8 +11943,7 @@
                 "subject",
                 "members",
                 "predicate",
-                "id",
-                "evidence"
+                "id"
             ],
             "title": "IdentifiedBy",
             "type": "object"
@@ -11860,6 +12046,8 @@
                     ]
                 },
                 "decided_on": {
+                    "description": "When it was decided, as an ISO date.",
+                    "pattern": "^\\d{4}(-\\d{2}(-\\d{2})?)?$",
                     "type": [
                         "string",
                         "null"
@@ -11887,7 +12075,7 @@
                     ]
                 },
                 "due_by": {
-                    "description": "The deadline it must be done by, as the text gives it ('2026-11-30', 'the end of each fiscal quarter'); a duration goes in within.",
+                    "description": "The deadline it must be done by, in the text's own words ('2026-11-30', '30 November', 'the end of each fiscal quarter', 'two weeks before launch'); a duration goes in within.",
                     "type": [
                         "string",
                         "null"
@@ -11921,10 +12109,15 @@
                     ]
                 },
                 "evidence": {
+                    "description": "The exact words of the source this statement came from. A statement with no source text to quote names who stated it in stated_by instead; one of the two is always given (conformance rule D10).",
                     "items": {
                         "$ref": "#/$defs/Evidence"
                     },
-                    "type": "array"
+                    "minItems": 1,
+                    "type": [
+                        "array",
+                        "null"
+                    ]
                 },
                 "exclusive": {
                     "description": "True when the source says only these (only analysts, the only channel with carts).",
@@ -12088,7 +12281,8 @@
                     ]
                 },
                 "ratified_on": {
-                    "description": "When it was ratified.",
+                    "description": "When it was ratified, as an ISO date.",
+                    "pattern": "^\\d{4}(-\\d{2}(-\\d{2})?)?$",
                     "type": [
                         "string",
                         "null"
@@ -12192,6 +12386,7 @@
                     ]
                 },
                 "via": {
+                    "description": "The channel, tool or intermediary (an escalation through #help); for a Rule it goes in its action's via.",
                     "items": {
                         "type": "string"
                     },
@@ -12236,8 +12431,7 @@
                 "subject",
                 "object",
                 "predicate",
-                "id",
-                "evidence"
+                "id"
             ],
             "title": "ImplementedBy",
             "type": "object"
@@ -12349,6 +12543,8 @@
                     ]
                 },
                 "decided_on": {
+                    "description": "When it was decided, as an ISO date.",
+                    "pattern": "^\\d{4}(-\\d{2}(-\\d{2})?)?$",
                     "type": [
                         "string",
                         "null"
@@ -12376,7 +12572,7 @@
                     ]
                 },
                 "due_by": {
-                    "description": "The deadline it must be done by, as the text gives it ('2026-11-30', 'the end of each fiscal quarter'); a duration goes in within.",
+                    "description": "The deadline it must be done by, in the text's own words ('2026-11-30', '30 November', 'the end of each fiscal quarter', 'two weeks before launch'); a duration goes in within.",
                     "type": [
                         "string",
                         "null"
@@ -12410,10 +12606,15 @@
                     ]
                 },
                 "evidence": {
+                    "description": "The exact words of the source this statement came from. A statement with no source text to quote names who stated it in stated_by instead; one of the two is always given (conformance rule D10).",
                     "items": {
                         "$ref": "#/$defs/Evidence"
                     },
-                    "type": "array"
+                    "minItems": 1,
+                    "type": [
+                        "array",
+                        "null"
+                    ]
                 },
                 "exclusive": {
                     "description": "True when the source says only these (only analysts, the only channel with carts).",
@@ -12559,7 +12760,8 @@
                     ]
                 },
                 "ratified_on": {
-                    "description": "When it was ratified.",
+                    "description": "When it was ratified, as an ISO date.",
+                    "pattern": "^\\d{4}(-\\d{2}(-\\d{2})?)?$",
                     "type": [
                         "string",
                         "null"
@@ -12678,6 +12880,7 @@
                     ]
                 },
                 "via": {
+                    "description": "The channel, tool or intermediary (an escalation through #help); for a Rule it goes in its action's via.",
                     "items": {
                         "type": "string"
                     },
@@ -12721,8 +12924,7 @@
             "required": [
                 "text",
                 "predicate",
-                "id",
-                "evidence"
+                "id"
             ],
             "title": "Indicates",
             "type": "object"
@@ -12825,6 +13027,8 @@
                     ]
                 },
                 "decided_on": {
+                    "description": "When it was decided, as an ISO date.",
+                    "pattern": "^\\d{4}(-\\d{2}(-\\d{2})?)?$",
                     "type": [
                         "string",
                         "null"
@@ -12862,7 +13066,7 @@
                     ]
                 },
                 "due_by": {
-                    "description": "The deadline it must be done by, as the text gives it ('2026-11-30', 'the end of each fiscal quarter'); a duration goes in within.",
+                    "description": "The deadline it must be done by, in the text's own words ('2026-11-30', '30 November', 'the end of each fiscal quarter', 'two weeks before launch'); a duration goes in within.",
                     "type": [
                         "string",
                         "null"
@@ -12896,10 +13100,15 @@
                     ]
                 },
                 "evidence": {
+                    "description": "The exact words of the source this statement came from. A statement with no source text to quote names who stated it in stated_by instead; one of the two is always given (conformance rule D10).",
                     "items": {
                         "$ref": "#/$defs/Evidence"
                     },
-                    "type": "array"
+                    "minItems": 1,
+                    "type": [
+                        "array",
+                        "null"
+                    ]
                 },
                 "exclusive": {
                     "description": "True when the source says only these (only analysts, the only channel with carts).",
@@ -13049,7 +13258,8 @@
                     ]
                 },
                 "ratified_on": {
-                    "description": "When it was ratified.",
+                    "description": "When it was ratified, as an ISO date.",
+                    "pattern": "^\\d{4}(-\\d{2}(-\\d{2})?)?$",
                     "type": [
                         "string",
                         "null"
@@ -13159,6 +13369,7 @@
                     ]
                 },
                 "via": {
+                    "description": "The channel, tool or intermediary (an escalation through #help); for a Rule it goes in its action's via.",
                     "items": {
                         "type": "string"
                     },
@@ -13203,8 +13414,7 @@
                 "subject",
                 "object",
                 "predicate",
-                "id",
-                "evidence"
+                "id"
             ],
             "title": "Influences",
             "type": "object"
@@ -13307,6 +13517,8 @@
                     ]
                 },
                 "decided_on": {
+                    "description": "When it was decided, as an ISO date.",
+                    "pattern": "^\\d{4}(-\\d{2}(-\\d{2})?)?$",
                     "type": [
                         "string",
                         "null"
@@ -13334,7 +13546,7 @@
                     ]
                 },
                 "due_by": {
-                    "description": "The deadline it must be done by, as the text gives it ('2026-11-30', 'the end of each fiscal quarter'); a duration goes in within.",
+                    "description": "The deadline it must be done by, in the text's own words ('2026-11-30', '30 November', 'the end of each fiscal quarter', 'two weeks before launch'); a duration goes in within.",
                     "type": [
                         "string",
                         "null"
@@ -13368,10 +13580,15 @@
                     ]
                 },
                 "evidence": {
+                    "description": "The exact words of the source this statement came from. A statement with no source text to quote names who stated it in stated_by instead; one of the two is always given (conformance rule D10).",
                     "items": {
                         "$ref": "#/$defs/Evidence"
                     },
-                    "type": "array"
+                    "minItems": 1,
+                    "type": [
+                        "array",
+                        "null"
+                    ]
                 },
                 "exclusive": {
                     "description": "True when the source says only these (only analysts, the only channel with carts).",
@@ -13521,7 +13738,8 @@
                     ]
                 },
                 "ratified_on": {
-                    "description": "When it was ratified.",
+                    "description": "When it was ratified, as an ISO date.",
+                    "pattern": "^\\d{4}(-\\d{2}(-\\d{2})?)?$",
                     "type": [
                         "string",
                         "null"
@@ -13624,6 +13842,7 @@
                     ]
                 },
                 "via": {
+                    "description": "The channel, tool or intermediary (an escalation through #help); for a Rule it goes in its action's via.",
                     "items": {
                         "type": "string"
                     },
@@ -13668,8 +13887,7 @@
                 "subject",
                 "object",
                 "predicate",
-                "id",
-                "evidence"
+                "id"
             ],
             "title": "IsA",
             "type": "object"
@@ -13791,6 +14009,8 @@
                     ]
                 },
                 "decided_on": {
+                    "description": "When it was decided, as an ISO date.",
+                    "pattern": "^\\d{4}(-\\d{2}(-\\d{2})?)?$",
                     "type": [
                         "string",
                         "null"
@@ -13824,7 +14044,7 @@
                     ]
                 },
                 "due_by": {
-                    "description": "The deadline it must be done by, as the text gives it ('2026-11-30', 'the end of each fiscal quarter'); a duration goes in within.",
+                    "description": "The deadline it must be done by, in the text's own words ('2026-11-30', '30 November', 'the end of each fiscal quarter', 'two weeks before launch'); a duration goes in within.",
                     "type": [
                         "string",
                         "null"
@@ -13858,10 +14078,15 @@
                     ]
                 },
                 "evidence": {
+                    "description": "The exact words of the source this statement came from. A statement with no source text to quote names who stated it in stated_by instead; one of the two is always given (conformance rule D10).",
                     "items": {
                         "$ref": "#/$defs/Evidence"
                     },
-                    "type": "array"
+                    "minItems": 1,
+                    "type": [
+                        "array",
+                        "null"
+                    ]
                 },
                 "exclusive": {
                     "description": "True when the source says only these (only analysts, the only channel with carts).",
@@ -14039,7 +14264,8 @@
                     ]
                 },
                 "ratified_on": {
-                    "description": "When it was ratified.",
+                    "description": "When it was ratified, as an ISO date.",
+                    "pattern": "^\\d{4}(-\\d{2}(-\\d{2})?)?$",
                     "type": [
                         "string",
                         "null"
@@ -14142,6 +14368,7 @@
                     ]
                 },
                 "via": {
+                    "description": "The channel, tool or intermediary (an escalation through #help); for a Rule it goes in its action's via.",
                     "items": {
                         "type": "string"
                     },
@@ -14186,8 +14413,7 @@
                 "subject",
                 "object",
                 "predicate",
-                "id",
-                "evidence"
+                "id"
             ],
             "title": "JoinsTo",
             "type": "object"
@@ -14345,6 +14571,8 @@
                     ]
                 },
                 "decided_on": {
+                    "description": "When it was decided, as an ISO date.",
+                    "pattern": "^\\d{4}(-\\d{2}(-\\d{2})?)?$",
                     "type": [
                         "string",
                         "null"
@@ -14372,7 +14600,7 @@
                     ]
                 },
                 "due_by": {
-                    "description": "The deadline it must be done by, as the text gives it ('2026-11-30', 'the end of each fiscal quarter'); a duration goes in within.",
+                    "description": "The deadline it must be done by, in the text's own words ('2026-11-30', '30 November', 'the end of each fiscal quarter', 'two weeks before launch'); a duration goes in within.",
                     "type": [
                         "string",
                         "null"
@@ -14406,10 +14634,15 @@
                     ]
                 },
                 "evidence": {
+                    "description": "The exact words of the source this statement came from. A statement with no source text to quote names who stated it in stated_by instead; one of the two is always given (conformance rule D10).",
                     "items": {
                         "$ref": "#/$defs/Evidence"
                     },
-                    "type": "array"
+                    "minItems": 1,
+                    "type": [
+                        "array",
+                        "null"
+                    ]
                 },
                 "exclusive": {
                     "description": "True when the source says only these (only analysts, the only channel with carts).",
@@ -14567,7 +14800,8 @@
                     ]
                 },
                 "ratified_on": {
-                    "description": "When it was ratified.",
+                    "description": "When it was ratified, as an ISO date.",
+                    "pattern": "^\\d{4}(-\\d{2}(-\\d{2})?)?$",
                     "type": [
                         "string",
                         "null"
@@ -14670,6 +14904,7 @@
                     ]
                 },
                 "via": {
+                    "description": "The channel, tool or intermediary (an escalation through #help); for a Rule it goes in its action's via.",
                     "items": {
                         "type": "string"
                     },
@@ -14715,8 +14950,7 @@
                 "object",
                 "match",
                 "predicate",
-                "id",
-                "evidence"
+                "id"
             ],
             "title": "Mapping",
             "type": "object"
@@ -14831,6 +15065,8 @@
                     ]
                 },
                 "decided_on": {
+                    "description": "When it was decided, as an ISO date.",
+                    "pattern": "^\\d{4}(-\\d{2}(-\\d{2})?)?$",
                     "type": [
                         "string",
                         "null"
@@ -14858,7 +15094,7 @@
                     ]
                 },
                 "due_by": {
-                    "description": "The deadline it must be done by, as the text gives it ('2026-11-30', 'the end of each fiscal quarter'); a duration goes in within.",
+                    "description": "The deadline it must be done by, in the text's own words ('2026-11-30', '30 November', 'the end of each fiscal quarter', 'two weeks before launch'); a duration goes in within.",
                     "type": [
                         "string",
                         "null"
@@ -14892,10 +15128,15 @@
                     ]
                 },
                 "evidence": {
+                    "description": "The exact words of the source this statement came from. A statement with no source text to quote names who stated it in stated_by instead; one of the two is always given (conformance rule D10).",
                     "items": {
                         "$ref": "#/$defs/Evidence"
                     },
-                    "type": "array"
+                    "minItems": 1,
+                    "type": [
+                        "array",
+                        "null"
+                    ]
                 },
                 "exclusive": {
                     "description": "True when the source says only these (only analysts, the only channel with carts).",
@@ -15045,7 +15286,8 @@
                     ]
                 },
                 "ratified_on": {
-                    "description": "When it was ratified.",
+                    "description": "When it was ratified, as an ISO date.",
+                    "pattern": "^\\d{4}(-\\d{2}(-\\d{2})?)?$",
                     "type": [
                         "string",
                         "null"
@@ -15154,6 +15396,7 @@
                     ]
                 },
                 "via": {
+                    "description": "The channel, tool or intermediary (an escalation through #help); for a Rule it goes in its action's via.",
                     "items": {
                         "type": "string"
                     },
@@ -15198,8 +15441,7 @@
                 "subject",
                 "object",
                 "predicate",
-                "id",
-                "evidence"
+                "id"
             ],
             "title": "MemberOf",
             "type": "object"
@@ -15343,6 +15585,8 @@
                     ]
                 },
                 "decided_on": {
+                    "description": "When it was decided, as an ISO date.",
+                    "pattern": "^\\d{4}(-\\d{2}(-\\d{2})?)?$",
                     "type": [
                         "string",
                         "null"
@@ -15370,7 +15614,7 @@
                     ]
                 },
                 "due_by": {
-                    "description": "The deadline it must be done by, as the text gives it ('2026-11-30', 'the end of each fiscal quarter'); a duration goes in within.",
+                    "description": "The deadline it must be done by, in the text's own words ('2026-11-30', '30 November', 'the end of each fiscal quarter', 'two weeks before launch'); a duration goes in within.",
                     "type": [
                         "string",
                         "null"
@@ -15404,10 +15648,15 @@
                     ]
                 },
                 "evidence": {
+                    "description": "The exact words of the source this statement came from. A statement with no source text to quote names who stated it in stated_by instead; one of the two is always given (conformance rule D10).",
                     "items": {
                         "$ref": "#/$defs/Evidence"
                     },
-                    "type": "array"
+                    "minItems": 1,
+                    "type": [
+                        "array",
+                        "null"
+                    ]
                 },
                 "exclusive": {
                     "description": "True when the source says only these (only analysts, the only channel with carts).",
@@ -15557,7 +15806,8 @@
                     ]
                 },
                 "ratified_on": {
-                    "description": "When it was ratified.",
+                    "description": "When it was ratified, as an ISO date.",
+                    "pattern": "^\\d{4}(-\\d{2}(-\\d{2})?)?$",
                     "type": [
                         "string",
                         "null"
@@ -15661,6 +15911,7 @@
                     ]
                 },
                 "via": {
+                    "description": "The channel, tool or intermediary (an escalation through #help); for a Rule it goes in its action's via.",
                     "items": {
                         "type": "string"
                     },
@@ -15705,8 +15956,7 @@
                 "subject",
                 "object",
                 "predicate",
-                "id",
-                "evidence"
+                "id"
             ],
             "title": "PartOf",
             "type": "object"
@@ -15820,6 +16070,15 @@
                     "description": "The purpose the source gives ('in order to', 'so that').",
                     "items": {
                         "$ref": "#/$defs/Condition"
+                    },
+                    "type": [
+                        "array",
+                        "null"
+                    ]
+                },
+                "stated_by": {
+                    "items": {
+                        "type": "string"
                     },
                     "type": [
                         "array",
@@ -15993,6 +16252,8 @@
                     ]
                 },
                 "decided_on": {
+                    "description": "When it was decided, as an ISO date.",
+                    "pattern": "^\\d{4}(-\\d{2}(-\\d{2})?)?$",
                     "type": [
                         "string",
                         "null"
@@ -16027,7 +16288,7 @@
                     ]
                 },
                 "due_by": {
-                    "description": "The deadline it must be done by, as the text gives it ('2026-11-30', 'the end of each fiscal quarter'); a duration goes in within.",
+                    "description": "The deadline it must be done by, in the text's own words ('2026-11-30', '30 November', 'the end of each fiscal quarter', 'two weeks before launch'); a duration goes in within.",
                     "type": [
                         "string",
                         "null"
@@ -16061,10 +16322,15 @@
                     ]
                 },
                 "evidence": {
+                    "description": "The exact words of the source this statement came from. A statement with no source text to quote names who stated it in stated_by instead; one of the two is always given (conformance rule D10).",
                     "items": {
                         "$ref": "#/$defs/Evidence"
                     },
-                    "type": "array"
+                    "minItems": 1,
+                    "type": [
+                        "array",
+                        "null"
+                    ]
                 },
                 "exclusive": {
                     "description": "True when the source says only these (only analysts, the only channel with carts).",
@@ -16214,7 +16480,8 @@
                     ]
                 },
                 "ratified_on": {
-                    "description": "When it was ratified.",
+                    "description": "When it was ratified, as an ISO date.",
+                    "pattern": "^\\d{4}(-\\d{2}(-\\d{2})?)?$",
                     "type": [
                         "string",
                         "null"
@@ -16318,6 +16585,7 @@
                     ]
                 },
                 "via": {
+                    "description": "The channel, tool or intermediary (an escalation through #help); for a Rule it goes in its action's via.",
                     "items": {
                         "type": "string"
                     },
@@ -16362,8 +16630,7 @@
                 "subject",
                 "object",
                 "predicate",
-                "id",
-                "evidence"
+                "id"
             ],
             "title": "ReportsTo",
             "type": "object"
@@ -16476,6 +16743,8 @@
                     ]
                 },
                 "decided_on": {
+                    "description": "When it was decided, as an ISO date.",
+                    "pattern": "^\\d{4}(-\\d{2}(-\\d{2})?)?$",
                     "type": [
                         "string",
                         "null"
@@ -16503,7 +16772,7 @@
                     ]
                 },
                 "due_by": {
-                    "description": "The deadline it must be done by, as the text gives it ('2026-11-30', 'the end of each fiscal quarter'); a duration goes in within.",
+                    "description": "The deadline it must be done by, in the text's own words ('2026-11-30', '30 November', 'the end of each fiscal quarter', 'two weeks before launch'); a duration goes in within.",
                     "type": [
                         "string",
                         "null"
@@ -16537,10 +16806,15 @@
                     ]
                 },
                 "evidence": {
+                    "description": "The exact words of the source this statement came from. A statement with no source text to quote names who stated it in stated_by instead; one of the two is always given (conformance rule D10).",
                     "items": {
                         "$ref": "#/$defs/Evidence"
                     },
-                    "type": "array"
+                    "minItems": 1,
+                    "type": [
+                        "array",
+                        "null"
+                    ]
                 },
                 "exclusive": {
                     "description": "True when the source says only these (only analysts, the only channel with carts).",
@@ -16690,7 +16964,8 @@
                     ]
                 },
                 "ratified_on": {
-                    "description": "When it was ratified.",
+                    "description": "When it was ratified, as an ISO date.",
+                    "pattern": "^\\d{4}(-\\d{2}(-\\d{2})?)?$",
                     "type": [
                         "string",
                         "null"
@@ -16794,6 +17069,7 @@
                     ]
                 },
                 "via": {
+                    "description": "The channel, tool or intermediary (an escalation through #help); for a Rule it goes in its action's via.",
                     "items": {
                         "type": "string"
                     },
@@ -16838,8 +17114,7 @@
                 "subject",
                 "object",
                 "predicate",
-                "id",
-                "evidence"
+                "id"
             ],
             "title": "Represents",
             "type": "object"
@@ -16971,6 +17246,8 @@
                     ]
                 },
                 "decided_on": {
+                    "description": "When it was decided, as an ISO date.",
+                    "pattern": "^\\d{4}(-\\d{2}(-\\d{2})?)?$",
                     "type": [
                         "string",
                         "null"
@@ -16998,7 +17275,7 @@
                     ]
                 },
                 "due_by": {
-                    "description": "The deadline it must be done by, as the text gives it ('2026-11-30', 'the end of each fiscal quarter'); a duration goes in within.",
+                    "description": "The deadline it must be done by, in the text's own words ('2026-11-30', '30 November', 'the end of each fiscal quarter', 'two weeks before launch'); a duration goes in within.",
                     "type": [
                         "string",
                         "null"
@@ -17032,10 +17309,15 @@
                     ]
                 },
                 "evidence": {
+                    "description": "The exact words of the source this statement came from. A statement with no source text to quote names who stated it in stated_by instead; one of the two is always given (conformance rule D10).",
                     "items": {
                         "$ref": "#/$defs/Evidence"
                     },
-                    "type": "array"
+                    "minItems": 1,
+                    "type": [
+                        "array",
+                        "null"
+                    ]
                 },
                 "exclusive": {
                     "description": "True when the source says only these (only analysts, the only channel with carts).",
@@ -17187,7 +17469,8 @@
                     ]
                 },
                 "ratified_on": {
-                    "description": "When it was ratified.",
+                    "description": "When it was ratified, as an ISO date.",
+                    "pattern": "^\\d{4}(-\\d{2}(-\\d{2})?)?$",
                     "type": [
                         "string",
                         "null"
@@ -17301,6 +17584,7 @@
                     ]
                 },
                 "via": {
+                    "description": "The channel, tool or intermediary (an escalation through #help); for a Rule it goes in its action's via.",
                     "items": {
                         "type": "string"
                     },
@@ -17345,8 +17629,7 @@
                 "subject",
                 "responsibility",
                 "predicate",
-                "id",
-                "evidence"
+                "id"
             ],
             "title": "ResponsibleFor",
             "type": "object"
@@ -17366,6 +17649,7 @@
                     "items": {
                         "$ref": "#/$defs/Evidence"
                     },
+                    "minItems": 1,
                     "type": "array"
                 },
                 "revised_by": {
@@ -17513,6 +17797,8 @@
                     ]
                 },
                 "decided_on": {
+                    "description": "When it was decided, as an ISO date.",
+                    "pattern": "^\\d{4}(-\\d{2}(-\\d{2})?)?$",
                     "type": [
                         "string",
                         "null"
@@ -17540,7 +17826,7 @@
                     ]
                 },
                 "due_by": {
-                    "description": "The deadline it must be done by, as the text gives it ('2026-11-30', 'the end of each fiscal quarter'); a duration goes in within.",
+                    "description": "The deadline it must be done by, in the text's own words ('2026-11-30', '30 November', 'the end of each fiscal quarter', 'two weeks before launch'); a duration goes in within.",
                     "type": [
                         "string",
                         "null"
@@ -17574,10 +17860,15 @@
                     ]
                 },
                 "evidence": {
+                    "description": "The exact words of the source this statement came from. A statement with no source text to quote names who stated it in stated_by instead; one of the two is always given (conformance rule D10).",
                     "items": {
                         "$ref": "#/$defs/Evidence"
                     },
-                    "type": "array"
+                    "minItems": 1,
+                    "type": [
+                        "array",
+                        "null"
+                    ]
                 },
                 "exclusive": {
                     "description": "True when the source says only these (only analysts, the only channel with carts).",
@@ -17736,7 +18027,8 @@
                     ]
                 },
                 "ratified_on": {
-                    "description": "When it was ratified.",
+                    "description": "When it was ratified, as an ISO date.",
+                    "pattern": "^\\d{4}(-\\d{2}(-\\d{2})?)?$",
                     "type": [
                         "string",
                         "null"
@@ -17836,6 +18128,7 @@
                     ]
                 },
                 "via": {
+                    "description": "The channel, tool or intermediary (an escalation through #help); for a Rule it goes in its action's via.",
                     "items": {
                         "type": "string"
                     },
@@ -17880,8 +18173,7 @@
                 "modality",
                 "action",
                 "predicate",
-                "id",
-                "evidence"
+                "id"
             ],
             "title": "Rule",
             "type": "object"
@@ -17991,6 +18283,8 @@
                     ]
                 },
                 "decided_on": {
+                    "description": "When it was decided, as an ISO date.",
+                    "pattern": "^\\d{4}(-\\d{2}(-\\d{2})?)?$",
                     "type": [
                         "string",
                         "null"
@@ -18018,7 +18312,7 @@
                     ]
                 },
                 "due_by": {
-                    "description": "The deadline it must be done by, as the text gives it ('2026-11-30', 'the end of each fiscal quarter'); a duration goes in within.",
+                    "description": "The deadline it must be done by, in the text's own words ('2026-11-30', '30 November', 'the end of each fiscal quarter', 'two weeks before launch'); a duration goes in within.",
                     "type": [
                         "string",
                         "null"
@@ -18052,10 +18346,15 @@
                     ]
                 },
                 "evidence": {
+                    "description": "The exact words of the source this statement came from. A statement with no source text to quote names who stated it in stated_by instead; one of the two is always given (conformance rule D10).",
                     "items": {
                         "$ref": "#/$defs/Evidence"
                     },
-                    "type": "array"
+                    "minItems": 1,
+                    "type": [
+                        "array",
+                        "null"
+                    ]
                 },
                 "exclusive": {
                     "description": "True when the source says only these (only analysts, the only channel with carts).",
@@ -18218,7 +18517,8 @@
                     ]
                 },
                 "ratified_on": {
-                    "description": "When it was ratified.",
+                    "description": "When it was ratified, as an ISO date.",
+                    "pattern": "^\\d{4}(-\\d{2}(-\\d{2})?)?$",
                     "type": [
                         "string",
                         "null"
@@ -18325,6 +18625,7 @@
                     ]
                 },
                 "via": {
+                    "description": "The channel, tool or intermediary (an escalation through #help); for a Rule it goes in its action's via.",
                     "items": {
                         "type": "string"
                     },
@@ -18368,8 +18669,7 @@
             "required": [
                 "members",
                 "predicate",
-                "id",
-                "evidence"
+                "id"
             ],
             "title": "RuleSet",
             "type": "object"
@@ -18479,6 +18779,8 @@
                     ]
                 },
                 "decided_on": {
+                    "description": "When it was decided, as an ISO date.",
+                    "pattern": "^\\d{4}(-\\d{2}(-\\d{2})?)?$",
                     "type": [
                         "string",
                         "null"
@@ -18506,7 +18808,7 @@
                     ]
                 },
                 "due_by": {
-                    "description": "The deadline it must be done by, as the text gives it ('2026-11-30', 'the end of each fiscal quarter'); a duration goes in within.",
+                    "description": "The deadline it must be done by, in the text's own words ('2026-11-30', '30 November', 'the end of each fiscal quarter', 'two weeks before launch'); a duration goes in within.",
                     "type": [
                         "string",
                         "null"
@@ -18540,10 +18842,15 @@
                     ]
                 },
                 "evidence": {
+                    "description": "The exact words of the source this statement came from. A statement with no source text to quote names who stated it in stated_by instead; one of the two is always given (conformance rule D10).",
                     "items": {
                         "$ref": "#/$defs/Evidence"
                     },
-                    "type": "array"
+                    "minItems": 1,
+                    "type": [
+                        "array",
+                        "null"
+                    ]
                 },
                 "exclusive": {
                     "description": "True when the source says only these (only analysts, the only channel with carts).",
@@ -18695,7 +19002,8 @@
                     ]
                 },
                 "ratified_on": {
-                    "description": "When it was ratified.",
+                    "description": "When it was ratified, as an ISO date.",
+                    "pattern": "^\\d{4}(-\\d{2}(-\\d{2})?)?$",
                     "type": [
                         "string",
                         "null"
@@ -18804,6 +19112,7 @@
                     ]
                 },
                 "via": {
+                    "description": "The channel, tool or intermediary (an escalation through #help); for a Rule it goes in its action's via.",
                     "items": {
                         "type": "string"
                     },
@@ -18848,8 +19157,7 @@
                 "items",
                 "sequence_type",
                 "predicate",
-                "id",
-                "evidence"
+                "id"
             ],
             "title": "Sequence",
             "type": "object"
@@ -18971,6 +19279,8 @@
                     ]
                 },
                 "decided_on": {
+                    "description": "When it was decided, as an ISO date.",
+                    "pattern": "^\\d{4}(-\\d{2}(-\\d{2})?)?$",
                     "type": [
                         "string",
                         "null"
@@ -18998,7 +19308,7 @@
                     ]
                 },
                 "due_by": {
-                    "description": "The deadline it must be done by, as the text gives it ('2026-11-30', 'the end of each fiscal quarter'); a duration goes in within.",
+                    "description": "The deadline it must be done by, in the text's own words ('2026-11-30', '30 November', 'the end of each fiscal quarter', 'two weeks before launch'); a duration goes in within.",
                     "type": [
                         "string",
                         "null"
@@ -19032,10 +19342,15 @@
                     ]
                 },
                 "evidence": {
+                    "description": "The exact words of the source this statement came from. A statement with no source text to quote names who stated it in stated_by instead; one of the two is always given (conformance rule D10).",
                     "items": {
                         "$ref": "#/$defs/Evidence"
                     },
-                    "type": "array"
+                    "minItems": 1,
+                    "type": [
+                        "array",
+                        "null"
+                    ]
                 },
                 "exclusive": {
                     "description": "True when the source says only these (only analysts, the only channel with carts).",
@@ -19188,7 +19503,8 @@
                     ]
                 },
                 "ratified_on": {
-                    "description": "When it was ratified.",
+                    "description": "When it was ratified, as an ISO date.",
+                    "pattern": "^\\d{4}(-\\d{2}(-\\d{2})?)?$",
                     "type": [
                         "string",
                         "null"
@@ -19291,6 +19607,7 @@
                     ]
                 },
                 "via": {
+                    "description": "The channel, tool or intermediary (an escalation through #help); for a Rule it goes in its action's via.",
                     "items": {
                         "type": "string"
                     },
@@ -19335,8 +19652,7 @@
                 "subject",
                 "members",
                 "predicate",
-                "id",
-                "evidence"
+                "id"
             ],
             "title": "Serves",
             "type": "object"
@@ -19361,6 +19677,7 @@
                     "items": {
                         "$ref": "#/$defs/Evidence"
                     },
+                    "minItems": 1,
                     "type": "array"
                 },
                 "reason": {
@@ -19573,6 +19890,8 @@
                     ]
                 },
                 "decided_on": {
+                    "description": "When it was decided, as an ISO date.",
+                    "pattern": "^\\d{4}(-\\d{2}(-\\d{2})?)?$",
                     "type": [
                         "string",
                         "null"
@@ -19600,7 +19919,7 @@
                     ]
                 },
                 "due_by": {
-                    "description": "The deadline it must be done by, as the text gives it ('2026-11-30', 'the end of each fiscal quarter'); a duration goes in within.",
+                    "description": "The deadline it must be done by, in the text's own words ('2026-11-30', '30 November', 'the end of each fiscal quarter', 'two weeks before launch'); a duration goes in within.",
                     "type": [
                         "string",
                         "null"
@@ -19634,10 +19953,15 @@
                     ]
                 },
                 "evidence": {
+                    "description": "The exact words of the source this statement came from. A statement with no source text to quote names who stated it in stated_by instead; one of the two is always given (conformance rule D10).",
                     "items": {
                         "$ref": "#/$defs/Evidence"
                     },
-                    "type": "array"
+                    "minItems": 1,
+                    "type": [
+                        "array",
+                        "null"
+                    ]
                 },
                 "exclusive": {
                     "description": "True when the source says only these (only analysts, the only channel with carts).",
@@ -19783,7 +20107,8 @@
                     ]
                 },
                 "ratified_on": {
-                    "description": "When it was ratified.",
+                    "description": "When it was ratified, as an ISO date.",
+                    "pattern": "^\\d{4}(-\\d{2}(-\\d{2})?)?$",
                     "type": [
                         "string",
                         "null"
@@ -19883,6 +20208,7 @@
                     ]
                 },
                 "via": {
+                    "description": "The channel, tool or intermediary (an escalation through #help); for a Rule it goes in its action's via.",
                     "items": {
                         "type": "string"
                     },
@@ -19925,8 +20251,7 @@
             },
             "required": [
                 "predicate",
-                "id",
-                "evidence"
+                "id"
             ],
             "title": "Statement",
             "type": "object"
@@ -19993,7 +20318,7 @@
                     ]
                 },
                 "due_by": {
-                    "description": "The deadline it must be done by, as the text gives it ('2026-11-30', 'the end of each fiscal quarter'); a duration goes in within.",
+                    "description": "The deadline it must be done by, in the text's own words ('2026-11-30', '30 November', 'the end of each fiscal quarter', 'two weeks before launch'); a duration goes in within.",
                     "type": [
                         "string",
                         "null"
@@ -20010,10 +20335,15 @@
                     ]
                 },
                 "evidence": {
+                    "description": "The exact words of the source; a step of a procedure with stated_by and no source text may leave it out.",
                     "items": {
                         "$ref": "#/$defs/Evidence"
                     },
-                    "type": "array"
+                    "minItems": 1,
+                    "type": [
+                        "array",
+                        "null"
+                    ]
                 },
                 "extensions": {
                     "anyOf": [
@@ -20155,8 +20485,7 @@
             "required": [
                 "id",
                 "order",
-                "action",
-                "evidence"
+                "action"
             ],
             "title": "Step",
             "type": "object"
@@ -20259,6 +20588,8 @@
                     ]
                 },
                 "decided_on": {
+                    "description": "When it was decided, as an ISO date.",
+                    "pattern": "^\\d{4}(-\\d{2}(-\\d{2})?)?$",
                     "type": [
                         "string",
                         "null"
@@ -20286,7 +20617,7 @@
                     ]
                 },
                 "due_by": {
-                    "description": "The deadline it must be done by, as the text gives it ('2026-11-30', 'the end of each fiscal quarter'); a duration goes in within.",
+                    "description": "The deadline it must be done by, in the text's own words ('2026-11-30', '30 November', 'the end of each fiscal quarter', 'two weeks before launch'); a duration goes in within.",
                     "type": [
                         "string",
                         "null"
@@ -20320,10 +20651,15 @@
                     ]
                 },
                 "evidence": {
+                    "description": "The exact words of the source this statement came from. A statement with no source text to quote names who stated it in stated_by instead; one of the two is always given (conformance rule D10).",
                     "items": {
                         "$ref": "#/$defs/Evidence"
                     },
-                    "type": "array"
+                    "minItems": 1,
+                    "type": [
+                        "array",
+                        "null"
+                    ]
                 },
                 "exclusive": {
                     "description": "True when the source says only these (only analysts, the only channel with carts).",
@@ -20469,7 +20805,8 @@
                     ]
                 },
                 "ratified_on": {
-                    "description": "When it was ratified.",
+                    "description": "When it was ratified, as an ISO date.",
+                    "pattern": "^\\d{4}(-\\d{2}(-\\d{2})?)?$",
                     "type": [
                         "string",
                         "null"
@@ -20587,6 +20924,7 @@
                     ]
                 },
                 "via": {
+                    "description": "The channel, tool or intermediary (an escalation through #help); for a Rule it goes in its action's via.",
                     "items": {
                         "type": "string"
                     },
@@ -20631,8 +20969,7 @@
                 "term",
                 "subject",
                 "predicate",
-                "id",
-                "evidence"
+                "id"
             ],
             "title": "SynonymOf",
             "type": "object"
@@ -20746,6 +21083,8 @@
                     ]
                 },
                 "decided_on": {
+                    "description": "When it was decided, as an ISO date.",
+                    "pattern": "^\\d{4}(-\\d{2}(-\\d{2})?)?$",
                     "type": [
                         "string",
                         "null"
@@ -20773,7 +21112,7 @@
                     ]
                 },
                 "due_by": {
-                    "description": "The deadline it must be done by, as the text gives it ('2026-11-30', 'the end of each fiscal quarter'); a duration goes in within.",
+                    "description": "The deadline it must be done by, in the text's own words ('2026-11-30', '30 November', 'the end of each fiscal quarter', 'two weeks before launch'); a duration goes in within.",
                     "type": [
                         "string",
                         "null"
@@ -20807,10 +21146,15 @@
                     ]
                 },
                 "evidence": {
+                    "description": "The exact words of the source this statement came from. A statement with no source text to quote names who stated it in stated_by instead; one of the two is always given (conformance rule D10).",
                     "items": {
                         "$ref": "#/$defs/Evidence"
                     },
-                    "type": "array"
+                    "minItems": 1,
+                    "type": [
+                        "array",
+                        "null"
+                    ]
                 },
                 "exclusive": {
                     "description": "True when the source says only these (only analysts, the only channel with carts).",
@@ -20976,7 +21320,8 @@
                     ]
                 },
                 "ratified_on": {
-                    "description": "When it was ratified.",
+                    "description": "When it was ratified, as an ISO date.",
+                    "pattern": "^\\d{4}(-\\d{2}(-\\d{2})?)?$",
                     "type": [
                         "string",
                         "null"
@@ -21093,6 +21438,7 @@
                     ]
                 },
                 "via": {
+                    "description": "The channel, tool or intermediary (an escalation through #help); for a Rule it goes in its action's via.",
                     "items": {
                         "type": "string"
                     },
@@ -21137,8 +21483,7 @@
                 "subject",
                 "text",
                 "predicate",
-                "id",
-                "evidence"
+                "id"
             ],
             "title": "Template",
             "type": "object"
@@ -21148,6 +21493,7 @@
             "description": "A named individual the context talks about (a person, a team, a post, a table, a system).",
             "properties": {
                 "aliases": {
+                    "description": "Other names the text gives the element where it names it (EMEA for Europe, Middle East and Africa); a sentence that claims a synonym, with its own quote, how often or for whom, is a SynonymOf statement.",
                     "items": {
                         "type": "string"
                     },
@@ -21359,6 +21705,8 @@
                     ]
                 },
                 "decided_on": {
+                    "description": "When it was decided, as an ISO date.",
+                    "pattern": "^\\d{4}(-\\d{2}(-\\d{2})?)?$",
                     "type": [
                         "string",
                         "null"
@@ -21386,7 +21734,7 @@
                     ]
                 },
                 "due_by": {
-                    "description": "The deadline it must be done by, as the text gives it ('2026-11-30', 'the end of each fiscal quarter'); a duration goes in within.",
+                    "description": "The deadline it must be done by, in the text's own words ('2026-11-30', '30 November', 'the end of each fiscal quarter', 'two weeks before launch'); a duration goes in within.",
                     "type": [
                         "string",
                         "null"
@@ -21420,10 +21768,15 @@
                     ]
                 },
                 "evidence": {
+                    "description": "The exact words of the source this statement came from. A statement with no source text to quote names who stated it in stated_by instead; one of the two is always given (conformance rule D10).",
                     "items": {
                         "$ref": "#/$defs/Evidence"
                     },
-                    "type": "array"
+                    "minItems": 1,
+                    "type": [
+                        "array",
+                        "null"
+                    ]
                 },
                 "exclusive": {
                     "description": "True when the source says only these (only analysts, the only channel with carts).",
@@ -21585,7 +21938,8 @@
                     ]
                 },
                 "ratified_on": {
-                    "description": "When it was ratified.",
+                    "description": "When it was ratified, as an ISO date.",
+                    "pattern": "^\\d{4}(-\\d{2}(-\\d{2})?)?$",
                     "type": [
                         "string",
                         "null"
@@ -21692,6 +22046,7 @@
                     ]
                 },
                 "via": {
+                    "description": "The channel, tool or intermediary (an escalation through #help); for a Rule it goes in its action's via.",
                     "items": {
                         "type": "string"
                     },
@@ -21736,8 +22091,7 @@
                 "subject",
                 "to_state",
                 "predicate",
-                "id",
-                "evidence"
+                "id"
             ],
             "title": "Transition",
             "type": "object"
@@ -21843,6 +22197,8 @@
                     ]
                 },
                 "decided_on": {
+                    "description": "When it was decided, as an ISO date.",
+                    "pattern": "^\\d{4}(-\\d{2}(-\\d{2})?)?$",
                     "type": [
                         "string",
                         "null"
@@ -21870,7 +22226,7 @@
                     ]
                 },
                 "due_by": {
-                    "description": "The deadline it must be done by, as the text gives it ('2026-11-30', 'the end of each fiscal quarter'); a duration goes in within.",
+                    "description": "The deadline it must be done by, in the text's own words ('2026-11-30', '30 November', 'the end of each fiscal quarter', 'two weeks before launch'); a duration goes in within.",
                     "type": [
                         "string",
                         "null"
@@ -21904,10 +22260,15 @@
                     ]
                 },
                 "evidence": {
+                    "description": "The exact words of the source this statement came from. A statement with no source text to quote names who stated it in stated_by instead; one of the two is always given (conformance rule D10).",
                     "items": {
                         "$ref": "#/$defs/Evidence"
                     },
-                    "type": "array"
+                    "minItems": 1,
+                    "type": [
+                        "array",
+                        "null"
+                    ]
                 },
                 "exclusive": {
                     "description": "True when the source says only these (only analysts, the only channel with carts).",
@@ -22053,7 +22414,8 @@
                     ]
                 },
                 "ratified_on": {
-                    "description": "When it was ratified.",
+                    "description": "When it was ratified, as an ISO date.",
+                    "pattern": "^\\d{4}(-\\d{2}(-\\d{2})?)?$",
                     "type": [
                         "string",
                         "null"
@@ -22157,6 +22519,7 @@
                     ]
                 },
                 "via": {
+                    "description": "The channel, tool or intermediary (an escalation through #help); for a Rule it goes in its action's via.",
                     "items": {
                         "type": "string"
                     },
@@ -22201,8 +22564,7 @@
                 "subject",
                 "action",
                 "predicate",
-                "id",
-                "evidence"
+                "id"
             ],
             "title": "Triggers",
             "type": "object"
@@ -22215,6 +22577,7 @@
                     "items": {
                         "$ref": "#/$defs/Evidence"
                     },
+                    "minItems": 1,
                     "type": "array"
                 },
                 "proposed_predicate": {
@@ -22332,6 +22695,8 @@
                     ]
                 },
                 "decided_on": {
+                    "description": "When it was decided, as an ISO date.",
+                    "pattern": "^\\d{4}(-\\d{2}(-\\d{2})?)?$",
                     "type": [
                         "string",
                         "null"
@@ -22359,7 +22724,7 @@
                     ]
                 },
                 "due_by": {
-                    "description": "The deadline it must be done by, as the text gives it ('2026-11-30', 'the end of each fiscal quarter'); a duration goes in within.",
+                    "description": "The deadline it must be done by, in the text's own words ('2026-11-30', '30 November', 'the end of each fiscal quarter', 'two weeks before launch'); a duration goes in within.",
                     "type": [
                         "string",
                         "null"
@@ -22393,10 +22758,15 @@
                     ]
                 },
                 "evidence": {
+                    "description": "The exact words of the source this statement came from. A statement with no source text to quote names who stated it in stated_by instead; one of the two is always given (conformance rule D10).",
                     "items": {
                         "$ref": "#/$defs/Evidence"
                     },
-                    "type": "array"
+                    "minItems": 1,
+                    "type": [
+                        "array",
+                        "null"
+                    ]
                 },
                 "exclusive": {
                     "description": "True when the source says only these (only analysts, the only channel with carts).",
@@ -22549,7 +22919,8 @@
                     ]
                 },
                 "ratified_on": {
-                    "description": "When it was ratified.",
+                    "description": "When it was ratified, as an ISO date.",
+                    "pattern": "^\\d{4}(-\\d{2}(-\\d{2})?)?$",
                     "type": [
                         "string",
                         "null"
@@ -22656,6 +23027,7 @@
                     ]
                 },
                 "via": {
+                    "description": "The channel, tool or intermediary (an escalation through #help); for a Rule it goes in its action's via.",
                     "items": {
                         "type": "string"
                     },
@@ -22700,8 +23072,7 @@
                 "subject",
                 "text",
                 "predicate",
-                "id",
-                "evidence"
+                "id"
             ],
             "title": "UsedFor",
             "type": "object"
@@ -22931,6 +23302,8 @@
                     ]
                 },
                 "decided_on": {
+                    "description": "When it was decided, as an ISO date.",
+                    "pattern": "^\\d{4}(-\\d{2}(-\\d{2})?)?$",
                     "type": [
                         "string",
                         "null"
@@ -22958,7 +23331,7 @@
                     ]
                 },
                 "due_by": {
-                    "description": "The deadline it must be done by, as the text gives it ('2026-11-30', 'the end of each fiscal quarter'); a duration goes in within.",
+                    "description": "The deadline it must be done by, in the text's own words ('2026-11-30', '30 November', 'the end of each fiscal quarter', 'two weeks before launch'); a duration goes in within.",
                     "type": [
                         "string",
                         "null"
@@ -22992,10 +23365,15 @@
                     ]
                 },
                 "evidence": {
+                    "description": "The exact words of the source this statement came from. A statement with no source text to quote names who stated it in stated_by instead; one of the two is always given (conformance rule D10).",
                     "items": {
                         "$ref": "#/$defs/Evidence"
                     },
-                    "type": "array"
+                    "minItems": 1,
+                    "type": [
+                        "array",
+                        "null"
+                    ]
                 },
                 "exclusive": {
                     "description": "True when the source says only these (only analysts, the only channel with carts).",
@@ -23144,7 +23522,8 @@
                     ]
                 },
                 "ratified_on": {
-                    "description": "When it was ratified.",
+                    "description": "When it was ratified, as an ISO date.",
+                    "pattern": "^\\d{4}(-\\d{2}(-\\d{2})?)?$",
                     "type": [
                         "string",
                         "null"
@@ -23254,6 +23633,7 @@
                     ]
                 },
                 "via": {
+                    "description": "The channel, tool or intermediary (an escalation through #help); for a Rule it goes in its action's via.",
                     "items": {
                         "type": "string"
                     },
@@ -23298,8 +23678,7 @@
                 "subject",
                 "object",
                 "predicate",
-                "id",
-                "evidence"
+                "id"
             ],
             "title": "WorksWith",
             "type": "object"
@@ -23379,7 +23758,7 @@
             ]
         },
         "schema_version": {
-            "description": "The version of BigContext Schema the document follows (1.0, or 0.9.4-draft before 1.0).",
+            "description": "The version of BigContext Schema the document follows (1.0, or 0.9.5-draft before 1.0).",
             "pattern": "^\\d+\\.\\d+(\\.\\d+)?(-[a-z0-9.]+)?$",
             "type": "string"
         },
@@ -23562,6 +23941,6 @@
     ],
     "title": "bigcontext_schema",
     "type": "object",
-    "version": "0.9.4-draft"
+    "version": "0.9.5-draft"
 }
 

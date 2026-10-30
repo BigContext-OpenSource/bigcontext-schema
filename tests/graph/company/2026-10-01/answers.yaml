@@ -1,0 +1,114 @@
+document: examples/company/document.yaml
+as_of: '2026-10-01'
+address: urn:bigcontext-schema:acme-outdoor-who-does-what/
+answers:
+  reports_to_chain:
+    t.sam_ito:
+    - t.coo
+    - t.leo_park
+    - t.operations_head
+    t.priya_nair: []
+    t.fulfillment_team: []
+  units_of_member:
+    t.sam_ito:
+    - t.acme_outdoor
+    - t.fulfillment_team
+    - t.operations
+    - t.returns_desk
+    t.analytics_team: []
+  members_of_unit:
+    t.operations:
+    - t.priya_nair
+    - t.sam_ito
+    t.fulfillment_team:
+    - t.priya_nair
+    - t.sam_ito
+  heads_of_unit:
+    t.fulfillment_team:
+    - t.ana_ruiz
+    - t.fulfillment_head
+  who_answers_for:
+    t.customers.email:
+    - - t.data_team
+      - answers_for
+    t.customer_360:
+    - - t.data_team
+      - answers_for
+    - - t.data_team
+      - owns
+    - - t.priya_nair
+      - advises
+    t.customers:
+    - - t.data_team
+      - answers_for
+  escalation_path:
+    t.returns_desk:
+    - t.fulfillment_head
+    - t.operations_head
+  rules_that_apply:
+    t.sam_ito:
+    - s.28
+    - s.29
+    - s.30
+    - s.33
+    t.priya_nair:
+    - s.28
+    - s.29
+    - s.30
+  overrides:
+    s.30:
+    - s.29
+  who_may_use:
+    t.refund_tool:
+    - - t.returns_desk
+      - can_use
+  table_columns:
+    t.orders:
+    - - t.orders.amount
+      - has_column
+    - - t.orders.customer_id
+      - has_column
+    - - t.orders.customer_id
+      - key_column
+    - - t.orders.order_date
+      - has_column
+    - - t.orders.order_date
+      - time_column
+    - - t.orders.order_id
+      - has_column
+    - - t.orders.order_id
+      - key_column
+    - - t.orders.status
+      - has_column
+  joins_of_table:
+    t.orders:
+    - t.customers
+    - t.refunds
+  lineage:
+    t.orders:
+    - t.raw_orders
+    - t.shop_database
+  metric_depends_on:
+    c.net_revenue:
+    - c.refund_amount
+    - c.revenue
+    - t.orders
+    - t.orders.amount
+    - t.orders.status
+    - t.refunds
+    - t.refunds.refund_amount
+    c.order_count:
+    - t.orders
+    - t.orders.order_id
+  metrics_fed_by:
+    t.orders.amount:
+    - c.average_order_value
+    - c.net_revenue
+    - c.revenue
+    t.refunds.refund_amount:
+    - c.net_revenue
+    - c.refund_amount
+  drivers_of:
+    c.order_count:
+    - - c.website_traffic
+      - increases

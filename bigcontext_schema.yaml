@@ -2,7 +2,7 @@
 id: https://w3id.org/bigcontext-schema  # permanent identifier to be registered before publishing
 name: bigcontext_schema
 title: BigContext Schema (draft)
-version: 0.9.4-draft
+version: 0.9.5-draft
 description: >-
   A small, closed set of building blocks for expressing business context taken from natural language:
   simple rules, long procedures, company structure, data and mappings. Tier 1 is the element types, tier 2 the
@@ -66,8 +66,9 @@ classes:
     attributes:
       quote:
         required: true
+        pattern: "\\S"
         exact_mappings: ["oa:exact"]
-        description: Copied exactly from the source text.
+        description: Copied exactly from the source text; never blank.
 
   Element:
     abstract: true
@@ -188,7 +189,11 @@ classes:
             answers, each, or_more_senior, automatic,
             capacity, acting_for, line, share, cadence]
     slot_usage:
-      evidence: {required: true}
+      evidence:
+        minimum_cardinality: 1
+        description: >-
+          The exact words of the source this statement came from. A statement with no source text to quote names who
+          stated it in stated_by instead; one of the two is always given (conformance rule D10).
 
   # meaning
   Definition:
@@ -566,7 +571,8 @@ classes:
   Procedure:
     is_a: Element
     description: An ordered set of steps, written as instructions or as a description of how work happens.
-    slots: [mode, modality, goal, performer, trigger, scope, when, unless, because, so_that, inputs, outputs, steps]
+    slots: [mode, modality, goal, performer, trigger, scope, when, unless, because, so_that, inputs, outputs, steps,
+            stated_by]
     slot_usage:
       label: {required: true}
       mode: {required: true}
@@ -579,7 +585,9 @@ classes:
     slot_usage:
       order: {required: true}
       action: {required: true}
-      evidence: {required: true}
+      evidence:
+        minimum_cardinality: 1
+        description: The exact words of the source; a step of a procedure with stated_by and no source text may leave it out.
   Branch:
     attributes:
       when: {range: Condition, required: true, inlined: true}
@@ -594,7 +602,7 @@ classes:
       date: {pattern: "^\\d{4}(-\\d{2}(-\\d{2})?)?$"}
       revised_by: {range: Element, multivalued: true, description: "Who made or approved this revision."}
       summary: {required: true}
-      evidence: {range: Evidence, multivalued: true, inlined_as_list: true, required: true}
+      evidence: {range: Evidence, multivalued: true, inlined_as_list: true, required: true, minimum_cardinality: 1}
   Conflict:
     description: Two or more statements that contradict each other, noticed while expressing the source.
     attributes:
@@ -603,13 +611,13 @@ classes:
   Unmapped:
     description: A statement BigContext Schema could not express. Kept, never dropped.
     attributes:
-      evidence: {range: Evidence, multivalued: true, inlined_as_list: true, required: true}
+      evidence: {range: Evidence, multivalued: true, inlined_as_list: true, required: true, minimum_cardinality: 1}
       proposed_predicate: {required: true, description: "The statement type you would have needed."}
       why: {required: true, description: "Why no building block fits."}
   Skipped:
     description: Source text that carries no context to express (a heading, formatting, navigation).
     attributes:
-      evidence: {range: Evidence, multivalued: true, inlined_as_list: true, required: true}
+      evidence: {range: Evidence, multivalued: true, inlined_as_list: true, required: true, minimum_cardinality: 1}
       reason: {range: SkipReasonEnum, required: true}
 
 # ---------------------------------------------------------------- the shared slot dictionary
@@ -622,7 +630,7 @@ slots:
   schema_version:
     required: true
     pattern: "^\\d+\\.\\d+(\\.\\d+)?(-[a-z0-9.]+)?$"
-    description: The version of BigContext Schema the document follows (1.0, or 0.9.4-draft before 1.0).
+    description: The version of BigContext Schema the document follows (1.0, or 0.9.5-draft before 1.0).
   extensions:
     range: Any
     description: >-
@@ -637,7 +645,7 @@ slots:
       The web address the source's element ids are joined to in a knowledge graph, ending in / or #. Without it the
       address is urn:bigcontext-schema:<source id>/ (see graph.md).
   location: {}
-  aliases: {multivalued: true}
+  aliases: {multivalued: true, description: "Other names the text gives the element where it names it (EMEA for Europe, Middle East and Africa); a sentence that claims a synonym, with its own quote, how often or for whom, is a SynonymOf statement."}
   evidence: {range: Evidence, multivalued: true, inlined_as_list: true}
   source: {range: Source, inlined: true, required: true}
   revisions: {range: Revision, multivalued: true, inlined_as_list: true}
@@ -648,10 +656,10 @@ slots:
   held_by: {range: Element, multivalued: true, description: "Whose preference, view or wish this is."}
   proposed_by: {range: Element, multivalued: true}
   decided_by: {range: Element, multivalued: true}
-  decided_on: {}
+  decided_on: {pattern: "^\\d{4}(-\\d{2}(-\\d{2})?)?$", description: "When it was decided, as an ISO date."}
   decided_in: {range: Element, description: "Where it was decided or recorded (a meeting, a channel, a ticket, a document)."}
   ratified_by: {range: Element, multivalued: true}
-  ratified_on: {description: "When it was ratified."}
+  ratified_on: {pattern: "^\\d{4}(-\\d{2}(-\\d{2})?)?$", description: "When it was ratified, as an ISO date."}
   ratified_in: {range: Element, description: "Where it was ratified (a meeting, a council, a document)."}
   endorsed_by: {range: Element, multivalued: true, description: "Who agreed or supported it (+1, 'fine for now')."}
   disputed_by: {range: Element, multivalued: true, description: "Who disagreed or objected."}
@@ -659,7 +667,7 @@ slots:
   decision_status: {range: DecisionStatusEnum, description: "How far it got: proposed, decided, ratified, rejected, withdrawn..."}
   supersedes: {range: Element, multivalued: true, description: "Statements this one replaces."}
   progress: {range: ProgressEnum, description: "How far an action item or piece of work has got."}
-  due_by: {description: "The deadline it must be done by, as the text gives it ('2026-11-30', 'the end of each fiscal quarter'); a duration goes in within."}
+  due_by: {description: "The deadline it must be done by, in the text's own words ('2026-11-30', '30 November', 'the end of each fiscal quarter', 'two weeks before launch'); a duration goes in within."}
   recurrence: {description: "How often a duty recurs ('every month', 'each Monday'); a rotation's turnover goes in cadence, how often something is true in frequency."}
   answers: {range: Statement, multivalued: true, description: "The open questions (Gaps) this statement answers."}
   each: {range: boolean, description: "True when the statement holds for each member of a class it names, not for the class itself ('nine offices, each headed by an Assistant Administrator')."}
@@ -735,7 +743,7 @@ slots:
   direct: {range: boolean, description: "True when the source says the reporting line is direct."}
   with_consent_of: {range: Element, multivalued: true}
   audience: {range: Element, multivalued: true, description: "Who the representation is towards."}
-  via: {range: Element, multivalued: true}
+  via: {range: Element, multivalued: true, description: "The channel, tool or intermediary (an escalation through #help); for a Rule it goes in its action's via."}
   from_state: {range: Concept}
   to_state: {range: Concept}
   alternative_states: {range: Concept, multivalued: true}

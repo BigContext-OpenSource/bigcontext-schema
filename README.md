@@ -157,6 +157,8 @@ converters to dbt, OSI and ODRL.
 | `bigcontext_schema.yaml` | The schema, written in [LinkML](https://linkml.io). The single source of truth |
 | `guide.md` | How to express a text in the schema, for people and AI models alike |
 | `graph.md` | How documents become a knowledge graph, and which statements count as in force on a date |
+| `conformance.md`, `tests/` | What a conforming document, producer and graph builder must do, and the cases that check it |
+| `CHANGELOG.md`, `GOVERNANCE.md`, `CONTRIBUTING.md`, `CODE_OF_CONDUCT.md` | What changed in each version; who decides changes and how; how to contribute; how everyone taking part behaves |
 | `bigcontext_facts.yaml` | The vocabulary of the graph's facts (reports to, owns, escalates to, same as) |
 | `queries/`, `cypher/` | Ready-made questions, in SPARQL and Cypher |
 | `generated/` | Files generated from the schema: JSON Schema, OWL, SHACL shapes and a JSON-LD context |
@@ -171,7 +173,8 @@ needed with [uv](https://docs.astral.sh/uv/)):
 uvx check-jsonschema --schemafile generated/bigcontext_schema.schema.json examples/order-tracking/document.yaml
 ```
 
-The free BigContext Schema tools add what a JSON Schema cannot: references that point at nothing, quotes that are
+`conformance.md` lists everything a conforming document must satisfy beyond the JSON Schema, and `tests/` holds the
+cases an implementation can check itself against. The free BigContext Schema tools add what a JSON Schema cannot: references that point at nothing, quotes that are
 not in the source, lines of the source left unaccounted for, loops in reporting lines and steps out of order, each
 explained in plain English.
 
@@ -223,7 +226,9 @@ Permanent address: `https://w3id.org/bigcontext-schema` (being registered).
 
 ## Citing
 
-Big Context & Company (2026). *BigContext Schema*, draft 0.9. https://w3id.org/bigcontext-schema
+Big Context & Company (2026). *BigContext Schema*, version 0.9.5-draft. https://w3id.org/bigcontext-schema
+
+`CITATION.cff` gives the same in a form citation tools read.
 
 ## Licence
 

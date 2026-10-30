@@ -1,0 +1,4 @@
+conforms: false
+breaks: D10
+reference_checker_says:
+- 'Statement s.1 has no quote and no stated_by: quote the words it came from, or name who stated it in stated_by.'

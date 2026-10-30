@@ -12,7 +12,7 @@ The schema is `bigcontext_schema.yaml` (LinkML), beside this guide. This guide e
 One YAML file, a `ContextDocument`:
 
 ```yaml
-schema_version: "0.9.4-draft"   # the version of BigContext Schema this document follows
+schema_version: "0.9.5-draft"   # the version of BigContext Schema this document follows
 source: {id: <corpus id>, title: <title>, as_of: <the date the source is true as of, if it says>}
 revisions: [...]     # the source's own change history: {version, date, revised_by, summary, evidence}
 external: [...]      # ids you refer to that another section of the same source declares (see Ids)
@@ -30,8 +30,11 @@ thing, concept, statement, step, unmapped item or skipped item.
 
 ## Evidence
 
-Every statement, step, unmapped and skipped item needs `evidence: [{quote: "..."}]`; things and concepts should
-have one too. The quote must be copied **word for word** from the source (whitespace and curly versus straight
+Every statement, step, unmapped and skipped item written from a text needs `evidence: [{quote: "..."}]`; things and
+concepts should have one too. A quote is never empty. Context someone states directly, with no text to quote (a rule
+typed into a product, a decision an agent records), gives `stated_by` instead: the person, team or system that
+stated it (for a procedure, on the procedure). Every statement has one or the other. The quote must be copied
+**word for word** from the source (whitespace and curly versus straight
 quotes are forgiven, nothing else). Quote the part each claim comes from: a long paragraph is usually quoted
 sentence by sentence across several statements. A quote may run across several lines. Several statements may
 share one quote when one sentence makes several claims.

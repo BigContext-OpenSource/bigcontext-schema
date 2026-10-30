@@ -1,0 +1,3 @@
+<urn:bigcontext-schema:data-policy/c.customer> <https://w3id.org/bigcontext-schema/facts/same_as> <urn:bigcontext-schema:data-policy/c.client> .
+<urn:bigcontext-schema:data-policy/t.customers.email> <https://w3id.org/bigcontext-schema/facts/is_a> <urn:bigcontext-schema:data-policy/c.restricted> .
+<urn:bigcontext-schema:data-policy/t.customers.phone> <https://w3id.org/bigcontext-schema/facts/is_a> <urn:bigcontext-schema:data-policy/c.restricted> .

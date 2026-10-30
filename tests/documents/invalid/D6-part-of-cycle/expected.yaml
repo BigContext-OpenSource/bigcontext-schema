@@ -1,0 +1,5 @@
+conforms: false
+breaks: D6
+reference_checker_says:
+- '''t.fulfillment_team'' ends up PartOf itself, which a PartOf chain cannot do.'
+- '''t.operations'' ends up PartOf itself, which a PartOf chain cannot do.'

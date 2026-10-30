@@ -1,0 +1,3 @@
+<urn:bigcontext-schema:order-tracking-policy/t.fulfillment_team> <https://w3id.org/bigcontext-schema/facts/responsible_for> <urn:bigcontext-schema:order-tracking-policy/c.shipping> .
+<urn:bigcontext-schema:order-tracking-policy/t.operations> <https://w3id.org/bigcontext-schema/facts/has_part> <urn:bigcontext-schema:order-tracking-policy/t.fulfillment_team> .
+<urn:bigcontext-schema:order-tracking-policy/t.support_team> <https://w3id.org/bigcontext-schema/facts/responsible_for> <urn:bigcontext-schema:order-tracking-policy/c.delivery_question> .

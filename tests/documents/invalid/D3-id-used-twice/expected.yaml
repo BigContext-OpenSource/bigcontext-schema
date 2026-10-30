@@ -1,0 +1,4 @@
+conforms: false
+breaks: D3
+reference_checker_says:
+- The id 's.1' is used twice.

@@ -1,0 +1,4 @@
+conforms: false
+breaks: D5
+reference_checker_says:
+- The linked source prefix 'skos' is a vocabulary prefix the graph uses; choose another.

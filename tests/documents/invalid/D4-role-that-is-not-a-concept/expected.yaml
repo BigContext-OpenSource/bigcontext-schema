@@ -1,0 +1,4 @@
+conforms: false
+breaks: D4
+reference_checker_says:
+- Statement s.7 uses 't.fulfillment_team' as its role, but 't.fulfillment_team' is a thing, not a concept.

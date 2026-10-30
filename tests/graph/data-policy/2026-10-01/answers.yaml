@@ -1,0 +1,18 @@
+document: tests/graph/data-policy/document.yaml
+as_of: '2026-10-01'
+address: urn:bigcontext-schema:data-policy/
+answers:
+  in_category:
+    c.restricted:
+    - c.contact_data
+    - t.customers.email
+    - t.customers.phone
+    c.public: []
+    c.contact_data:
+    - t.customers.email
+    - t.customers.phone
+  same_as:
+    c.client:
+    - c.customer
+    c.customer:
+    - c.client

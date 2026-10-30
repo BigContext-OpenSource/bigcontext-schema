@@ -1,0 +1,6 @@
+Data policy
+Contact data is Restricted.
+The EMAIL column holds contact data.
+PHONE is the customer's phone number, which is contact data.
+PHONE is Public when the customer has published it.
+A client is exactly what we call a customer.

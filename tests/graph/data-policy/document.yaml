@@ -1,0 +1,81 @@
+schema_version: 0.9.5-draft
+source:
+  id: data-policy
+  title: Data policy
+  as_of: '2026-10-01'
+things:
+- id: t.customers.email
+  label: EMAIL
+  thing_type: field
+  evidence:
+  - quote: The EMAIL column
+- id: t.customers.phone
+  label: PHONE
+  thing_type: field
+  evidence:
+  - quote: PHONE is the customer's phone number
+concepts:
+- id: c.restricted
+  label: Restricted
+  concept_type: category_value
+  evidence:
+  - quote: is Restricted
+- id: c.contact_data
+  label: contact data
+  concept_type: category_value
+  evidence:
+  - quote: Contact data
+- id: c.public
+  label: Public
+  concept_type: category_value
+  evidence:
+  - quote: PHONE is Public
+- id: c.client
+  label: client
+  concept_type: entity_type
+  evidence:
+  - quote: A client
+- id: c.customer
+  label: customer
+  concept_type: entity_type
+  evidence:
+  - quote: what we call a customer
+statements:
+- id: s.1
+  predicate: IsA
+  subject: c.contact_data
+  object: c.restricted
+  evidence:
+  - quote: Contact data is Restricted.
+- id: s.2
+  predicate: IsA
+  subject: t.customers.email
+  object: c.contact_data
+  evidence:
+  - quote: The EMAIL column holds contact data.
+- id: s.3
+  predicate: Definition
+  subject: t.customers.phone
+  object: c.contact_data
+  text: the customer's phone number
+  evidence:
+  - quote: PHONE is the customer's phone number, which is contact data.
+- id: s.4
+  predicate: IsA
+  subject: t.customers.phone
+  object: c.public
+  when:
+  - description: the customer has published it
+  evidence:
+  - quote: PHONE is Public when the customer has published it.
+- id: s.5
+  predicate: Mapping
+  subject: c.client
+  object: c.customer
+  match: exact
+  evidence:
+  - quote: A client is exactly what we call a customer.
+skipped:
+- reason: heading
+  evidence:
+  - quote: Data policy

@@ -1,0 +1,4 @@
+conforms: false
+breaks: D8
+reference_checker_says:
+- 'Statement s.1 quotes text that is not in the source: "Customers must receive an email."'

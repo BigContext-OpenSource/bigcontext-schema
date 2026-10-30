@@ -1,0 +1,164 @@
+schema_version: 0.9.5-draft
+source:
+  id: order-tracking-policy
+  title: Order tracking policy (online store)
+things:
+- id: t.fulfillment_team
+  label: Fulfillment team
+  thing_type: team
+  evidence:
+  - quote: The Fulfillment team is part of Operations
+- id: t.operations
+  label: Operations
+  thing_type: unit
+  evidence:
+  - quote: is part of Operations
+- id: t.support_team
+  label: Support team
+  thing_type: team
+  evidence:
+  - quote: The Support team answers delivery questions.
+concepts:
+- id: c.customer
+  label: customer
+  concept_type: entity_type
+  evidence:
+  - quote: Customers must receive a text message
+- id: c.order
+  label: order
+  concept_type: entity_type
+  evidence:
+  - quote: when their order goes out for delivery
+- id: c.standard
+  label: Standard
+  concept_type: category_value
+  evidence:
+  - quote: Express and Standard together make up the shipping options.
+- id: c.express
+  label: Express
+  concept_type: category_value
+  evidence:
+  - quote: Express and Standard together make up the shipping options.
+- id: c.shipping_options
+  label: shipping options
+  concept_type: segment
+  evidence:
+  - quote: make up the shipping options
+- id: c.shipping
+  label: shipping
+  concept_type: activity
+  evidence:
+  - quote: is responsible for shipping
+- id: c.delivery_question
+  label: delivery question
+  concept_type: activity
+  evidence:
+  - quote: answers delivery questions
+- id: c.late_order
+  label: late order
+  concept_type: state
+  evidence:
+  - quote: 'When an order is late:'
+statements:
+- id: s.1
+  predicate: Rule
+  modality: must
+  action:
+    verb: notify
+    specific_verb: text
+    to:
+    - c.customer
+  when:
+  - description: the order goes out for delivery
+    about:
+    - c.order
+  evidence:
+  - quote: Customers must receive a text message when their order goes out for delivery.
+- id: s.2
+  predicate: Rule
+  modality: should
+  action:
+    verb: other
+    specific_verb: ship
+    objects:
+    - c.standard
+    values:
+    - value: '2'
+      unit: business days
+      value_role: maximum
+  frequency: usually
+  unless:
+  - description: the item is on backorder
+  evidence:
+  - quote: Standard orders usually ship within two business days, unless the item is on backorder.
+- id: s.3
+  predicate: Groups
+  subject: c.shipping_options
+  members:
+  - c.express
+  - c.standard
+  complete: true
+  evidence:
+  - quote: Express and Standard together make up the shipping options.
+- id: s.4
+  predicate: PartOf
+  subject: t.fulfillment_team
+  object: t.operations
+  evidence:
+  - quote: The Fulfillment team is part of Operations
+- id: s.5
+  predicate: ResponsibleFor
+  subject: t.fulfillment_team
+  object: c.shipping
+  responsibility: responsible
+  evidence:
+  - quote: is responsible for shipping
+- id: s.6
+  predicate: ResponsibleFor
+  subject: t.support_team
+  object: c.delivery_question
+  responsibility: performs
+  evidence:
+  - quote: The Support team answers delivery questions.
+procedures:
+- id: p.late_order
+  label: When an order is late
+  mode: instruction
+  trigger:
+    description: an order is late
+    about:
+    - c.late_order
+  steps:
+  - id: p.late_order.1
+    order: 1
+    source_label: '1.'
+    action:
+      verb: check
+      detail: carrier status
+    next:
+    - p.late_order.2
+    evidence:
+    - quote: 1. Check the carrier status.
+  - id: p.late_order.2
+    order: 2
+    source_label: '2.'
+    action:
+      verb: other
+      specific_verb: reship
+      objects:
+      - c.order
+    when:
+    - description: the parcel is lost
+    next:
+    - p.late_order.3
+    evidence:
+    - quote: 2. If the parcel is lost, reship the order.
+  - id: p.late_order.3
+    order: 3
+    source_label: '3.'
+    action:
+      verb: tell
+      to:
+      - c.customer
+    evidence:
+    - quote: 3. Tell the customer what happened.

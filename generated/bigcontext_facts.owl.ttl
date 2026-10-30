@@ -6,12 +6,6 @@
 @prefix owl: <http://www.w3.org/2002/07/owl#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix pav: <http://purl.org/pav/> .
-<https://w3id.org/bigcontext-schema/facts.owl.ttl> dcterms:license "Apache-2.0" ;
-	dcterms:title "BigContext Schema facts (draft)" ;
-	pav:version "0.9.0-draft" ;
-	a owl:Ontology ;
-	rdfs:label "bigcontext_facts" ;
-	skos:definition "The direct links a BigContext Schema graph projects from statements in force, and the logic a reasoner applies to them: which links are transitive, which are the inverse of which, and which chains of links imply another. Statements stay the record of what was said, with their conditions, dates and quotes; facts are what reasoning follows. graph.md says which statements become which facts. A chain is written as the annotation property_chain (several separated by \";\"), which generation turns into OWL property chains." .
 bcf:Node a owl:Class ;
 	rdfs:label "Node" ;
 	skos:definition "Any element of a BigContext Schema document that a fact links." ;
@@ -286,6 +280,12 @@ bcf:worked_out_by a owl:DatatypeProperty ;
 	rdfs:range xsd:string ;
 	skos:definition "How a worked-out fact follows from the facts it came from (\"part_of carries through\")." ;
 	skos:inScheme <https://w3id.org/bigcontext-schema/facts> .
+<https://w3id.org/bigcontext-schema/facts> dcterms:license "Apache-2.0" ;
+	dcterms:title "BigContext Schema facts (draft)" ;
+	pav:version "0.9.2-draft" ;
+	a owl:Ontology ;
+	rdfs:label "bigcontext_facts" ;
+	skos:definition "The direct links a BigContext Schema graph projects from statements in force, and the logic a reasoner applies to them: which links are transitive, which are the inverse of which, and which chains of links imply another. Statements stay the record of what was said, with their conditions, dates and quotes; facts are what reasoning follows. graph.md says which statements become which facts. A chain is written as the annotation property_chain (several separated by \";\"), which generation turns into OWL property chains." .
 
 # property chains, from the property_chain annotations
 bcf:reports_to <http://www.w3.org/2002/07/owl#propertyChainAxiom> ( bcf:holds_role bcf:reports_to ) .

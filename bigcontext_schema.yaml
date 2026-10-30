@@ -2,7 +2,7 @@
 id: https://w3id.org/bigcontext-schema  # permanent identifier to be registered before publishing
 name: bigcontext_schema
 title: BigContext Schema (draft)
-version: 0.9.1-draft
+version: 0.9.2-draft
 description: >-
   A small, closed set of building blocks for expressing business context taken from natural language:
   simple rules, long procedures, company structure, data and mappings. Tier 1 is the element types, tier 2 the

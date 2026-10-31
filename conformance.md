@@ -6,20 +6,29 @@ capitals.
 Three kinds of thing can conform to BigContext Schema: a **document**; a **producer**, which writes documents from a
 text (a person, a program or an AI model); and a **graph builder**, which turns documents into a knowledge graph and
 answers questions over it. Each rule has a name (D1, P2, G3) that the cases in `tests/` point to, so any
-implementation can check itself against the same cases. The free BigContext Schema tools pass all of them.
+implementation can check itself against the same cases. The reference tools (coming soon) pass all of them.
 
 ## A conforming document
 
 A document conforms to a version of BigContext Schema, the one its `schema_version` names, when:
 
 - **D1** It is valid against that version's `generated/bigcontext_schema.schema.json` (JSON Schema 2019-09): its
-  fields, required fields, allowed values and statement types, and the shape of its ids, dates and addresses.
+  fields, required fields, allowed values and statement types, and the shape of its ids, dates and addresses; from
+  1.1, also that a condition gives at most one of `values`, `compare_to` and `party_responsibility`, and that a
+  period gives at least one of `start`, `end` and `named`. (The SHACL shapes check the fields and values but not these two.)
 - **D2** Each HasValues statement gives `values` or `members`; each HasProperty gives `standard_attribute` or
-  `attribute`; each CreatedBy gives `object`, `members` or `text`.
+  `attribute`; each CreatedBy gives `object`, `members` or `text`. From 1.1: a condition with `compare_to` gives
+  `field` and `comparator`; a ComputedAs gives at most one of a value with `value_role: window` and `grain_to_date`;
+  a value with `value_role: window` is on a cumulative or conversion metric, and one with `value_role: offset` on a
+  derived metric with exactly one input, and one with `value_role: percentile` on a percentile aggregation; a
+  conversion metric gives `numerator` and `denominator`; a condition with `party_responsibility` is in a Rule's
+  `when` or `unless`; a key pair's `normalize` gives at most one of `cast_to_text` and `cast_to_number`; a RuleSet
+  gives `subject` or `members`.
 - **D3** Every id of a thing, concept, statement, procedure and step is used once in the document.
 - **D4** Every reference names something the document declares, an id listed in `external` (declared by another
   section of the same source), or `prefix:id` with a prefix declared in `linked_sources`. A reference in
-  `attribute`, `role`, `from_state` or `to_state` names a concept; one in `calls` names a procedure.
+  `attribute`, `role`, `from_state`, `to_state`, `alternative_states`, `calendar` or a period's `named` names a
+  concept; one in `calls` names a procedure.
 - **D5** Each linked source's prefix is declared once and is none of the prefixes the graph's vocabularies use (bcs,
   linkml, odrl, org, skos, prov, dcat, dqv, oa, dcterms), and its `base_iri` ends in `/` or `#`.
 - **D6** No PartOf or ReportsTo chain leads back to where it started.

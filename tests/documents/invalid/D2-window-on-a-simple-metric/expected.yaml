@@ -1,0 +1,4 @@
+conforms: false
+breaks: D2
+reference_checker_says:
+- Statement s.7 (ComputedAs) has a window but is not a cumulative or conversion metric.

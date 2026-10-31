@@ -3,6 +3,63 @@
 What changed in each version of BigContext Schema. Versions follow the rules in the README: patch, minor and major,
 with drafts (`0.9.x-draft`) before 1.0.
 
+## 1.1.0 (2026-10-31)
+
+Every 1.0 document is valid under 1.1.0 and keeps its meaning and its graph facts. The additions come from real
+analytics context packs and from an expert test of hard cases; each has a line in the guide and is used in the
+conformance case `tests/documents/valid/added-in-1-1/`. One published wording narrows: `frequency` now means only how
+often, and how many members of a class a statement holds for is the new `quantifier`; for a document that follows
+1.1, a link that holds only some of the time stays in the record (graph.md).
+
+What people do and how often
+- `Habit`: what a party usually does, described rather than required, including what people ask about (verb `ask`)
+  and the usual breakdowns of an analysis (verb `analyze` with `by`).
+- `quantifier` (most | some | few) for statements about some members of a class; `especially_when` for conditions
+  under which a statement holds most strongly.
+
+Relations
+- `Overlaps`: two roles or kinds the same individual can be at once. `CorrelatesWith`: two measures that move
+  together without a stated cause.
+- `RecordMatch`: when records count as the same individual, never the same element. Key pairs take `normalize`
+  (trim, ignore_case, cast_to_text, cast_to_number). IdentifiedBy takes `primary` (false for an alternate key) and
+  `stable` (false when the key can change). RecordMatch compares key pairs; `expression` holds a rule they cannot say.
+- `divided_by` on Groups; `role` on JoinsTo; join type `anti`; JoinsTo's `expected_cardinality`; cardinalities
+  `one_to_one`, `many_to_many` and `more_than_one`; status `certified`; responsibilities `consulted` and
+  `kept_informed`; RuleSet `members` may be left out when its `subject` names it.
+
+Time
+- `period` (`start`, `end`, `named`): the stretch of data or business time a statement is about, which never ends it.
+  `recorded_on`: when a fact was recorded or restated. A table's data period goes in `period`; in a document that
+  follows 1.0, a Covers' `valid_from` and `valid_to` are also its period. A link limited to a period stays in the
+  record, as a scoped one does.
+
+Metrics a semantic layer can hold
+- Metric types `cumulative` and `conversion`; value roles `window`, `offset` (an offset is its own derived metric over
+  one metric) and `percentile`; aggregations `first`, `last` and `percentile_discrete`; `grain_to_date`,
+  `reporting_grain`, `calendar` (a fiscal or other calendar), `entity` (what a conversion follows), and
+  `non_additive` (`across`, `take`, `per`) for a stored measure. What an empty period shows is a value with role
+  `default`.
+
+Conditions on another field or on whoever is acting
+- A condition's `compare_to` (instead of written values) and the concept type `party_attribute`; a condition's
+  `party_responsibility` (whoever is acting must hold it, for what the rule acts on or for the element a column names);
+  HasAccess `filters` for row-level access; a value's `distinct` (a count of different people) and `per` (a limit for
+  each).
+
+Conformance
+- D1 also rejects a condition with more than one of values, `compare_to` and `party_responsibility`, and an empty
+  period, through the JSON Schema. D2 gains clauses for `compare_to`, windows, offsets, percentiles, conversions,
+  `party_responsibility` (only in a Rule's conditions), casts in `normalize`, and rule sets.
+
+Guide
+- Amounts follow one rule (`value_role` and `comparator`); a cap is a prohibition. Lines for forbidden joins, colour
+  sentences, references to other sections, quoted and case-sensitive physical names and colliding ids, and the five
+  dates. The guide's lists of concept types, standard attributes, usages, date fields and free-text fields are
+  complete again, and the README's example uses `value_role`.
+- A ratio's or conversion's counts and the amount a percentile is taken over may be ones the text only implies; a
+  quoted column's label is its name without the quotes. Two more examples are rewritten in the guide's own
+  online-store setting.
+
 ## 1.0.1 (2026-10-30)
 
 Wording only: the examples in the guide and in the schema's descriptions are rewritten in the guide's own

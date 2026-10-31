@@ -1,0 +1,4 @@
+conforms: false
+breaks: D1
+reference_checker_says:
+- 'Statement s.1 (Rule) has a condition with party_responsibility and something to compare (at when > item 1); it compares nothing else: remove field, values or compare_to.'

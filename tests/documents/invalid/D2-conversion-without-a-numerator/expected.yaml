@@ -1,0 +1,4 @@
+conforms: false
+breaks: D2
+reference_checker_says:
+- 'Statement s.7 (ComputedAs) is a conversion without both counts: name the converting count in numerator and the starting count in denominator.'

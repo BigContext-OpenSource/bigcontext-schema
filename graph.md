@@ -2,7 +2,7 @@
 # BigContext Schema as a knowledge graph
 
 A BigContext Schema document becomes an RDF graph in four named parts. Anyone can produce or read the same graph
-from this description; the free tools do it with `bigcontext-schema graph`.
+from this description; the free tools (coming soon) do it with `bigcontext-schema graph`.
 
 | Graph | What it holds |
 |---|---|
@@ -30,7 +30,8 @@ classes, so a graph whose objects have no class is checked against nothing.
 
 ## Which statements become facts
 
-**The date.** Facts are worked out for one date: the one asked for, else the latest `as_of` of the source. When
+**The date.** Facts are worked out for one date: the one asked for, else the latest `as_of` among the sources (a
+statement's own `as_of` does not count). When
 neither is given the date is unknown and no facts are worked out; a reader never assumes today, so the same
 documents always give the same facts.
 
@@ -46,31 +47,45 @@ documents always give the same facts.
 - no statement in force on the date names it in `supersedes`.
 
 A statement's own `as_of` says when what it describes was observed; it does not change whether it is in force.
+Neither do `period` (what the statement is about: a caveat about 1 to 3 June still holds in July) and `recorded_on`
+(when it was recorded). The graph answers what holds on a date. What was known on a date is a different question,
+which a store answers by leaving out the statements recorded after it. In a document that follows 1.0, a Covers'
+`valid_from` and `valid_to` are also its period, as the 1.0 guide defined them; they still decide when the Covers is
+in force, as before, so no result changes. In a document that follows 1.1 or later they say only when it holds, and
+its data period is its `period`.
 `HasStatus` (canonical, variant, deprecated, retired and so on) decides which metric definition is exported to a
 semantic layer, not which statements are facts.
 
 **Links and rules.** The link statement types are PartOf, ReportsTo, Heads, MemberOf, HoldsRole, EscalatesTo,
 DerivedFrom, ImplementedBy, GovernedBy, JoinsTo, ResponsibleFor, HasAccess, Contains, IdentifiedBy, Groups,
 Influences, IsA, Definition and Mapping. A link in force becomes a fact only when it is unconditional: one with
-`when`, `when_any`, `unless`, `valid_while` or `scope`, or about each member of a class (`each`), stays in the
-record only. A Rule is not a link: its conditions stay on the rule in the record, and in force it gives the facts
+`when`, `when_any`, `unless`, `valid_while`, `scope` or `period` (limited to part of the data), or about the members
+of a class (`each` or `quantifier`), stays in the record only; so, in a document that follows 1.1 or later, does
+one whose `frequency` is anything but `always`, since it holds only some of the time (in a 1.0 document frequency
+changes nothing, as before). Other statement types (Habit, Overlaps, CorrelatesWith and RecordMatch among them) stay
+in the record, as do conditions with `party_responsibility`. A policy engine checks those against the
+ResponsibleFor statements in force in the record (so `consulted` and `kept_informed` count, though they give no
+facts): whoever is acting holds a responsibility for an element when such a statement gives it, for that element, to
+them, to a post they hold (HoldsRole) or to a team they are a member of (MemberOf). A Rule is not a link: its conditions stay on the rule in the record, and in force it gives the facts
 in the table below, its parties being everyone in `binds` and every element of its `scope` whose `thing_type` is a
 party (person, team, unit, post, organization, agent or access_group); other elements of a rule's scope (a purpose,
 a section) stay in the record. A dotted line becomes `dotted_line_to` and a backup or delegate becomes
-`backs_up`; reasoning follows neither. Fields under `extensions` stay in the record and never become facts.
+`backs_up`; reasoning follows neither. Fields under `extensions` stay in the record and never become facts. A
+RecordMatch is never a fact and never `same_as`: records matching is not two elements meaning the same. Access
+limited to some rows (HasAccess with `filters`) is still the access fact; the rows stay in the record.
 
 | Statement | Facts (`bcf:`) |
 |---|---|
 | PartOf, ReportsTo, Heads, MemberOf, HoldsRole, EscalatesTo, DerivedFrom, ImplementedBy, GovernedBy, JoinsTo | `part_of`, `reports_to`, `heads`, `member_of`, `holds_role`, `escalates_to`, `derived_from`, `implemented_by`, `governed_by`, `joins_to` |
-| ResponsibleFor (with an object) | one per responsibility value: `owns`, `accountable_for`, `manages`, `approves`, `decides`, `supervises`, `coordinates`, `reviews`, `advises`, `assists`, `performs`, `responsible`; all kinds of `responsible_for` |
+| ResponsibleFor (with an object) | one per responsibility value: `owns`, `accountable_for`, `manages`, `approves`, `decides`, `supervises`, `coordinates`, `reviews`, `advises`, `assists`, `performs`, `responsible`; all kinds of `responsible_for` (`consulted` and `kept_informed` stay in the record) |
 | HasAccess | `can_use`, `can_read`, `can_admin`, `can_see_masked`, `access_granted`; all kinds of `has_access` (`none` stays in the record) |
 | IsA, and Definition with an object (its category) | `is_a`, transitive: whatever is in a kind is in every category that kind is in |
 | Mapping with match exact, decided (within a source, or across sources through `linked_sources`) | `same_as`, symmetric and transitive |
 | Contains (the object a field), IdentifiedBy, Groups | `has_column`; `time_column` for a time dimension and `key_column` for a key (both kinds of `has_column`); `key_column` for each IdentifiedBy member; `has_member` |
-| ComputedAs (the definition that would be exported) | `has_input`, `has_numerator`, `has_denominator`, `aggregates_over`, `aggregates_column` (columns of the base table the expression names), `counted_by`, `filters_on`: all kinds of `depends_on` |
+| ComputedAs (the definition that would be exported) | `has_input`, `has_numerator`, `has_denominator`, `aggregates_over`, `aggregates_column` (columns of the base table the expression names), `counted_by`, `filters_on` (a filter's field, and the field it is compared with when `compare_to` names a field): all kinds of `depends_on`; `depends_on` itself for a conversion's `entity` and a non-additive measure's `across` and `per` |
 | Influences | `increases`, `decreases`, `influences`: kinds of `drives`, kept apart from `depends_on` |
 | Rule | `binds` for each party in `binds` and each party in `scope`; `about` for the action's objects; `overrides`, a rule set's members standing for the set |
-| RuleSet | `in_rule_set` for each member; when one set overrides another, each member overrides each member of the other |
+| RuleSet | `in_rule_set` for each member; when one set overrides another, each member overrides each member of the other; a set with no `members` field stands for itself, as the source and the target of overrides; an override that names a rule set's `subject` concept (as another section does) names that set |
 
 ## What the reasoner works out
 

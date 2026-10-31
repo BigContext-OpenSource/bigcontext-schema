@@ -107,7 +107,7 @@ slots:
     description: A table's date or time column, which its measures can be counted by.
     is_a: has_column
   same_as:
-    description: Two sources' elements stand for the same thing, decided by a person (an exact Mapping in force).
+    description: Two elements stand for the same thing, within one source or across two, decided by a person (an exact Mapping in force).
     symmetric: true
     transitive: true
   joins_to:
@@ -119,7 +119,7 @@ slots:
   implemented_by:
     description: A business concept is represented in data by a column, table or filter.
   has_member:
-    description: A group (a data product, a segment, a set of values) has a member.
+    description: A group (a data product, a segment, a region) has a member.
 
   # metrics
   depends_on:

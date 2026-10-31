@@ -1,0 +1,4 @@
+conforms: false
+breaks: D1
+reference_checker_says:
+- Statement s.1 (Rule) has a period with no start, end or named period (at period); give at least one.

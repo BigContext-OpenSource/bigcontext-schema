@@ -1,0 +1,4 @@
+conforms: false
+breaks: D1
+reference_checker_says:
+- 'Statement s.1 (Rule) has a condition with both values and compare_to (at when > item 1); give one: written values, or what it is compared with.'

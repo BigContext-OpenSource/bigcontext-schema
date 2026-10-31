@@ -1,0 +1,4 @@
+conforms: false
+breaks: D2
+reference_checker_says:
+- 'Statement s.1 (Rule) compares with ''c.customer'' but gives no comparator: say which field is compared, and how.'

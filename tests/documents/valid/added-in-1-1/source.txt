@@ -1,0 +1,40 @@
+Store analytics notes
+Most shoppers ask about delivery dates; few ask about the returns window.
+The buyer is often also the recipient.
+Basket size tends to rise with product views, though neither causes the other.
+A sale's source is the first ad the shopper clicked.
+Orders and invoices match one to one, and a split order has more than one parcel.
+Products join to suppliers many to many.
+The join from orders to invoices is certified.
+Some customers are wholesale buyers.
+A customer's region is the last region on their address history.
+Wholesale buyers usually order by phone.
+Sales are often looked at by region and by device.
+Returns are sometimes divided by reason into damaged and unwanted.
+Shoppers are sometimes called guests, especially when they have no account.
+Order data is missing from 1 to 3 June 2026.
+Q1 sales were restated on 10 May 2026 to $1.2 million.
+Orders over the last 7 days are counted every day.
+Sales year to date add up from the start of the fiscal year, on the fiscal calendar.
+Sales the same week last year are compared with this week's sales.
+Cart conversion is the share of carts that become orders within 2 days.
+Stock is the last count of each day for each warehouse, and is never summed across days.
+Days with no sales show 0.
+Store managers see only the orders of their own store.
+A viewer's store is the store_id on their staff record.
+Whoever requests a refund may not approve it.
+No customer gets more than 3 refunds per calendar month.
+A refund over $500 needs approval from two different managers.
+For the sales dashboard, Finance is consulted and the store managers are kept informed.
+To find customers with no order, keep the customers that have no match in orders.
+Orders join to customers once as the buyer and once as the recipient.
+Customers are identified by customer_id, and also by email, which can change.
+A shop customer and a newsletter contact count as one customer when their trimmed, lowercased emails match.
+Privacy rules override the store guidelines.
+Orders should match payments one to one, but split payments make duplicates.
+Only a metric's owner may change its definition.
+Delivery time is the 95th percentile of hours to deliver, always one of the actual times.
+The newsletter keeps customer numbers as text; compare them with the shop's customer_id as numbers.
+Warehouse postcodes are compared with order postcodes as text.
+The "Order Items" table in the "Sales" schema has the columns "Order Date", "orderId" and "OrderID".
+Some shoppers pay by invoice.

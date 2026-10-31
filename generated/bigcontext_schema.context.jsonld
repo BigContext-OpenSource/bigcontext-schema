@@ -152,6 +152,10 @@
       "cadence": {
          "@id": "cadence"
       },
+      "calendar": {
+         "@type": "@id",
+         "@id": "calendar"
+      },
       "calls": {
          "@type": "@id",
          "@id": "calls"
@@ -216,12 +220,24 @@
          },
          "@id": "comparator"
       },
+      "compare_to": {
+         "@type": "@id",
+         "@id": "compare_to"
+      },
       "description": {
          "@id": "description"
       },
       "field": {
          "@type": "@id",
          "@id": "field"
+      },
+      "party_responsibility": {
+         "@context": {
+            "text": "skos:notation",
+            "description": "skos:prefLabel",
+            "meaning": "@id"
+         },
+         "@id": "party_responsibility"
       },
       "statements": {
          "@type": "@id",
@@ -298,6 +314,10 @@
          "@type": "@id",
          "@id": "disputed_by"
       },
+      "divided_by": {
+         "@type": "@id",
+         "@id": "divided_by"
+      },
       "due_by": {
          "@id": "due_by"
       },
@@ -308,6 +328,14 @@
       "endorsed_by": {
          "@type": "@id",
          "@id": "endorsed_by"
+      },
+      "entity": {
+         "@type": "@id",
+         "@id": "entity"
+      },
+      "especially_when": {
+         "@type": "@id",
+         "@id": "especially_when"
       },
       "even_if": {
          "@type": "@id",
@@ -323,6 +351,14 @@
       "exclusive": {
          "@type": "xsd:boolean",
          "@id": "exclusive"
+      },
+      "expected_cardinality": {
+         "@context": {
+            "text": "skos:notation",
+            "description": "skos:prefLabel",
+            "meaning": "@id"
+         },
+         "@id": "expected_cardinality"
       },
       "expression": {
          "@id": "expression"
@@ -352,6 +388,14 @@
       },
       "goal": {
          "@id": "goal"
+      },
+      "grain_to_date": {
+         "@context": {
+            "text": "skos:notation",
+            "description": "skos:prefLabel",
+            "meaning": "@id"
+         },
+         "@id": "grain_to_date"
       },
       "held_by": {
          "@type": "@id",
@@ -396,6 +440,14 @@
       "from_field": {
          "@type": "@id",
          "@id": "from_field"
+      },
+      "normalize": {
+         "@context": {
+            "text": "skos:notation",
+            "description": "skos:prefLabel",
+            "meaning": "@id"
+         },
+         "@id": "normalize"
       },
       "to_field": {
          "@type": "@id",
@@ -474,6 +526,22 @@
       "next": {
          "@id": "next"
       },
+      "non_additive": {
+         "@type": "@id",
+         "@id": "non_additive"
+      },
+      "across": {
+         "@type": "@id",
+         "@id": "across"
+      },
+      "take": {
+         "@context": {
+            "text": "skos:notation",
+            "description": "skos:prefLabel",
+            "meaning": "@id"
+         },
+         "@id": "take"
+      },
       "note": {
          "@id": "note"
       },
@@ -501,9 +569,27 @@
          "@type": "@id",
          "@id": "overrides"
       },
+      "per": {
+         "@type": "@id",
+         "@id": "per"
+      },
       "performer": {
          "@type": "@id",
          "@id": "performer"
+      },
+      "period": {
+         "@type": "@id",
+         "@id": "period"
+      },
+      "end": {
+         "@id": "end"
+      },
+      "named": {
+         "@type": "@id",
+         "@id": "named"
+      },
+      "start": {
+         "@id": "start"
       },
       "physical_name": {
          "@id": "physical_name"
@@ -537,6 +623,14 @@
          "@type": "@id",
          "@id": "proposed_by"
       },
+      "quantifier": {
+         "@context": {
+            "text": "skos:notation",
+            "description": "skos:prefLabel",
+            "meaning": "@id"
+         },
+         "@id": "quantifier"
+      },
       "ratified_by": {
          "@type": "@id",
          "@id": "ratified_by"
@@ -548,8 +642,19 @@
       "ratified_on": {
          "@id": "ratified_on"
       },
+      "recorded_on": {
+         "@id": "recorded_on"
+      },
       "recurrence": {
          "@id": "recurrence"
+      },
+      "reporting_grain": {
+         "@context": {
+            "text": "skos:notation",
+            "description": "skos:prefLabel",
+            "meaning": "@id"
+         },
+         "@id": "reporting_grain"
       },
       "responsibility": {
          "@context": {
@@ -624,6 +729,10 @@
       },
       "source_label": {
          "@id": "source_label"
+      },
+      "stable": {
+         "@type": "xsd:boolean",
+         "@id": "stable"
       },
       "standard_attribute": {
          "@context": {
@@ -736,6 +845,10 @@
          },
          "@id": "datatype"
       },
+      "distinct": {
+         "@type": "xsd:boolean",
+         "@id": "distinct"
+      },
       "unit": {
          "@id": "unit"
       },
@@ -798,6 +911,9 @@
       "ContextDocument": {
          "@id": "ContextDocument"
       },
+      "CorrelatesWith": {
+         "@id": "CorrelatesWith"
+      },
       "Covers": {
          "@id": "Covers"
       },
@@ -833,6 +949,9 @@
       },
       "Groups": {
          "@id": "Groups"
+      },
+      "Habit": {
+         "@id": "Habit"
       },
       "Has": {
          "@id": "Has"
@@ -888,11 +1007,23 @@
       "MemberOf": {
          "@id": "MemberOf"
       },
+      "NonAdditive": {
+         "@id": "NonAdditive"
+      },
+      "Overlaps": {
+         "@id": "Overlaps"
+      },
       "PartOf": {
          "@id": "PartOf"
       },
+      "Period": {
+         "@id": "Period"
+      },
       "Procedure": {
          "@id": "Procedure"
+      },
+      "RecordMatch": {
+         "@id": "RecordMatch"
       },
       "ReportsTo": {
          "@id": "ReportsTo"

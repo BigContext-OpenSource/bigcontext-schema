@@ -2,13 +2,13 @@
 id: https://w3id.org/bigcontext-schema
 name: bigcontext_schema
 title: BigContext Schema
-version: 1.0.1
+version: 1.1.0
 description: >-
   A small, closed set of building blocks for expressing business context taken from natural language:
   simple rules, long procedures, company structure, data and mappings. Tier 1 is the element types, tier 2 the
   statement types (predicates) whose roles come from one shared dictionary of slots, tier 3 the qualifiers
-  every statement can carry. A document can carry fields of its own under `extensions`. Shared groups of fields any statement can carry (decision, assignment, snapshot, data
-  profile) cover kinds of context that recur across many statement types. A computable core (key pairs, filters,
+  every statement can carry. A document can carry fields of its own under `extensions`. Shared groups of fields any statement can carry (decision, assignment, snapshot, work
+  and time, service and scope, classes and questions, meetings) cover kinds of context that recur across many statement types. A computable core (key pairs, filters,
   aggregations, metric types, time grains) lets metric and join definitions move to and from semantic-layer
   formats.
 prefixes:
@@ -92,6 +92,7 @@ classes:
 
   Value:
     description: A literal value, kept with its type, unit and the part it plays.
+    slots: [per]
     attributes:
       value: {required: true}
       datatype: {range: DatatypeEnum}
@@ -101,10 +102,13 @@ classes:
         description: The part this value plays (a weight, a threshold, a resulting score, a minimum).
       comparator:
         range: ComparatorEnum
-        description: For thresholds, how the value is compared (more than, at most).
+        description: How the value is compared (more than, at most), for a threshold, or for a minimum or maximum whose amount itself does not count.
       applies_to:
         range: Element
         description: The element this value belongs to, when a statement has several (the input a weight is for).
+      distinct:
+        range: boolean
+        description: True when the value counts different individuals ("two different managers").
 
   Condition:
     close_mappings: ["odrl:Constraint"]
@@ -117,6 +121,21 @@ classes:
       field: {range: Element, description: "The column the filter tests."}
       comparator: {range: ComparatorEnum}
       values: {range: Value, multivalued: true, inlined_as_list: true}
+      compare_to:
+        range: Element
+        description: >-
+          What the field is compared with when it is not a written value: another column (the order's region with the
+          customer's), or a party attribute (the viewer's region). Give values or compare_to, not both.
+      party_responsibility:
+        range: ResponsibilityEnum
+        description: >-
+          The responsibility whoever is acting must hold ("only the metric's owner may change it": owns), for what the
+          rule acts on, or, with field, for the element that column names on the row (the metric a change is about).
+          Only in a Rule's when or unless; never with values or compare_to.
+    none_of:
+      - slot_conditions: {values: {required: true}, compare_to: {required: true}}
+      - slot_conditions: {party_responsibility: {required: true}, values: {required: true}}
+      - slot_conditions: {party_responsibility: {required: true}, compare_to: {required: true}}
 
   Case:
     description: One row of a step-wise calculation (when this holds, the result is that value).
@@ -124,11 +143,39 @@ classes:
       when: {range: Condition, required: true, inlined: true}
       result: {range: Value, required: true, inlined: true, description: "The result when the condition holds."}
 
+  Period:
+    exact_mappings: ["dcterms:PeriodOfTime"]
+    description: >-
+      A stretch of time a statement is about: give its start, its end, or the period the text names, or several.
+    attributes:
+      start: {exact_mappings: ["dcat:startDate"], pattern: "^\\d{4}(-\\d{2}(-\\d{2})?)?$", description: "The first day, as an ISO date."}
+      end: {exact_mappings: ["dcat:endDate"], pattern: "^\\d{4}(-\\d{2}(-\\d{2})?)?$", description: "The last day, as an ISO date: 2026-03 for 'March 2026' (a year or month means its last day)."}
+      named: {range: Concept, description: "The period as the text names it, a concept of type period ('Q3 2026', 'the holiday season')."}
+    any_of:
+      - slot_conditions: {start: {required: true}}
+      - slot_conditions: {end: {required: true}}
+      - slot_conditions: {named: {required: true}}
+
+  NonAdditive:
+    slots: [per]
+    slot_usage:
+      per: {description: "The elements the value is kept for, one each (the last balance for each account)."}
+    description: >-
+      The dimensions a stored measure must not be summed across, and which value to keep across them (a balance takes
+      its last value across days).
+    attributes:
+      across: {range: Element, multivalued: true, description: "The dimensions; left out when it must not be summed across any dimension at all (a pre-counted distinct count)."}
+      take: {range: AggregationEnum, description: "Which value to keep across them, when the text says (last for a balance)."}
+
   KeyPair:
-    description: One pair of columns a join matches on.
+    description: One pair of columns a join or a match compares.
     attributes:
       from_field: {range: Element, required: true}
       to_field: {range: Element, required: true}
+      normalize:
+        range: NormalizeEnum
+        multivalued: true
+        description: What is done to both columns before they are compared, always in this order whichever are given (trim, then ignore case, then cast).
 
   Action:
     close_mappings: ["odrl:Action"]
@@ -182,11 +229,11 @@ classes:
     is_a: Element
     abstract: true
     description: One claim. Its type is the predicate; its roles come from the shared slot dictionary.
-    slots: [predicate, when, when_any, unless, even_if, because, so_that, scope, frequency, certainty, importance,
+    slots: [predicate, when, when_any, unless, even_if, especially_when, because, so_that, scope, frequency, certainty, importance,
             negated, currently, valid_from, valid_to, valid_while, as_of, within, via, exclusive, stated_by,
             held_by, proposed_by, decided_by, decided_on, decided_in, ratified_by, endorsed_by, disputed_by,
             informed, decision_status, supersedes, ratified_on, ratified_in, progress, due_by, recurrence,
-            answers, each, or_more_senior, automatic,
+            answers, each, quantifier, or_more_senior, automatic, period, recorded_on,
             capacity, acting_for, line, share, cadence]
     slot_usage:
       evidence:
@@ -213,6 +260,15 @@ classes:
     slot_usage:
       subject: {required: true}
       object: {required: true, description: "The category."}
+  Overlaps:
+    is_a: Statement
+    description: >-
+      Two roles or kinds that the same individual can be at once ("the buyer is often also the recipient");
+      frequency says how often. Neither is a kind of the other: that is IsA.
+    slots: [subject, object]
+    slot_usage:
+      subject: {required: true}
+      object: {required: true}
   SynonymOf:
     close_mappings: ["skos:altLabel"]
     is_a: Statement
@@ -224,7 +280,7 @@ classes:
   Groups:
     is_a: Statement
     description: A named group made of members.
-    slots: [subject, members, complete]
+    slots: [subject, members, complete, divided_by]
     slot_usage:
       subject: {required: true, description: "The group."}
       members: {required: true}
@@ -239,7 +295,7 @@ classes:
     is_a: Statement
     description: How a measure, score or derived field is calculated.
     slots: [subject, expression, inputs, values, cases, metric_type, aggregation, base, time_dimension, numerator,
-            denominator, filters, dialect]
+            denominator, filters, dialect, grain_to_date, reporting_grain, non_additive, entity, calendar]
     slot_usage:
       subject: {required: true, description: "What is calculated."}
       expression: {required: true, description: "The calculation in the source's notation or plain words."}
@@ -285,7 +341,7 @@ classes:
     description: A named group of rules that share a scope, a strength or a precedence ("these rules override team guidelines").
     slots: [subject, members, overrides, absolute]
     slot_usage:
-      members: {required: true, description: "The ids of the rules in the set."}
+      members: {description: "The ids of the rules in the set, when the source lists them."}
       subject: {description: "A concept naming the set, if the source names it."}
 
   # company structure
@@ -343,7 +399,7 @@ classes:
     close_mappings: ["odrl:Permission"]
     is_a: Statement
     description: A party can or cannot use a resource.
-    slots: [subject, object, access]
+    slots: [subject, object, access, filters]
     slot_usage:
       subject: {required: true}
       object: {required: true}
@@ -393,7 +449,7 @@ classes:
       subject: {required: true}
       object: {required: true, description: "The law, policy, agreement or document."}
 
-  # lifecycles and automatic behaviour
+  # lifecycles and behaviour
   Transition:
     is_a: Statement
     description: Something moves from one state to another, when something happens (one edge of a lifecycle).
@@ -409,6 +465,17 @@ classes:
     slot_usage:
       subject: {required: true, description: "The system or party that acts."}
       action: {required: true}
+  Habit:
+    is_a: Statement
+    description: >-
+      What a party usually does, described rather than required ("wholesale buyers usually order by phone", "sales are
+      often looked at by region and by device", "most shoppers ask about delivery dates": verb ask); frequency says
+      how often and quantifier how many of them. A norm is a Rule; something done automatically when an event happens
+      is Triggers.
+    slots: [subject, action]
+    slot_usage:
+      subject: {description: "Who does it; left out when the text means people in general or does not say."}
+      action: {required: true, description: "What they do; the usual breakdowns of an analysis go in the action's by."}
 
   # mapping
   Mapping:
@@ -431,10 +498,23 @@ classes:
   JoinsTo:
     is_a: Statement
     description: How two data elements join.
-    slots: [subject, object, keys, key_pairs, cardinality, dedup, join_type]
+    slots: [subject, object, keys, key_pairs, cardinality, expected_cardinality, dedup, join_type, role]
     slot_usage:
       subject: {required: true}
       object: {required: true}
+      cardinality: {description: "What the data has; what it should be, when the text says the data breaks it, is expected_cardinality."}
+      role: {description: "The role the joined element plays through this join (buyer, recipient)."}
+  RecordMatch:
+    is_a: Statement
+    description: >-
+      When records count as the same individual, within one table or across two: the fields compared, the rule as
+      written, and the outcomes by score. Two elements that mean the same is Mapping; how two tables join is JoinsTo.
+    slots: [subject, object, key_pairs, expression, cases]
+    slot_usage:
+      subject: {required: true, description: "The records matched (a table or a kind of thing)."}
+      object: {description: "The records they are matched to; left out when matching within one table."}
+      expression: {description: "A match rule key pairs cannot say, as written (a similarity function: similarity(name, name) at least 0.9)."}
+      cases: {description: "Outcomes by score (at least 0.92: merged automatically; 0.85 to 0.92: sent for review)."}
 
   # data assets
   Contains:
@@ -456,8 +536,8 @@ classes:
     close_mappings: ["dcterms:coverage"]
     is_a: Statement
     description: >-
-      Which rows a table or dataset covers: which platforms, populations, places or periods (use valid_from and
-      valid_to for the period).
+      Which rows a table or dataset covers: which platforms, populations, places or periods (the period goes in
+      period; in a document that follows 1.0, valid_from and valid_to give it).
     slots: [subject, members, complete, primary]
     slot_usage:
       subject: {required: true}
@@ -465,7 +545,7 @@ classes:
       primary: {description: "True when it is the source of truth for these."}
   HasStatus:
     is_a: Statement
-    description: The lifecycle status of an element (active, deprecated, retired, planned, experimental).
+    description: The lifecycle status of an element (canonical, variant, deprecated, retired, certified...).
     slots: [subject, status]
     slot_usage:
       subject: {required: true}
@@ -482,7 +562,7 @@ classes:
   IdentifiedBy:
     is_a: Statement
     description: The elements that together identify each instance of the subject (a table's unique key).
-    slots: [subject, members]
+    slots: [subject, members, primary, stable]
     slot_usage:
       subject: {required: true}
       members: {required: true, description: "The fields or elements that together identify it."}
@@ -519,6 +599,16 @@ classes:
     slot_usage:
       subject: {required: true, description: "The cause."}
       object: {required: true, description: "The effect."}
+  CorrelatesWith:
+    is_a: Statement
+    description: >-
+      Two measures that move together, where the text does not say that one causes the other ("basket size tends to
+      rise with product views"). A cause is Influences.
+    slots: [subject, object, direction, text]
+    slot_usage:
+      subject: {required: true}
+      object: {required: true}
+      direction: {description: "increases when they rise and fall together, decreases when one rises as the other falls."}
 
   # patterns, gaps and examples
   Template:
@@ -526,7 +616,7 @@ classes:
     description: >-
       A reusable pattern for a kind of task (a sample query, a message or report format), linked to the use case it
       serves, with the elements it uses and the placeholders to fill. One-off values in a sample are values with
-      role example; placeholders are values with role parameter.
+      value_role example; placeholders are values with value_role parameter.
     slots: [subject, text, inputs, values, outputs]
     slot_usage:
       subject: {required: true, description: "The use case: an activity concept or procedure the pattern is for."}
@@ -580,7 +670,7 @@ classes:
   Step:
     description: One step of a procedure.
     slots: [id, order, source_label, modality, action, performer, or_more_senior, automatic, when,
-            when_any, unless, even_if, because, so_that, within, due_by, recurrence, next, branches, calls, consumes,
+            when_any, unless, even_if, especially_when, because, so_that, within, due_by, recurrence, next, branches, calls, consumes,
             produces, evidence, note, extensions]
     slot_usage:
       order: {required: true}
@@ -649,7 +739,7 @@ slots:
   evidence: {range: Evidence, multivalued: true, inlined_as_list: true}
   source: {range: Source, inlined: true, required: true}
   revisions: {range: Revision, multivalued: true, inlined_as_list: true}
-  as_of: {description: "The date a snapshot was true, as an ISO date (2026-10, 2026-10-01); on the source, the date every undated statement holds as of.", pattern: "^\\d{4}(-\\d{2}(-\\d{2})?)?$"}
+  as_of: {description: "The date what a statement describes was observed (a snapshot), as an ISO date (2026-10, 2026-10-01); on the source, the date every statement without its own as_of, valid_from or valid_to holds as of.", pattern: "^\\d{4}(-\\d{2}(-\\d{2})?)?$"}
   standard_attribute: {range: StandardAttributeEnum}
   within: {range: Value, inlined: true, description: "A time limit ('answer within 4 business hours')."}
   exclusive: {range: boolean, description: "True when the source says only these (only analysts, the only warehouse that ships abroad)."}
@@ -671,12 +761,13 @@ slots:
   recurrence: {description: "How often a duty recurs ('every month', 'each Monday'); a rotation's turnover goes in cadence, how often something is true in frequency."}
   answers: {range: Statement, multivalued: true, description: "The open questions (Gaps) this statement answers."}
   each: {range: boolean, description: "True when the statement holds for each member of a class it names, not for the class itself ('nine offices, each headed by an Assistant Administrator')."}
+  quantifier: {range: QuantifierEnum, description: "How many members of a class it names the statement holds for, when not every one ('some customers', 'most shoppers'); every one is each. Like each, it makes the statement about the members, not the class."}
   or_more_senior: {range: boolean, description: "True when the posts or roles the statement names also cover anyone more senior ('a VP or higher')."}
   capacity: {range: CapacityEnum, description: "In what capacity a role, membership or responsibility is held."}
   acting_for: {range: Element, description: "Whom an acting or interim holder stands in for."}
   line: {range: LineEnum, description: "Solid or dotted reporting or membership line."}
   share: {range: Value, inlined: true, description: "The share of time (50%)."}
-  cadence: {description: "How a rotation turns over ('weekly, Monday 09:00 ET')."}
+  cadence: {description: "How a rotation turns over ('every two weeks, from Friday 17:00')."}
   physical_name: {description: "The object's name in its system (tpcds.public.store_sales; a tool's name in its MCP server)."}
   key_pairs: {range: KeyPair, multivalued: true, inlined_as_list: true}
   metric_type: {range: MetricTypeEnum}
@@ -685,7 +776,17 @@ slots:
   time_dimension: {range: Element, description: "The time column a measure is counted by. Expected when the text says which date counts it, and when its base table has no time column or several; left out when the text does not say."}
   numerator: {range: Element}
   denominator: {range: Element}
-  filters: {range: Condition, multivalued: true, inlined_as_list: true, description: "Row filters applied before aggregating."}
+  filters: {range: Condition, multivalued: true, inlined_as_list: true, description: "Row filters: on a metric, applied before aggregating; on access, the rows it is limited to."}
+  grain_to_date: {range: TimeGrainEnum, description: "A cumulative metric taken from the start of this grain (year for year to date), in the metric's calendar."}
+  calendar: {range: Concept, description: "The calendar a metric's grains, windows and offsets follow when it is not the ordinary one (a fiscal calendar, a concept of type calendar)."}
+  reporting_grain: {range: TimeGrainEnum, description: "The time grain a metric is reported at unless asked otherwise ('for each day')."}
+  non_additive: {range: NonAdditive, inlined: true, description: "The dimensions a stored measure must not be summed across."}
+  per: {range: Element, multivalued: true, description: "For each of these: a limit for each (3 refunds per customer per calendar month), or a value kept for each (the last balance for each account)."}
+  entity: {range: Element, description: "The kind of thing a conversion metric follows from its first event to its second (the cart, the user)."}
+  stable: {range: boolean, description: "False when a key can change (an email, a device id): it still identifies the row on a date, not over time."}
+  expected_cardinality: {range: CardinalityEnum, description: "The cardinality a join should have, as the text states it (one of the pair values); cardinality is what the data has."}
+  period: {range: Period, inlined: true, exact_mappings: ["dcterms:temporal"], description: "The stretch of data or business time the statement is about (the days data is missing, the quarter a target is for); it never ends the statement, which is valid_from and valid_to."}
+  recorded_on: {pattern: "^\\d{4}(-\\d{2}(-\\d{2})?)?$", description: "When the source says the fact or figure was recorded or restated, as an ISO date."}
   dialect: {description: "The SQL dialect of the expression (ANSI_SQL, Snowflake, BigQuery)."}
   time_grain: {range: TimeGrainEnum}
   external:
@@ -737,7 +838,7 @@ slots:
   keys: {multivalued: true, description: "Key pairs such as \"orders.customer_id = customers.customer_id\"."}
   dedup: {}
   join_type: {range: JoinTypeEnum}
-  primary: {range: boolean, description: "True when the source calls this the primary, core or canonical representation."}
+  primary: {range: boolean, description: "True when the source calls this the primary, core or canonical representation; false for an alternate key."}
   binds: {range: Element, multivalued: true, description: "Who must comply, when it is not the reader of the context."}
   absolute: {range: boolean, description: "True for a rule that nothing may override."}
   direct: {range: boolean, description: "True when the source says the reporting line is direct."}
@@ -756,10 +857,12 @@ slots:
   when_any: {range: Condition, multivalued: true, inlined_as_list: true, description: "Conditions of which any one is enough."}
   unless: {range: Condition, multivalued: true, inlined_as_list: true, description: "Exceptions; any one is enough to set the statement aside."}
   even_if: {range: Condition, multivalued: true, inlined_as_list: true, description: "Conditions under which the statement still holds ('even if', 'including when')."}
+  especially_when: {range: Condition, multivalued: true, inlined_as_list: true, description: "Conditions under which it holds most often or most strongly ('especially if', 'particularly when'); unlike when, it also holds without them."}
+  divided_by: {range: Element, multivalued: true, description: "The field or dimension that divides a group into its members (returns divided by reason into damaged and unwanted)."}
   because: {range: Condition, multivalued: true, inlined_as_list: true, description: "The reasons the source gives."}
   so_that: {range: Condition, multivalued: true, inlined_as_list: true, description: "The purpose the source gives ('in order to', 'so that')."}
   scope: {range: Element, multivalued: true, description: "The elements the statement is limited to."}
-  frequency: {range: FrequencyEnum, description: "How often, or how widely (most shoppers, some customers), it holds."}
+  frequency: {range: FrequencyEnum, description: "How often it holds; how many members of a class it holds for is quantifier."}
   certainty: {range: CertaintyEnum}
   importance: {range: ImportanceEnum, description: "How much it matters, when the source says (critical, very important, minor)."}
   negated: {range: boolean}
@@ -821,15 +924,25 @@ enums:
       area: {description: "A part of the business."}
       calendar: {}
       period: {}
+      party_attribute: {description: "Something about whoever is acting when a rule is checked (who they are, their region, their tenant), filled in when it is checked."}
       term: {}
       other: {}
   DatatypeEnum:
     permissible_values: {text: {}, number: {}, percent: {}, date: {}, duration: {}, boolean: {}, expression: {}, identifier: {}}
+  NormalizeEnum:
+    permissible_values:
+      trim: {description: "Leading and trailing spaces removed."}
+      ignore_case: {description: "Upper and lower case compared as equal."}
+      cast_to_text: {description: "Compared as text."}
+      cast_to_number: {description: "Compared as numbers."}
   ValueRoleEnum:
     permissible_values: {weight: {}, threshold: {}, result: {}, minimum: {}, maximum: {}, default: {}, target: {},
                          parameter: {description: "A placeholder to fill when using a pattern."},
                          example: {description: "A one-off value used only in this sample."},
-                         fixed: {description: "A constant that is part of the pattern itself (a fixed filter)."}}
+                         fixed: {description: "A constant that is part of the pattern itself (a fixed filter)."},
+                         window: {description: "A time window: a cumulative metric's trailing window (7 days), a conversion's window (14 days)."},
+                         offset: {description: "How far back a metric's one input is taken (one year back for the same week last year)."},
+                         percentile: {description: "The level of a percentile aggregation, between 0 and 1 (0.95)."}}
   VerbEnum:
     permissible_values:
       use: {exact_mappings: ["odrl:use"]}
@@ -890,9 +1003,9 @@ enums:
       need_not: {}
       by_default: {}
   CardinalityEnum:
-    permissible_values: {one_to_many: {}, many_to_one: {}, exactly_one: {}, one_or_more: {}, zero_or_more: {}}
+    permissible_values: {one_to_many: {}, many_to_one: {}, exactly_one: {}, one_or_more: {}, zero_or_more: {}, one_to_one: {}, many_to_many: {}, more_than_one: {description: "Two or more."}}
   ResponsibilityEnum:
-    permissible_values: {owns: {}, manages: {}, accountable: {}, responsible: {}, performs: {}, approves: {}, decides: {}, supervises: {}, coordinates: {}, reviews: {}, advises: {}, assists: {}}
+    permissible_values: {owns: {}, manages: {}, accountable: {}, responsible: {}, performs: {}, approves: {}, decides: {}, supervises: {}, coordinates: {}, reviews: {}, advises: {}, assists: {}, consulted: {description: "Asked for their view before the work is done (RACI's C)."}, kept_informed: {description: "Told about the work once it is done (RACI's I)."}}
   AccessEnum:
     permissible_values: {admin: {}, read: {}, none: {}, masked: {description: "Can see the data with sensitive values masked."}, use: {description: "Can call or operate a tool, system or service."}, granted: {description: "Has access; the text does not say what kind."}}
   MatchEnum:
@@ -903,15 +1016,17 @@ enums:
       narrow: {exact_mappings: ["skos:narrowMatch"]}
       related: {exact_mappings: ["skos:relatedMatch"]}
   JoinTypeEnum:
-    permissible_values: {left: {}, semi: {description: "Keeps rows of the first that have a match in the second, without adding its columns."}}
+    permissible_values: {left: {}, semi: {description: "Keeps rows of the first that have a match in the second, without adding its columns."}, anti: {description: "Keeps rows of the first that have no match in the second."}}
   DataRoleEnum:
     permissible_values: {key: {}, attribute: {}, label: {}, dimension: {}, time_dimension: {}, measure: {}}
   StatusEnum:
-    permissible_values: {canonical: {}, variant: {}, alias: {}, broken: {}, deprecated: {}, retired: {}}
+    permissible_values: {canonical: {}, variant: {}, alias: {}, broken: {}, deprecated: {}, retired: {}, certified: {description: "Approved by its owner as trusted to use (a certified table, a certified join)."}}
   DirectionEnum:
     permissible_values: {increases: {}, decreases: {}, changes: {}}
   FrequencyEnum:
     permissible_values: {always: {}, usually: {}, often: {}, sometimes: {}, rarely: {}}
+  QuantifierEnum:
+    permissible_values: {most: {}, some: {}, few: {description: "Few or hardly any."}}
   CertaintyEnum:
     permissible_values: {stated: {}, likely: {}, possible: {}, estimated: {}}
   ImportanceEnum:
@@ -947,9 +1062,9 @@ enums:
   LineEnum:
     permissible_values: {solid: {}, dotted: {}}
   MetricTypeEnum:
-    permissible_values: {simple: {}, ratio: {}, derived: {}}
+    permissible_values: {simple: {}, ratio: {}, derived: {}, cumulative: {description: "Applies its input's aggregation over a trailing window or from the start of a grain (distinct users over the last 7 days, not a sum of daily counts)."}, conversion: {description: "The share of an entity reaching a second event within a window, after a first (numerator over denominator)."}}
   AggregationEnum:
-    permissible_values: {sum: {}, count: {}, count_distinct: {}, average: {}, min: {}, max: {}, median: {}, percentile: {}, sum_boolean: {}}
+    permissible_values: {sum: {}, count: {}, count_distinct: {}, average: {}, min: {}, max: {}, median: {}, percentile: {description: "A percentile, continuous (interpolated); its level is a value with role percentile."}, percentile_discrete: {description: "A percentile that is always one of the values (PERCENTILE_DISC)."}, sum_boolean: {}, first: {description: "The earliest value in time order (first-touch attribution)."}, last: {description: "The latest value in time order (last-touch attribution)."}}
   ComparatorEnum:
     permissible_values: {equal: {}, not_equal: {}, more_than: {}, at_least: {}, less_than: {}, at_most: {}, in: {}, not_in: {}, is_null: {}, is_not_null: {}}
   TimeGrainEnum:

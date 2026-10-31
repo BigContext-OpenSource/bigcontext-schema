@@ -1,0 +1,4 @@
+conforms: false
+breaks: D2
+reference_checker_says:
+- 'Statement s.7 (ComputedAs) has both a window and grain_to_date: a cumulative metric adds up over a trailing window or from the start of a grain, not both.'

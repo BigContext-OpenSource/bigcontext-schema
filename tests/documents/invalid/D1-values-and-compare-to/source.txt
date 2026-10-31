@@ -1,0 +1,12 @@
+Order tracking policy (online store)
+
+Customers must receive a text message when their order goes out for delivery.
+Standard orders usually ship within two business days, unless the item is on backorder.
+Express and Standard together make up the shipping options.
+The Fulfillment team is part of Operations and is responsible for shipping.
+The Support team answers delivery questions.
+
+When an order is late:
+1. Check the carrier status.
+2. If the parcel is lost, reship the order.
+3. Tell the customer what happened.

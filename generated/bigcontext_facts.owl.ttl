@@ -155,7 +155,7 @@ bcf:has_input a owl:ObjectProperty ;
 	skos:inScheme <https://w3id.org/bigcontext-schema/facts> .
 bcf:has_member a owl:ObjectProperty ;
 	rdfs:label "has_member" ;
-	skos:definition "A group (a data product, a segment, a set of values) has a member." ;
+	skos:definition "A group (a data product, a segment, a region) has a member." ;
 	skos:inScheme <https://w3id.org/bigcontext-schema/facts> .
 bcf:has_numerator a owl:ObjectProperty ;
 	rdfs:label "has_numerator" ;
@@ -264,7 +264,7 @@ bcf:reviews a owl:ObjectProperty ;
 	skos:inScheme <https://w3id.org/bigcontext-schema/facts> .
 bcf:same_as a owl:ObjectProperty , owl:SymmetricProperty , owl:TransitiveProperty ;
 	rdfs:label "same_as" ;
-	skos:definition "Two sources' elements stand for the same thing, decided by a person (an exact Mapping in force)." ;
+	skos:definition "Two elements stand for the same thing, within one source or across two, decided by a person (an exact Mapping in force)." ;
 	skos:inScheme <https://w3id.org/bigcontext-schema/facts> .
 bcf:supervises a owl:ObjectProperty ;
 	rdfs:label "supervises" ;

@@ -1,0 +1,4 @@
+conforms: false
+breaks: D2
+reference_checker_says:
+- 'Statement s.7 (ComputedAs) has an offset but is not a derived metric with one input: the earlier copy of a metric is its own derived metric over that one metric.'

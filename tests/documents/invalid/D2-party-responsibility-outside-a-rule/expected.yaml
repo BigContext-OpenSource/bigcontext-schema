@@ -1,0 +1,4 @@
+conforms: false
+breaks: D2
+reference_checker_says:
+- Statement s.4 (PartOf) has party_responsibility outside a Rule's when or unless, where nothing says what whoever is acting must hold it for.

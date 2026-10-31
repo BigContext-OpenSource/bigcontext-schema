@@ -1,0 +1,871 @@
+schema_version: 1.1.0
+source:
+  id: store-analytics-notes
+  title: Store analytics notes
+  as_of: '2026-10-01'
+things:
+- id: t.shop.orders
+  label: orders
+  thing_type: table
+  evidence:
+  - quote: The join from orders
+- id: t.shop.invoices
+  label: invoices
+  thing_type: table
+  evidence:
+  - quote: to invoices is certified
+- id: t.shop.products
+  label: products
+  thing_type: table
+  evidence:
+  - quote: Products join
+- id: t.shop.suppliers
+  label: suppliers
+  thing_type: table
+  evidence:
+  - quote: join to suppliers
+- id: t.shop.customers
+  label: customers
+  thing_type: table
+  evidence:
+  - quote: Orders join to customers
+- id: t.shop.customers.customer_id
+  label: customer_id
+  thing_type: field
+  evidence:
+  - quote: customer_id
+- id: t.shop.customers.email
+  label: email
+  thing_type: field
+  evidence:
+  - quote: and also by email
+- id: t.shop.orders.store_id
+  label: store_id
+  thing_type: field
+  evidence:
+  - quote: the orders of their own store
+- id: t.shop.refunds.requested_by
+  label: requested by
+  thing_type: field
+  evidence:
+  - quote: Whoever requests a refund
+- id: t.hr.staff.store_id
+  label: store_id
+  thing_type: field
+  evidence:
+  - quote: the store_id on their staff record
+- id: t.mail.contacts
+  label: newsletter contacts
+  thing_type: table
+  evidence:
+  - quote: a newsletter contact
+- id: t.mail.contacts.email
+  label: email
+  thing_type: field
+  evidence:
+  - quote: lowercased emails
+- id: t.mail.contacts.customer_number
+  label: customer number
+  thing_type: field
+  evidence:
+  - quote: customer numbers as text
+- id: t.shop.payments
+  label: payments
+  thing_type: table
+  evidence:
+  - quote: split payments
+- id: t.shop.orders.postcode
+  label: postcode
+  thing_type: field
+  evidence:
+  - quote: order postcodes
+- id: t.wh.deliveries
+  label: warehouse deliveries
+  thing_type: table
+  evidence:
+  - quote: Warehouse postcodes
+- id: t.wh.deliveries.postcode
+  label: postcode
+  thing_type: field
+  evidence:
+  - quote: Warehouse postcodes
+- id: t.sales.order_items
+  label: Order Items
+  thing_type: table
+  physical_name: '"Sales"."Order Items"'
+  evidence:
+  - quote: The "Order Items" table in the "Sales" schema
+- id: t.sales.order_items.order_date
+  label: Order Date
+  thing_type: field
+  physical_name: '"Order Date"'
+  evidence:
+  - quote: '"Order Date"'
+- id: t.sales.order_items.orderId
+  label: orderId
+  thing_type: field
+  physical_name: '"orderId"'
+  evidence:
+  - quote: '"orderId"'
+- id: t.sales.order_items.OrderID
+  label: OrderID
+  thing_type: field
+  physical_name: '"OrderID"'
+  evidence:
+  - quote: '"OrderID"'
+- id: t.store_managers
+  label: store managers
+  thing_type: team
+  evidence:
+  - quote: Store managers
+- id: t.finance
+  label: Finance
+  thing_type: team
+  evidence:
+  - quote: Finance is consulted
+- id: t.manager
+  label: manager
+  thing_type: post
+  evidence:
+  - quote: two different managers
+- id: t.sales_dashboard
+  label: sales dashboard
+  thing_type: document
+  evidence:
+  - quote: the sales dashboard
+concepts:
+- id: c.shopper
+  label: shopper
+  concept_type: entity_type
+  evidence:
+  - quote: Most shoppers
+- id: c.delivery_date
+  label: delivery date
+  concept_type: term
+  evidence:
+  - quote: delivery dates
+- id: c.returns_window
+  label: returns window
+  concept_type: term
+  evidence:
+  - quote: the returns window
+- id: c.buyer
+  label: buyer
+  concept_type: role
+  evidence:
+  - quote: The buyer
+- id: c.recipient
+  label: recipient
+  concept_type: role
+  evidence:
+  - quote: the recipient
+- id: c.basket_size
+  label: basket size
+  concept_type: metric
+  evidence:
+  - quote: Basket size
+- id: c.product_views
+  label: product views
+  concept_type: metric
+  evidence:
+  - quote: product views
+- id: c.sale_source
+  label: sale's source
+  concept_type: dimension
+  evidence:
+  - quote: A sale's source
+- id: c.ad_click
+  label: ad click
+  concept_type: entity_type
+  evidence:
+  - quote: the first ad the shopper clicked
+- id: c.order
+  label: order
+  concept_type: entity_type
+  evidence:
+  - quote: Orders and invoices
+- id: c.invoice
+  label: invoice
+  concept_type: entity_type
+  evidence:
+  - quote: Orders and invoices
+- id: c.split_order
+  label: split order
+  concept_type: entity_type
+  evidence:
+  - quote: a split order
+- id: c.parcel
+  label: parcel
+  concept_type: entity_type
+  evidence:
+  - quote: more than one parcel
+- id: c.customer
+  label: customer
+  concept_type: entity_type
+  evidence:
+  - quote: Some customers
+- id: c.wholesale_buyer
+  label: wholesale buyer
+  concept_type: segment
+  evidence:
+  - quote: wholesale buyers
+- id: c.customer_region
+  label: customer's region
+  concept_type: dimension
+  evidence:
+  - quote: A customer's region
+- id: c.phone
+  label: phone
+  concept_type: term
+  evidence:
+  - quote: by phone
+- id: c.sales
+  label: sales
+  concept_type: metric
+  evidence:
+  - quote: Sales are often looked at
+- id: c.region
+  label: region
+  concept_type: dimension
+  evidence:
+  - quote: by region
+- id: c.device
+  label: device
+  concept_type: dimension
+  evidence:
+  - quote: by device
+- id: c.return
+  label: return
+  concept_type: entity_type
+  evidence:
+  - quote: Returns are sometimes divided
+- id: c.return_reason
+  label: return reason
+  concept_type: dimension
+  evidence:
+  - quote: divided by reason
+- id: c.damaged_return
+  label: damaged
+  concept_type: category_value
+  evidence:
+  - quote: into damaged
+- id: c.unwanted_return
+  label: unwanted
+  concept_type: category_value
+  evidence:
+  - quote: and unwanted
+- id: c.q1_2026
+  label: Q1 2026
+  concept_type: period
+  evidence:
+  - quote: Q1 sales
+- id: c.total_amount
+  label: total amount
+  concept_type: term
+  evidence:
+  - quote: to $1.2 million
+- id: c.order_count
+  label: order count
+  concept_type: metric
+  evidence:
+  - quote: Orders over the last 7 days
+- id: c.orders_7d
+  label: orders over the last 7 days
+  concept_type: metric
+  evidence:
+  - quote: Orders over the last 7 days
+- id: c.sales_ytd
+  label: sales year to date
+  concept_type: metric
+  evidence:
+  - quote: Sales year to date
+- id: c.sales_last_year
+  label: sales the same week last year
+  concept_type: metric
+  evidence:
+  - quote: Sales the same week last year
+- id: c.sales_vs_last_year
+  label: sales against last year
+  concept_type: metric
+  evidence:
+  - quote: compared with this week's sales
+- id: c.cart_conversion
+  label: cart conversion
+  concept_type: metric
+  evidence:
+  - quote: Cart conversion
+- id: c.carts_ordered
+  label: carts that become orders
+  concept_type: metric
+  evidence:
+  - quote: carts that become orders
+- id: c.carts_started
+  label: carts
+  concept_type: metric
+  evidence:
+  - quote: the share of carts
+- id: c.cart
+  label: cart
+  concept_type: entity_type
+  evidence:
+  - quote: the share of carts
+- id: c.stock
+  label: stock
+  concept_type: metric
+  evidence:
+  - quote: Stock is the last count
+- id: c.day
+  label: day
+  concept_type: dimension
+  evidence:
+  - quote: of each day
+- id: c.warehouse
+  label: warehouse
+  concept_type: entity_type
+  evidence:
+  - quote: for each warehouse
+- id: c.daily_sales
+  label: daily sales
+  concept_type: metric
+  evidence:
+  - quote: Days with no sales show 0.
+- id: c.viewer_store
+  label: the viewer's store
+  concept_type: party_attribute
+  evidence:
+  - quote: their own store
+- id: c.acting_person
+  label: whoever is approving
+  concept_type: party_attribute
+  evidence:
+  - quote: may not approve it
+- id: c.refund
+  label: refund
+  concept_type: entity_type
+  evidence:
+  - quote: Whoever requests a refund
+- id: c.calendar_month
+  label: calendar month
+  concept_type: period
+  evidence:
+  - quote: per calendar month
+- id: c.metric_definition
+  label: metric definition
+  concept_type: term
+  evidence:
+  - quote: its definition
+- id: c.delivery_time
+  label: delivery time
+  concept_type: metric
+  evidence:
+  - quote: Delivery time
+- id: c.fiscal_calendar
+  label: fiscal calendar
+  concept_type: calendar
+  evidence:
+  - quote: the fiscal calendar
+- id: c.privacy_rules
+  label: privacy rules
+  concept_type: term
+  evidence:
+  - quote: Privacy rules
+- id: c.store_guidelines
+  label: store guidelines
+  concept_type: term
+  evidence:
+  - quote: the store guidelines
+statements:
+- id: s.1
+  predicate: Habit
+  subject: c.shopper
+  quantifier: most
+  action:
+    verb: ask
+    objects:
+    - c.delivery_date
+  evidence:
+  - quote: Most shoppers ask about delivery dates
+- id: s.2
+  predicate: Habit
+  subject: c.shopper
+  quantifier: few
+  action:
+    verb: ask
+    objects:
+    - c.returns_window
+  evidence:
+  - quote: few ask about the returns window
+- id: s.3
+  predicate: Overlaps
+  subject: c.buyer
+  object: c.recipient
+  frequency: often
+  evidence:
+  - quote: The buyer is often also the recipient.
+- id: s.4
+  predicate: CorrelatesWith
+  subject: c.basket_size
+  object: c.product_views
+  direction: increases
+  evidence:
+  - quote: Basket size tends to rise with product views, though neither causes the other.
+- id: s.5
+  predicate: ComputedAs
+  subject: c.sale_source
+  aggregation: first
+  expression: the first ad the shopper clicked
+  inputs:
+  - c.ad_click
+  evidence:
+  - quote: A sale's source is the first ad the shopper clicked.
+- id: s.6
+  predicate: Has
+  subject: c.order
+  object: c.invoice
+  cardinality: one_to_one
+  evidence:
+  - quote: Orders and invoices match one to one
+- id: s.7
+  predicate: Has
+  subject: c.split_order
+  object: c.parcel
+  cardinality: more_than_one
+  evidence:
+  - quote: a split order has more than one parcel
+- id: s.8
+  predicate: JoinsTo
+  subject: t.shop.products
+  object: t.shop.suppliers
+  cardinality: many_to_many
+  evidence:
+  - quote: Products join to suppliers many to many.
+- id: s.9
+  predicate: JoinsTo
+  subject: t.shop.orders
+  object: t.shop.invoices
+  evidence:
+  - quote: The join from orders to invoices
+- id: s.10
+  predicate: HasStatus
+  subject: s.9
+  status: certified
+  evidence:
+  - quote: The join from orders to invoices is certified.
+- id: s.11
+  predicate: IsA
+  subject: c.wholesale_buyer
+  object: c.customer
+  evidence:
+  - quote: Some customers are wholesale buyers.
+- id: s.12
+  predicate: ComputedAs
+  subject: c.customer_region
+  aggregation: last
+  expression: the last region on their address history
+  evidence:
+  - quote: A customer's region is the last region on their address history.
+- id: s.13
+  predicate: Habit
+  subject: c.wholesale_buyer
+  frequency: usually
+  action:
+    verb: other
+    specific_verb: order
+    via:
+    - c.phone
+  evidence:
+  - quote: Wholesale buyers usually order by phone.
+- id: s.14
+  predicate: Habit
+  frequency: often
+  action:
+    verb: analyze
+    specific_verb: look at
+    objects:
+    - c.sales
+    by:
+    - c.region
+    - c.device
+  evidence:
+  - quote: Sales are often looked at by region and by device.
+- id: s.15
+  predicate: Groups
+  subject: c.return
+  members:
+  - c.damaged_return
+  - c.unwanted_return
+  divided_by:
+  - c.return_reason
+  frequency: sometimes
+  evidence:
+  - quote: Returns are sometimes divided by reason into damaged and unwanted.
+- id: s.16
+  predicate: SynonymOf
+  term: guests
+  subject: c.shopper
+  usage: sometimes
+  especially_when:
+  - description: they have no account
+  evidence:
+  - quote: Shoppers are sometimes called guests, especially when they have no account.
+- id: s.17
+  predicate: Caveat
+  subject: t.shop.orders
+  text: order data is missing
+  period:
+    start: '2026-06-01'
+    end: '2026-06-03'
+  evidence:
+  - quote: Order data is missing from 1 to 3 June 2026.
+- id: s.18
+  predicate: HasProperty
+  subject: c.sales
+  attribute: c.total_amount
+  property_value:
+    value: '1200000'
+    datatype: number
+    unit: USD
+  period:
+    named: c.q1_2026
+  recorded_on: '2026-05-10'
+  evidence:
+  - quote: Q1 sales were restated on 10 May 2026 to $1.2 million.
+- id: s.19
+  predicate: ComputedAs
+  subject: c.orders_7d
+  metric_type: cumulative
+  expression: orders over the last 7 days
+  inputs:
+  - c.order_count
+  values:
+  - value: '7'
+    datatype: duration
+    unit: days
+    value_role: window
+  reporting_grain: day
+  evidence:
+  - quote: Orders over the last 7 days are counted every day.
+- id: s.20
+  predicate: ComputedAs
+  subject: c.sales_ytd
+  metric_type: cumulative
+  expression: sales from the start of the fiscal year
+  inputs:
+  - c.sales
+  grain_to_date: year
+  calendar: c.fiscal_calendar
+  evidence:
+  - quote: Sales year to date add up from the start of the fiscal year, on the fiscal calendar.
+- id: s.21
+  predicate: ComputedAs
+  subject: c.sales_last_year
+  metric_type: derived
+  expression: sales
+  inputs:
+  - c.sales
+  values:
+  - value: '1'
+    datatype: duration
+    unit: year
+    value_role: offset
+  evidence:
+  - quote: Sales the same week last year
+- id: s.22
+  predicate: ComputedAs
+  subject: c.sales_vs_last_year
+  metric_type: derived
+  expression: sales / sales_last_year - 1
+  inputs:
+  - c.sales
+  - c.sales_last_year
+  evidence:
+  - quote: Sales the same week last year are compared with this week's sales.
+- id: s.23
+  predicate: ComputedAs
+  subject: c.cart_conversion
+  metric_type: conversion
+  expression: carts that become orders / carts
+  numerator: c.carts_ordered
+  denominator: c.carts_started
+  entity: c.cart
+  values:
+  - value: '2'
+    datatype: duration
+    unit: days
+    value_role: window
+  evidence:
+  - quote: Cart conversion is the share of carts that become orders within 2 days.
+- id: s.24
+  predicate: ComputedAs
+  subject: c.stock
+  aggregation: sum
+  expression: stock count
+  non_additive:
+    across:
+    - c.day
+    take: last
+    per:
+    - c.warehouse
+  evidence:
+  - quote: Stock is the last count of each day for each warehouse, and is never summed across days.
+- id: s.25
+  predicate: ComputedAs
+  subject: c.daily_sales
+  metric_type: simple
+  expression: sales
+  inputs:
+  - c.sales
+  reporting_grain: day
+  values:
+  - value: '0'
+    datatype: number
+    value_role: default
+  evidence:
+  - quote: Days with no sales show 0.
+- id: s.26
+  predicate: HasAccess
+  subject: t.store_managers
+  object: t.shop.orders
+  access: read
+  filters:
+  - description: their own store
+    field: t.shop.orders.store_id
+    comparator: equal
+    compare_to: c.viewer_store
+  evidence:
+  - quote: Store managers see only the orders of their own store.
+- id: s.27
+  predicate: ImplementedBy
+  subject: c.viewer_store
+  object: t.hr.staff.store_id
+  evidence:
+  - quote: A viewer's store is the store_id on their staff record.
+- id: s.28
+  predicate: Rule
+  modality: must_not
+  action:
+    verb: approve
+    objects:
+    - c.refund
+  when:
+  - description: the refund was requested by whoever is approving
+    field: t.shop.refunds.requested_by
+    comparator: equal
+    compare_to: c.acting_person
+  evidence:
+  - quote: Whoever requests a refund may not approve it.
+- id: s.29
+  predicate: Rule
+  modality: must_not
+  action:
+    verb: other
+    specific_verb: refund
+    objects:
+    - c.refund
+    to:
+    - c.customer
+    values:
+    - value: '3'
+      datatype: number
+      unit: refunds
+      value_role: threshold
+      comparator: more_than
+      per:
+      - c.customer
+      - c.calendar_month
+  evidence:
+  - quote: No customer gets more than 3 refunds per calendar month.
+- id: s.30
+  predicate: Rule
+  modality: must_not
+  action:
+    verb: other
+    specific_verb: refund
+    objects:
+    - c.refund
+  when:
+  - description: the refund is over $500
+    values:
+    - value: '500'
+      datatype: number
+      unit: USD
+      value_role: threshold
+      comparator: more_than
+  unless:
+  - description: two different managers approve it
+    about:
+    - t.manager
+    values:
+    - value: '2'
+      datatype: number
+      unit: approvals
+      value_role: threshold
+      comparator: at_least
+      distinct: true
+  evidence:
+  - quote: A refund over $500 needs approval from two different managers.
+- id: s.31
+  predicate: ResponsibleFor
+  subject: t.finance
+  responsibility: consulted
+  object: t.sales_dashboard
+  evidence:
+  - quote: Finance is consulted
+- id: s.32
+  predicate: ResponsibleFor
+  subject: t.store_managers
+  responsibility: kept_informed
+  object: t.sales_dashboard
+  evidence:
+  - quote: the store managers are kept informed
+- id: s.33
+  predicate: JoinsTo
+  subject: t.shop.customers
+  object: t.shop.orders
+  join_type: anti
+  evidence:
+  - quote: To find customers with no order, keep the customers that have no match in orders.
+- id: s.34
+  predicate: JoinsTo
+  subject: t.shop.orders
+  object: t.shop.customers
+  role: c.buyer
+  evidence:
+  - quote: once as the buyer
+- id: s.35
+  predicate: JoinsTo
+  subject: t.shop.orders
+  object: t.shop.customers
+  role: c.recipient
+  evidence:
+  - quote: once as the recipient
+- id: s.36
+  predicate: IdentifiedBy
+  subject: t.shop.customers
+  members:
+  - t.shop.customers.customer_id
+  primary: true
+  evidence:
+  - quote: Customers are identified by customer_id
+- id: s.37
+  predicate: IdentifiedBy
+  subject: t.shop.customers
+  members:
+  - t.shop.customers.email
+  primary: false
+  stable: false
+  evidence:
+  - quote: and also by email, which can change
+- id: s.38
+  predicate: RecordMatch
+  subject: t.shop.customers
+  object: t.mail.contacts
+  key_pairs:
+  - from_field: t.shop.customers.email
+    to_field: t.mail.contacts.email
+    normalize:
+    - trim
+    - ignore_case
+  evidence:
+  - quote: A shop customer and a newsletter contact count as one customer when their trimmed, lowercased emails match.
+- id: s.39
+  predicate: RuleSet
+  subject: c.privacy_rules
+  overrides:
+  - s.40
+  evidence:
+  - quote: Privacy rules override the store guidelines.
+- id: s.40
+  predicate: RuleSet
+  subject: c.store_guidelines
+  evidence:
+  - quote: the store guidelines
+- id: s.41
+  predicate: JoinsTo
+  subject: t.shop.orders
+  object: t.shop.payments
+  cardinality: one_to_many
+  expected_cardinality: one_to_one
+  evidence:
+  - quote: Orders should match payments one to one, but split payments make duplicates.
+- id: s.42
+  predicate: Rule
+  modality: must_not
+  action:
+    verb: update
+    objects:
+    - c.metric_definition
+  unless:
+  - description: whoever changes it owns it
+    party_responsibility: owns
+  evidence:
+  - quote: Only a metric's owner may change its definition.
+- id: s.43
+  predicate: ComputedAs
+  subject: c.delivery_time
+  aggregation: percentile_discrete
+  expression: hours to deliver
+  values:
+  - value: '0.95'
+    datatype: number
+    value_role: percentile
+  evidence:
+  - quote: Delivery time is the 95th percentile of hours to deliver, always one of the actual times.
+- id: s.44
+  predicate: JoinsTo
+  subject: t.mail.contacts
+  object: t.shop.customers
+  key_pairs:
+  - from_field: t.mail.contacts.customer_number
+    to_field: t.shop.customers.customer_id
+    normalize:
+    - cast_to_number
+  evidence:
+  - quote: The newsletter keeps customer numbers as text; compare them with the shop's customer_id as numbers.
+- id: s.45
+  predicate: JoinsTo
+  subject: t.wh.deliveries
+  object: t.shop.orders
+  key_pairs:
+  - from_field: t.wh.deliveries.postcode
+    to_field: t.shop.orders.postcode
+    normalize:
+    - cast_to_text
+  evidence:
+  - quote: Warehouse postcodes are compared with order postcodes as text.
+- id: s.46
+  predicate: Contains
+  subject: t.sales.order_items
+  object: t.sales.order_items.order_date
+  data_role: time_dimension
+  evidence:
+  - quote: '"Order Date"'
+- id: s.47
+  predicate: Contains
+  subject: t.sales.order_items
+  object: t.sales.order_items.orderId
+  data_role: attribute
+  evidence:
+  - quote: '"orderId"'
+- id: s.48
+  predicate: Contains
+  subject: t.sales.order_items
+  object: t.sales.order_items.OrderID
+  data_role: attribute
+  evidence:
+  - quote: The "Order Items" table in the "Sales" schema has the columns "Order Date", "orderId" and "OrderID".
+- id: s.49
+  predicate: Habit
+  subject: c.shopper
+  quantifier: some
+  action:
+    verb: other
+    specific_verb: pay
+    via:
+    - c.invoice
+  evidence:
+  - quote: Some shoppers pay by invoice.
+skipped:
+- reason: heading
+  evidence:
+  - quote: Store analytics notes

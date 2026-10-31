@@ -4,7 +4,7 @@
 responsibilities. People, software and AI agents all read it the same way, and every statement points back to the
 exact words it came from.**
 
-Status: version 1.0.1. Licence: Apache 2.0, free for anyone to use and build on.
+Status: version 1.1.0. Licence: Apache 2.0, free for anyone to use and build on.
 
 ---
 
@@ -95,7 +95,7 @@ becomes one statement:
   when:
     - description: the refund is over $500
       about: [c.refund_amount]
-      values: [{value: "500", unit: USD, role: threshold, comparator: more_than}]
+      values: [{value: "500", datatype: number, unit: USD, value_role: threshold, comparator: more_than}]
   unless:
     - {description: the Finance controller has approved it, about: [t.finance_controller]}
     - {description: the customer is on the VIP list, about: [t.vip_list]}
@@ -192,8 +192,8 @@ nothing is BigContext Schema's own: the evidence-bound statement, how strongly a
 | [ORG](https://www.w3.org/TR/vocab-org/) (organizations) | MemberOf → `memberOf`, ReportsTo → `reportsTo`, Heads → `headOf` (exact); HoldsRole → `holds` (close); PartOf → `unitOf` (related); thing types unit, organization, post → `OrganizationalUnit`, `Organization`, `Post`; concept type role → `Role` |
 | [SKOS](https://www.w3.org/TR/skos-reference/) (concepts) | Mapping matches exact, close, broad, narrow, related → `exactMatch`, `closeMatch`, `broadMatch`, `narrowMatch`, `relatedMatch`; Mapping → `mappingRelation`; Definition → `definition`; IsA → `broader`; SynonymOf → `altLabel`; Example → `example` (close) |
 | [PROV-O](https://www.w3.org/TR/prov-o/) (provenance) | DerivedFrom → `wasDerivedFrom` (exact); CreatedBy → `wasAttributedTo` (close); the graph's provenance part uses PROV-O throughout |
-| [Dublin Core terms](https://www.dublincore.org/specifications/dublin-core/dcmi-terms/) | PartOf → `isPartOf`, Covers → `coverage`, CreatedBy → `creator` (close); GovernedBy → `conformsTo` (related) |
-| [DCAT 3](https://www.w3.org/TR/vocab-dcat-3/) (datasets) | thing type data_product → `Dataset` (close) |
+| [Dublin Core terms](https://www.dublincore.org/specifications/dublin-core/dcmi-terms/) | Period → `PeriodOfTime`, period → `temporal` (exact); PartOf → `isPartOf`, Covers → `coverage`, CreatedBy → `creator` (close); GovernedBy → `conformsTo` (related) |
+| [DCAT 3](https://www.w3.org/TR/vocab-dcat-3/) (datasets) | a period's start and end → `startDate`, `endDate` (exact); thing type data_product → `Dataset` (close) |
 | [DQV](https://www.w3.org/TR/vocab-dqv/) (data quality) | Caveat → `QualityAnnotation` (close) |
 | [Web Annotation](https://www.w3.org/TR/annotation-vocab/) | Evidence → `TextQuoteSelector` (close); its quote → `exact` (exact) |
 
@@ -202,7 +202,7 @@ nothing is BigContext Schema's own: the evidence-bound statement, how strongly a
 Found something BigContext Schema cannot express, expresses only roughly, or explains unclearly? Open an issue with
 the [enhancement form](https://github.com/BigContext-OpenSource/bigcontext-schema/issues/new?template=enhancement.yml):
 the example text, what it should become, and why the standard falls short today. `bigcontext-schema generate`
-writes these examples for you, in a `.unmapped.md` file beside each document. Issues are public: remove anything
+(in the free tools, coming soon) writes these examples for you, in a `.unmapped.md` file beside each document. Issues are public: remove anything
 confidential first.
 
 ## Versions
@@ -213,7 +213,9 @@ that version's files. From 1.0 on, versions follow [semantic versioning](https:/
 - a **patch** version (1.0.1) corrects wording, descriptions or generated files and changes nothing about which
   documents are valid;
 - a **minor** version (1.1) only adds statement types, fields or allowed values, and never removes or narrows one,
-  so every document valid under 1.0 stays valid under 1.1;
+  so every document valid under 1.0 stays valid under 1.1 and keeps its meaning and its graph facts; it may make a
+  field's description more precise when a new field takes over part of its meaning (in 1.1, `quantifier` takes
+  "how widely" from `frequency`);
 - a **major** version (2.0) is any other change.
 
 A reader that knows 1.0 and is given a 1.1 document validates it against the 1.1 files its `schema_version` names,
@@ -226,7 +228,7 @@ Permanent address: `https://w3id.org/bigcontext-schema` (being registered).
 
 ## Citing
 
-Big Context & Company (2026). *BigContext Schema*, version 1.0.1. https://w3id.org/bigcontext-schema
+Big Context & Company (2026). *BigContext Schema*, version 1.1.0. https://w3id.org/bigcontext-schema
 
 `CITATION.cff` gives the same in a form citation tools read.
 

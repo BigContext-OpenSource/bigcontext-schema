@@ -1,8 +1,8 @@
 # serves: F-057 — Ask questions across company structure, data, metrics and rules through standard graph formats
 id: https://w3id.org/bigcontext-schema/facts
 name: bigcontext_facts
-title: BigContext Schema facts (draft)
-version: 0.9.5-draft
+title: BigContext Schema facts
+version: 1.0.0
 description: >-
   The direct links a BigContext Schema graph projects from statements in force, and the logic a reasoner applies to
   them: which links are transitive, which are the inverse of which, and which chains of links imply another.

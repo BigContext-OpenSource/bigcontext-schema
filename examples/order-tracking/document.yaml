@@ -1,4 +1,4 @@
-schema_version: "0.9.5-draft"
+schema_version: "1.0.0"
 source: {id: order-tracking-policy, title: "Order tracking policy (online store)"}
 things:
   - {id: t.fulfillment_team, label: Fulfillment team, thing_type: team, evidence: [{quote: "The Fulfillment team is part of Operations"}]}

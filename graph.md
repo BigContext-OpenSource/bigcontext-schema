@@ -1,5 +1,5 @@
 <!-- serves: F-057 — Ask questions across company structure, data, metrics and rules through standard graph formats -->
-# BigContext Schema as a knowledge graph (draft 0.9)
+# BigContext Schema as a knowledge graph
 
 A BigContext Schema document becomes an RDF graph in four named parts. Anyone can produce or read the same graph
 from this description; the free tools do it with `bigcontext-schema graph`.

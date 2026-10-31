@@ -55,7 +55,7 @@ body:
     attributes:
       label: Version of BigContext Schema
       description: The version at the top of bigcontext_schema.yaml, or the one named in the .unmapped.md file.
-      placeholder: 0.9.5-draft
+      placeholder: 1.0.0
   - type: dropdown
     id: source
     attributes:

@@ -4,7 +4,7 @@
 responsibilities. People, software and AI agents all read it the same way, and every statement points back to the
 exact words it came from.**
 
-Status: draft 0.9, heading for 1.0. Licence: Apache 2.0, free for anyone to use and build on.
+Status: version 1.0.0. Licence: Apache 2.0, free for anyone to use and build on.
 
 ---
 
@@ -137,7 +137,7 @@ original sentence to anyone who asks why.
 4. **Use it.** Give the documents to your AI agent, load them into a knowledge graph and ask the questions in
    `queries/` (SPARQL) or `cypher/` (Cypher), or export the metric definitions to your semantic layer.
 
-The free BigContext Schema tools, available with a free sign-up, do steps 2 to 4 for you: an extraction prompt
+The free BigContext Schema tools (coming soon) do steps 2 to 4 for you: an extraction prompt
 with a check-and-fix loop, a checker that also verifies every quote, a coverage check, a graph export, and
 converters to dbt, OSI and ODRL.
 
@@ -220,13 +220,13 @@ A reader that knows 1.0 and is given a 1.1 document validates it against the 1.1
 or keeps what it understands and reports the rest. A company's own fields go under `extensions`, with keys that
 start with a prefix it owns (`acme:priority`); readers keep them and may ignore them, and they never change what the
 rest of the document means. A field many people need is proposed as an enhancement and can join the standard in a
-minor version. Until 1.0 the schema is a draft (`0.9.x-draft`), and anything may change.
+minor version. The versions before 1.0 were drafts (`0.9.x-draft`).
 
 Permanent address: `https://w3id.org/bigcontext-schema` (being registered).
 
 ## Citing
 
-Big Context & Company (2026). *BigContext Schema*, version 0.9.5-draft. https://w3id.org/bigcontext-schema
+Big Context & Company (2026). *BigContext Schema*, version 1.0.0. https://w3id.org/bigcontext-schema
 
 `CITATION.cff` gives the same in a form citation tools read.
 

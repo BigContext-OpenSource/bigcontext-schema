@@ -1823,7 +1823,7 @@ bcs:role a owl:ObjectProperty ;
 bcs:schema_version a owl:DatatypeProperty ;
 	rdfs:label "schema_version" ;
 	rdfs:range _:c14n581 ;
-	skos:definition "The version of BigContext Schema the document follows (1.0, or 0.9.5-draft before 1.0)." ;
+	skos:definition "The version of BigContext Schema the document follows, such as 1.0.0." ;
 	skos:inScheme <https://w3id.org/bigcontext-schema> .
 bcs:scope a owl:ObjectProperty ;
 	rdfs:label "scope" ;
@@ -2010,8 +2010,8 @@ bcs:within a owl:ObjectProperty ;
 	rdfs:range bcs:Value ;
 	skos:definition "A time limit ('answer within 4 business hours')." ;
 	skos:inScheme <https://w3id.org/bigcontext-schema> .
-<https://w3id.org/bigcontext-schema> dcterms:title "BigContext Schema (draft)" ;
-	pav:version "0.9.5-draft" ;
+<https://w3id.org/bigcontext-schema> dcterms:title "BigContext Schema" ;
+	pav:version "1.0.0" ;
 	a owl:Ontology ;
 	rdfs:label "bigcontext_schema" ;
 	skos:definition "A small, closed set of building blocks for expressing business context taken from natural language: simple rules, long procedures, company structure, data and mappings. Tier 1 is the element types, tier 2 the statement types (predicates) whose roles come from one shared dictionary of slots, tier 3 the qualifiers every statement can carry. A document can carry fields of its own under `extensions`. Shared groups of fields any statement can carry (decision, assignment, snapshot, data profile) cover kinds of context that recur across many statement types. A computable core (key pairs, filters, aggregations, metric types, time grains) lets metric and join definitions move to and from semantic-layer formats." .

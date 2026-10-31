@@ -1,4 +1,4 @@
-schema_version: "0.9.5-draft"
+schema_version: "1.0.0"
 source: {id: acme-outdoor-who-does-what, title: "Acme Outdoor: who does what", as_of: "2026-10-01"}
 things:
   - {id: t.acme_outdoor, label: Acme Outdoor, thing_type: organization, evidence: [{quote: "The Operations department is part of Acme Outdoor."}]}

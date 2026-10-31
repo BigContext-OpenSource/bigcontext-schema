@@ -2501,7 +2501,7 @@
                     ]
                 },
                 "schema_version": {
-                    "description": "The version of BigContext Schema the document follows (1.0, or 0.9.5-draft before 1.0).",
+                    "description": "The version of BigContext Schema the document follows, such as 1.0.0.",
                     "pattern": "^\\d+\\.\\d+(\\.\\d+)?(-[a-z0-9.]+)?$",
                     "type": "string"
                 },
@@ -23758,7 +23758,7 @@
             ]
         },
         "schema_version": {
-            "description": "The version of BigContext Schema the document follows (1.0, or 0.9.5-draft before 1.0).",
+            "description": "The version of BigContext Schema the document follows, such as 1.0.0.",
             "pattern": "^\\d+\\.\\d+(\\.\\d+)?(-[a-z0-9.]+)?$",
             "type": "string"
         },
@@ -23941,6 +23941,6 @@
     ],
     "title": "bigcontext_schema",
     "type": "object",
-    "version": "0.9.5-draft"
+    "version": "1.0.0"
 }
 

@@ -7,7 +7,7 @@ abstract: >-
 type: software
 authors:
   - name: "Big Context & Company"
-version: "0.9.5-draft"
+version: "1.0.0"
 date-released: "2026-10-30"
 license: Apache-2.0
 repository-code: "https://github.com/BigContext-OpenSource/bigcontext-schema"

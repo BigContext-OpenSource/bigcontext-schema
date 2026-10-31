@@ -1,5 +1,5 @@
 <!-- serves: F-056 — Express any context in BigContext Schema -->
-# Expressing a text in BigContext Schema (draft 0.9)
+# Expressing a text in BigContext Schema
 
 This guide is for anyone, person or AI agent, who turns a source text into a BigContext Schema document.
 **Faithfulness beats coverage.** If something does not fit, record it as `unmapped` with the statement type you
@@ -12,7 +12,7 @@ The schema is `bigcontext_schema.yaml` (LinkML), beside this guide. This guide e
 One YAML file, a `ContextDocument`:
 
 ```yaml
-schema_version: "0.9.5-draft"   # the version of BigContext Schema this document follows
+schema_version: "1.0.0"   # the version of BigContext Schema this document follows
 source: {id: <corpus id>, title: <title>, as_of: <the date the source is true as of, if it says>}
 revisions: [...]     # the source's own change history: {version, date, revised_by, summary, evidence}
 external: [...]      # ids you refer to that another section of the same source declares (see Ids)

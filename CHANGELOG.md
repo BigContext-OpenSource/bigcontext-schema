@@ -3,6 +3,12 @@
 What changed in each version of BigContext Schema. Versions follow the rules in the README: patch, minor and major,
 with drafts (`0.9.x-draft`) before 1.0.
 
+## 1.0.0 (2026-10-30)
+
+The first stable version. From here on a minor version (1.1) only adds statement types, fields or allowed values and
+leaves every 1.0 document valid; anything else is a major version (2.0). The content is that of 0.9.5-draft, with
+the titles and examples no longer marked draft.
+
 ## 0.9.5-draft (2026-10-30)
 
 - `conformance.md`: what a conforming document (D1 to D10), producer (P1 to P3) and graph builder (G1 to G4) must do.

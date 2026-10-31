@@ -1,8 +1,8 @@
 # serves: F-056 — Express any context in BigContext Schema
-id: https://w3id.org/bigcontext-schema  # permanent identifier to be registered before publishing
+id: https://w3id.org/bigcontext-schema
 name: bigcontext_schema
-title: BigContext Schema (draft)
-version: 0.9.5-draft
+title: BigContext Schema
+version: 1.0.0
 description: >-
   A small, closed set of building blocks for expressing business context taken from natural language:
   simple rules, long procedures, company structure, data and mappings. Tier 1 is the element types, tier 2 the
@@ -630,7 +630,7 @@ slots:
   schema_version:
     required: true
     pattern: "^\\d+\\.\\d+(\\.\\d+)?(-[a-z0-9.]+)?$"
-    description: The version of BigContext Schema the document follows (1.0, or 0.9.5-draft before 1.0).
+    description: The version of BigContext Schema the document follows, such as 1.0.0.
   extensions:
     range: Any
     description: >-

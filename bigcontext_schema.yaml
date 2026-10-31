@@ -2,7 +2,7 @@
 id: https://w3id.org/bigcontext-schema
 name: bigcontext_schema
 title: BigContext Schema
-version: 1.0.0
+version: 1.0.1
 description: >-
   A small, closed set of building blocks for expressing business context taken from natural language:
   simple rules, long procedures, company structure, data and mappings. Tier 1 is the element types, tier 2 the
@@ -144,7 +144,7 @@ classes:
       via:
         range: Element
         multivalued: true
-        description: The channel, tool or intermediary the action goes through (PagerDuty, Slack, the account manager).
+        description: The channel, tool or intermediary the action goes through (PagerDuty, Slack, the support desk).
       to:
         range: Element
         multivalued: true
@@ -473,7 +473,7 @@ classes:
   DerivedFrom:
     exact_mappings: ["prov:wasDerivedFrom"]
     is_a: Statement
-    description: An element is built or sourced from another (an aggregate built on a mart; a table built from a vendor's export).
+    description: An element is built or sourced from another (a summary table built on the orders table; a table built from a vendor's export).
     slots: [subject, object, text]
     slot_usage:
       subject: {required: true}
@@ -488,13 +488,13 @@ classes:
       members: {required: true, description: "The fields or elements that together identify it."}
   Has:
     is_a: Statement
-    description: Each subject has some number of the object (a boat has one owner; a user has many sessions).
+    description: Each subject has some number of the object (an order has one invoice; a customer has many orders).
     slots: [subject, object, cardinality, role]
     slot_usage:
       subject: {required: true}
       object: {required: true}
       cardinality: {description: "How many of the object each subject has."}
-      role: {description: "The role the object plays, if named (captain)."}
+      role: {description: "The role the object plays, if named (recipient)."}
   Caveat:
     close_mappings: ["dqv:QualityAnnotation"]
     is_a: Statement
@@ -503,7 +503,7 @@ classes:
     slot_usage:
       subject: {required: true}
       text: {required: true, description: "The limitation, as the source gives it."}
-      object: {description: "A second element the limitation is about (the table it will not tie to)."}
+      object: {description: "A second element the limitation is about (the report its totals do not match)."}
 
   # belief
   Indicates:
@@ -652,7 +652,7 @@ slots:
   as_of: {description: "The date a snapshot was true, as an ISO date (2026-10, 2026-10-01); on the source, the date every undated statement holds as of.", pattern: "^\\d{4}(-\\d{2}(-\\d{2})?)?$"}
   standard_attribute: {range: StandardAttributeEnum}
   within: {range: Value, inlined: true, description: "A time limit ('answer within 4 business hours')."}
-  exclusive: {range: boolean, description: "True when the source says only these (only analysts, the only channel with carts)."}
+  exclusive: {range: boolean, description: "True when the source says only these (only analysts, the only warehouse that ships abroad)."}
   held_by: {range: Element, multivalued: true, description: "Whose preference, view or wish this is."}
   proposed_by: {range: Element, multivalued: true}
   decided_by: {range: Element, multivalued: true}
@@ -739,7 +739,7 @@ slots:
   join_type: {range: JoinTypeEnum}
   primary: {range: boolean, description: "True when the source calls this the primary, core or canonical representation."}
   binds: {range: Element, multivalued: true, description: "Who must comply, when it is not the reader of the context."}
-  absolute: {range: boolean, description: "True for a hard rule that nothing may override."}
+  absolute: {range: boolean, description: "True for a rule that nothing may override."}
   direct: {range: boolean, description: "True when the source says the reporting line is direct."}
   with_consent_of: {range: Element, multivalued: true}
   audience: {range: Element, multivalued: true, description: "Who the representation is towards."}
@@ -759,7 +759,7 @@ slots:
   because: {range: Condition, multivalued: true, inlined_as_list: true, description: "The reasons the source gives."}
   so_that: {range: Condition, multivalued: true, inlined_as_list: true, description: "The purpose the source gives ('in order to', 'so that')."}
   scope: {range: Element, multivalued: true, description: "The elements the statement is limited to."}
-  frequency: {range: FrequencyEnum, description: "How often, or how widely (most users, some owners), it holds."}
+  frequency: {range: FrequencyEnum, description: "How often, or how widely (most shoppers, some customers), it holds."}
   certainty: {range: CertaintyEnum}
   importance: {range: ImportanceEnum, description: "How much it matters, when the source says (critical, very important, minor)."}
   negated: {range: boolean}
@@ -814,7 +814,7 @@ enums:
       metric: {}
       dimension: {}
       segment: {}
-      category_value: {description: "One value of a category (weather as a cancellation reason)."}
+      category_value: {description: "One value of a category (damaged as a return reason)."}
       state: {description: "A status or stage (approved refund, resolved incident)."}
       role: {exact_mappings: ["org:Role"]}
       activity: {description: "A kind of work, analysis or question; the use case a pattern or procedure serves."}

@@ -12,12 +12,12 @@ The schema is `bigcontext_schema.yaml` (LinkML), beside this guide. This guide e
 One YAML file, a `ContextDocument`:
 
 ```yaml
-schema_version: "1.0.0"   # the version of BigContext Schema this document follows
+schema_version: "1.0.1"   # the version of BigContext Schema this document follows
 source: {id: <corpus id>, title: <title>, as_of: <the date the source is true as of, if it says>}
 revisions: [...]     # the source's own change history: {version, date, revised_by, summary, evidence}
 external: [...]      # ids you refer to that another section of the same source declares (see Ids)
 things: [...]        # named individuals: people, teams, units, posts, organizations, agents, systems, tables, fields, channels
-concepts: [...]      # business words and categories: customer, revenue, approved refund, Paid Search, data analyst
+concepts: [...]      # business words and categories: customer, revenue, approved refund, Express, store manager
 statements: [...]    # one claim each; the predicate is the statement type
 procedures: [...]    # ordered steps, as instructions (do this) or descriptions (how work happens)
 conflicts: [...]     # statements that contradict each other: {statements: [ids], why}
@@ -87,7 +87,7 @@ Meaning
   body are `MemberOf` it, one statement each. Groups and HasValues take `complete`: true when the text says the list is
   complete, false when it says "such as", "including" or "etc."
 - `ComputedAs`: how something is calculated: `expression`, `inputs`, `values` (weights, thresholds: each with
-  `value_role`, `comparator`, `applies_to`), and `cases` for step-wise scoring ("over 10% gives -2 points": one case
+  `value_role`, `comparator`, `applies_to`), and `cases` for step-wise scoring ("orders over $100 earn 10 points": one case
   per row, `{when, result}`).
 - `Sequence`: items in order: funnel | levels | derivation | lifecycle | format, optional `complete`.
 - `HasProperty`: a literal value (`property_value`) for an attribute **that no other statement type covers**. Use
@@ -99,7 +99,7 @@ Meaning
 Rules
 - `Rule`: a norm. `modality`; `action`; `when` (all must hold), `when_any` (any one is enough), `unless`,
   `even_if`, `because`, `so_that`; `overrides`; `binds` (who must comply, when not the reader); `absolute: true`
-  for a "hard rule" or "hard ban".
+  for a rule nothing may override ("no exceptions", "whatever else applies").
 - `RuleSet`: a named group of rules sharing a scope, strength or precedence ("Privacy Rules, which override
   team guidelines"). `members` the rule ids, `overrides`, `absolute`. Write the precedence once here.
 
@@ -111,7 +111,7 @@ Rules
   | we pledge to, we commit to, is committed to, we will (an organization promising its readers) | `must`, binding the organization: a promise is a duty it takes on, never `unmapped` |
   | it is your responsibility to ensure, you are responsible for (said to the reader) | `must` |
   | never, do not, must not, banned, not allowed, not permitted, prohibited, is not acceptable | `must_not` |
-  | should, prefer, for preference, it is better to, can and should, generally/typically + an instruction | `should` |
+  | should, prefer, it is better to, can and should, generally/typically + an instruction | `should` |
   | is expected to, we ask that, please, we recommend, useful (of things to use) | `should` |
   | is encouraged to, shall work to, aims to, strives to, ideally, is intended to, we'd like to (an aim, not a duty) | `should` |
   | it is important to, it is critical to | `should`, with `importance: high` |
@@ -120,7 +120,7 @@ Rules
   | may, can, might, possibly (it might happen, not a permission) | no strength: write the fact with `certainty: possible` |
   | will, is (describing what a role or system does, not telling anyone to) | no strength: write the fact (`ResponsibleFor`, `Triggers`, `Transition`) |
   | need not, does not have to, is not required | `need_not` |
-  | by default, default to, unless otherwise specified, assume | `by_default` |
+  | by default, default to, unless told otherwise, assume | `by_default` |
   | **only** do X when Y / X **only** if Y (only limits when the act is allowed) | `must_not` X, `unless` Y (not `must`) |
   | check with, consult or clear it with Y **before** X ("clear any discount with Finance before you quote it") | `must_not` X, `unless` checked with Y (`about` Y), as for an approval (not `must` check, `when` before X) |
   | **only** these may do X ("only managers may approve") | `may`, with `exclusive: true` |
@@ -140,7 +140,7 @@ Rules
   strict majority", "at least two-thirds") is a condition with a threshold value:
   `{value: "2/3", value_role: threshold, comparator: at_least, unit: "of votes cast"}`. A consequence with no one named as acting ("they are removed", "the council
   is dissolved", "it is moved out automatically") is a `Transition` to the new state with `automatic: true` when
-  the text says it happens by itself; never invent who does it. Which source wins over another ("the finance team's formula is the one that runs"; "Snowflake is the source of truth for fiscal revenue"; "tax filings use the ledger") is a
+  the text says it happens by itself; never invent who does it. Which source wins over another ("the finance team's formula is the one that runs"; "the payments system is the source of truth for refunds"; "tax filings use the ledger") is a
   `Rule` to use one source, with the purpose it is for ("fiscal revenue", "tax filings") in `scope`, not `when`,
   and `overrides` when it names the rule or source it beats.
 
@@ -329,14 +329,14 @@ statement type.
   true as of a different date (a profile from February) carries its own `as_of`. Dated changes use `valid_from`
   and `valid_to` (`valid_to` is the last day it held).
 - **Service and scope**: `within` (a time limit: "answer within 4 business hours"), `via` (the channel or tool a
-  party is reached through), `exclusive: true` ("only analysts", "the only channel with carts").
+  party is reached through), `exclusive: true` ("only analysts", "the only warehouse that ships abroad").
 
 ## Qualifiers every statement can carry
 
 `when`, `when_any`, `unless`, `even_if`, `because`, `so_that` (lists of `{description, about}`), `scope`,
 `frequency` always | usually | often | sometimes | rarely (how often or how widely), `certainty` stated |
-likely | possible | estimated, `importance` critical | high ("VERY IMPORTANT", "the core of your
-analysis", "of particular interest"), `negated`, `currently` ("right now", "currently"), `valid_from`,
+likely | possible | estimated, `importance` critical | high ("above all", "the most important
+check", "pay close attention to"), `negated`, `currently` ("right now", "currently"), `valid_from`,
 `valid_to`, `valid_while` ("for the duration of the incident": a named period or state the statement holds through,
 such as "during the freeze" or "while Jo is on leave"; a recurring window, "during business hours", is a `when`;
 a list, like the other conditions), `stated_by` (a list).

@@ -103,7 +103,7 @@
                     "$ref": "#/$defs/VerbEnum"
                 },
                 "via": {
-                    "description": "The channel, tool or intermediary the action goes through (PagerDuty, Slack, the account manager).",
+                    "description": "The channel, tool or intermediary the action goes through (PagerDuty, Slack, the support desk).",
                     "items": {
                         "type": "string"
                     },
@@ -329,7 +329,7 @@
                     ]
                 },
                 "exclusive": {
-                    "description": "True when the source says only these (only analysts, the only channel with carts).",
+                    "description": "True when the source says only these (only analysts, the only warehouse that ships abroad).",
                     "type": [
                         "boolean",
                         "null"
@@ -355,7 +355,7 @@
                             "type": "null"
                         }
                     ],
-                    "description": "How often, or how widely (most users, some owners), it holds."
+                    "description": "How often, or how widely (most shoppers, some customers), it holds."
                 },
                 "held_by": {
                     "description": "Whose preference, view or wish this is.",
@@ -884,7 +884,7 @@
                     ]
                 },
                 "exclusive": {
-                    "description": "True when the source says only these (only analysts, the only channel with carts).",
+                    "description": "True when the source says only these (only analysts, the only warehouse that ships abroad).",
                     "type": [
                         "boolean",
                         "null"
@@ -910,7 +910,7 @@
                             "type": "null"
                         }
                     ],
-                    "description": "How often, or how widely (most users, some owners), it holds."
+                    "description": "How often, or how widely (most shoppers, some customers), it holds."
                 },
                 "held_by": {
                     "description": "Whose preference, view or wish this is.",
@@ -978,7 +978,7 @@
                     ]
                 },
                 "object": {
-                    "description": "A second element the limitation is about (the table it will not tie to).",
+                    "description": "A second element the limitation is about (the report its totals do not match).",
                     "type": [
                         "string",
                         "null"
@@ -1431,7 +1431,7 @@
                     ]
                 },
                 "exclusive": {
-                    "description": "True when the source says only these (only analysts, the only channel with carts).",
+                    "description": "True when the source says only these (only analysts, the only warehouse that ships abroad).",
                     "type": [
                         "boolean",
                         "null"
@@ -1471,7 +1471,7 @@
                             "type": "null"
                         }
                     ],
-                    "description": "How often, or how widely (most users, some owners), it holds."
+                    "description": "How often, or how widely (most shoppers, some customers), it holds."
                 },
                 "held_by": {
                     "description": "Whose preference, view or wish this is.",
@@ -2117,7 +2117,7 @@
                     ]
                 },
                 "exclusive": {
-                    "description": "True when the source says only these (only analysts, the only channel with carts).",
+                    "description": "True when the source says only these (only analysts, the only warehouse that ships abroad).",
                     "type": [
                         "boolean",
                         "null"
@@ -2143,7 +2143,7 @@
                             "type": "null"
                         }
                     ],
-                    "description": "How often, or how widely (most users, some owners), it holds."
+                    "description": "How often, or how widely (most shoppers, some customers), it holds."
                 },
                 "held_by": {
                     "description": "Whose preference, view or wish this is.",
@@ -2864,7 +2864,7 @@
                     ]
                 },
                 "exclusive": {
-                    "description": "True when the source says only these (only analysts, the only channel with carts).",
+                    "description": "True when the source says only these (only analysts, the only warehouse that ships abroad).",
                     "type": [
                         "boolean",
                         "null"
@@ -2890,7 +2890,7 @@
                             "type": "null"
                         }
                     ],
-                    "description": "How often, or how widely (most users, some owners), it holds."
+                    "description": "How often, or how widely (most shoppers, some customers), it holds."
                 },
                 "held_by": {
                     "description": "Whose preference, view or wish this is.",
@@ -3348,7 +3348,7 @@
                     ]
                 },
                 "exclusive": {
-                    "description": "True when the source says only these (only analysts, the only channel with carts).",
+                    "description": "True when the source says only these (only analysts, the only warehouse that ships abroad).",
                     "type": [
                         "boolean",
                         "null"
@@ -3374,7 +3374,7 @@
                             "type": "null"
                         }
                     ],
-                    "description": "How often, or how widely (most users, some owners), it holds."
+                    "description": "How often, or how widely (most shoppers, some customers), it holds."
                 },
                 "held_by": {
                     "description": "Whose preference, view or wish this is.",
@@ -3881,7 +3881,7 @@
                     ]
                 },
                 "exclusive": {
-                    "description": "True when the source says only these (only analysts, the only channel with carts).",
+                    "description": "True when the source says only these (only analysts, the only warehouse that ships abroad).",
                     "type": [
                         "boolean",
                         "null"
@@ -3907,7 +3907,7 @@
                             "type": "null"
                         }
                     ],
-                    "description": "How often, or how widely (most users, some owners), it holds."
+                    "description": "How often, or how widely (most shoppers, some customers), it holds."
                 },
                 "held_by": {
                     "description": "Whose preference, view or wish this is.",
@@ -4192,7 +4192,7 @@
         },
         "DerivedFrom": {
             "additionalProperties": false,
-            "description": "An element is built or sourced from another (an aggregate built on a mart; a table built from a vendor's export).",
+            "description": "An element is built or sourced from another (a summary table built on the orders table; a table built from a vendor's export).",
             "properties": {
                 "acting_for": {
                     "description": "Whom an acting or interim holder stands in for.",
@@ -4362,7 +4362,7 @@
                     ]
                 },
                 "exclusive": {
-                    "description": "True when the source says only these (only analysts, the only channel with carts).",
+                    "description": "True when the source says only these (only analysts, the only warehouse that ships abroad).",
                     "type": [
                         "boolean",
                         "null"
@@ -4388,7 +4388,7 @@
                             "type": "null"
                         }
                     ],
-                    "description": "How often, or how widely (most users, some owners), it holds."
+                    "description": "How often, or how widely (most shoppers, some customers), it holds."
                 },
                 "held_by": {
                     "description": "Whose preference, view or wish this is.",
@@ -4842,7 +4842,7 @@
                     ]
                 },
                 "exclusive": {
-                    "description": "True when the source says only these (only analysts, the only channel with carts).",
+                    "description": "True when the source says only these (only analysts, the only warehouse that ships abroad).",
                     "type": [
                         "boolean",
                         "null"
@@ -4868,7 +4868,7 @@
                             "type": "null"
                         }
                     ],
-                    "description": "How often, or how widely (most users, some owners), it holds."
+                    "description": "How often, or how widely (most shoppers, some customers), it holds."
                 },
                 "held_by": {
                     "description": "Whose preference, view or wish this is.",
@@ -5380,7 +5380,7 @@
                     ]
                 },
                 "exclusive": {
-                    "description": "True when the source says only these (only analysts, the only channel with carts).",
+                    "description": "True when the source says only these (only analysts, the only warehouse that ships abroad).",
                     "type": [
                         "boolean",
                         "null"
@@ -5406,7 +5406,7 @@
                             "type": "null"
                         }
                     ],
-                    "description": "How often, or how widely (most users, some owners), it holds."
+                    "description": "How often, or how widely (most shoppers, some customers), it holds."
                 },
                 "held_by": {
                     "description": "Whose preference, view or wish this is.",
@@ -5868,7 +5868,7 @@
                     ]
                 },
                 "exclusive": {
-                    "description": "True when the source says only these (only analysts, the only channel with carts).",
+                    "description": "True when the source says only these (only analysts, the only warehouse that ships abroad).",
                     "type": [
                         "boolean",
                         "null"
@@ -5894,7 +5894,7 @@
                             "type": "null"
                         }
                     ],
-                    "description": "How often, or how widely (most users, some owners), it holds."
+                    "description": "How often, or how widely (most shoppers, some customers), it holds."
                 },
                 "held_by": {
                     "description": "Whose preference, view or wish this is.",
@@ -6354,7 +6354,7 @@
                     ]
                 },
                 "exclusive": {
-                    "description": "True when the source says only these (only analysts, the only channel with carts).",
+                    "description": "True when the source says only these (only analysts, the only warehouse that ships abroad).",
                     "type": [
                         "boolean",
                         "null"
@@ -6380,7 +6380,7 @@
                             "type": "null"
                         }
                     ],
-                    "description": "How often, or how widely (most users, some owners), it holds."
+                    "description": "How often, or how widely (most shoppers, some customers), it holds."
                 },
                 "held_by": {
                     "description": "Whose preference, view or wish this is.",
@@ -6828,7 +6828,7 @@
                     ]
                 },
                 "exclusive": {
-                    "description": "True when the source says only these (only analysts, the only channel with carts).",
+                    "description": "True when the source says only these (only analysts, the only warehouse that ships abroad).",
                     "type": [
                         "boolean",
                         "null"
@@ -6854,7 +6854,7 @@
                             "type": "null"
                         }
                     ],
-                    "description": "How often, or how widely (most users, some owners), it holds."
+                    "description": "How often, or how widely (most shoppers, some customers), it holds."
                 },
                 "held_by": {
                     "description": "Whose preference, view or wish this is.",
@@ -7314,7 +7314,7 @@
                     ]
                 },
                 "exclusive": {
-                    "description": "True when the source says only these (only analysts, the only channel with carts).",
+                    "description": "True when the source says only these (only analysts, the only warehouse that ships abroad).",
                     "type": [
                         "boolean",
                         "null"
@@ -7340,7 +7340,7 @@
                             "type": "null"
                         }
                     ],
-                    "description": "How often, or how widely (most users, some owners), it holds."
+                    "description": "How often, or how widely (most shoppers, some customers), it holds."
                 },
                 "held_by": {
                     "description": "Whose preference, view or wish this is.",
@@ -7620,7 +7620,7 @@
         },
         "Has": {
             "additionalProperties": false,
-            "description": "Each subject has some number of the object (a boat has one owner; a user has many sessions).",
+            "description": "Each subject has some number of the object (an order has one invoice; a customer has many orders).",
             "properties": {
                 "acting_for": {
                     "description": "Whom an acting or interim holder stands in for.",
@@ -7801,7 +7801,7 @@
                     ]
                 },
                 "exclusive": {
-                    "description": "True when the source says only these (only analysts, the only channel with carts).",
+                    "description": "True when the source says only these (only analysts, the only warehouse that ships abroad).",
                     "type": [
                         "boolean",
                         "null"
@@ -7827,7 +7827,7 @@
                             "type": "null"
                         }
                     ],
-                    "description": "How often, or how widely (most users, some owners), it holds."
+                    "description": "How often, or how widely (most shoppers, some customers), it holds."
                 },
                 "held_by": {
                     "description": "Whose preference, view or wish this is.",
@@ -7962,7 +7962,7 @@
                     ]
                 },
                 "role": {
-                    "description": "The role the object plays, if named (captain).",
+                    "description": "The role the object plays, if named (recipient).",
                     "type": [
                         "string",
                         "null"
@@ -8283,7 +8283,7 @@
                     ]
                 },
                 "exclusive": {
-                    "description": "True when the source says only these (only analysts, the only channel with carts).",
+                    "description": "True when the source says only these (only analysts, the only warehouse that ships abroad).",
                     "type": [
                         "boolean",
                         "null"
@@ -8309,7 +8309,7 @@
                             "type": "null"
                         }
                     ],
-                    "description": "How often, or how widely (most users, some owners), it holds."
+                    "description": "How often, or how widely (most shoppers, some customers), it holds."
                 },
                 "held_by": {
                     "description": "Whose preference, view or wish this is.",
@@ -8756,7 +8756,7 @@
                     ]
                 },
                 "exclusive": {
-                    "description": "True when the source says only these (only analysts, the only channel with carts).",
+                    "description": "True when the source says only these (only analysts, the only warehouse that ships abroad).",
                     "type": [
                         "boolean",
                         "null"
@@ -8782,7 +8782,7 @@
                             "type": "null"
                         }
                     ],
-                    "description": "How often, or how widely (most users, some owners), it holds."
+                    "description": "How often, or how widely (most shoppers, some customers), it holds."
                 },
                 "held_by": {
                     "description": "Whose preference, view or wish this is.",
@@ -9246,7 +9246,7 @@
                     ]
                 },
                 "exclusive": {
-                    "description": "True when the source says only these (only analysts, the only channel with carts).",
+                    "description": "True when the source says only these (only analysts, the only warehouse that ships abroad).",
                     "type": [
                         "boolean",
                         "null"
@@ -9272,7 +9272,7 @@
                             "type": "null"
                         }
                     ],
-                    "description": "How often, or how widely (most users, some owners), it holds."
+                    "description": "How often, or how widely (most shoppers, some customers), it holds."
                 },
                 "held_by": {
                     "description": "Whose preference, view or wish this is.",
@@ -9730,7 +9730,7 @@
                     ]
                 },
                 "exclusive": {
-                    "description": "True when the source says only these (only analysts, the only channel with carts).",
+                    "description": "True when the source says only these (only analysts, the only warehouse that ships abroad).",
                     "type": [
                         "boolean",
                         "null"
@@ -9756,7 +9756,7 @@
                             "type": "null"
                         }
                     ],
-                    "description": "How often, or how widely (most users, some owners), it holds."
+                    "description": "How often, or how widely (most shoppers, some customers), it holds."
                 },
                 "held_by": {
                     "description": "Whose preference, view or wish this is.",
@@ -10209,7 +10209,7 @@
                     ]
                 },
                 "exclusive": {
-                    "description": "True when the source says only these (only analysts, the only channel with carts).",
+                    "description": "True when the source says only these (only analysts, the only warehouse that ships abroad).",
                     "type": [
                         "boolean",
                         "null"
@@ -10235,7 +10235,7 @@
                             "type": "null"
                         }
                     ],
-                    "description": "How often, or how widely (most users, some owners), it holds."
+                    "description": "How often, or how widely (most shoppers, some customers), it holds."
                 },
                 "held_by": {
                     "description": "Whose preference, view or wish this is.",
@@ -10697,7 +10697,7 @@
                     ]
                 },
                 "exclusive": {
-                    "description": "True when the source says only these (only analysts, the only channel with carts).",
+                    "description": "True when the source says only these (only analysts, the only warehouse that ships abroad).",
                     "type": [
                         "boolean",
                         "null"
@@ -10723,7 +10723,7 @@
                             "type": "null"
                         }
                     ],
-                    "description": "How often, or how widely (most users, some owners), it holds."
+                    "description": "How often, or how widely (most shoppers, some customers), it holds."
                 },
                 "held_by": {
                     "description": "Whose preference, view or wish this is.",
@@ -11171,7 +11171,7 @@
                     ]
                 },
                 "exclusive": {
-                    "description": "True when the source says only these (only analysts, the only channel with carts).",
+                    "description": "True when the source says only these (only analysts, the only warehouse that ships abroad).",
                     "type": [
                         "boolean",
                         "null"
@@ -11197,7 +11197,7 @@
                             "type": "null"
                         }
                     ],
-                    "description": "How often, or how widely (most users, some owners), it holds."
+                    "description": "How often, or how widely (most shoppers, some customers), it holds."
                 },
                 "held_by": {
                     "description": "Whose preference, view or wish this is.",
@@ -11644,7 +11644,7 @@
                     ]
                 },
                 "exclusive": {
-                    "description": "True when the source says only these (only analysts, the only channel with carts).",
+                    "description": "True when the source says only these (only analysts, the only warehouse that ships abroad).",
                     "type": [
                         "boolean",
                         "null"
@@ -11670,7 +11670,7 @@
                             "type": "null"
                         }
                     ],
-                    "description": "How often, or how widely (most users, some owners), it holds."
+                    "description": "How often, or how widely (most shoppers, some customers), it holds."
                 },
                 "held_by": {
                     "description": "Whose preference, view or wish this is.",
@@ -12120,7 +12120,7 @@
                     ]
                 },
                 "exclusive": {
-                    "description": "True when the source says only these (only analysts, the only channel with carts).",
+                    "description": "True when the source says only these (only analysts, the only warehouse that ships abroad).",
                     "type": [
                         "boolean",
                         "null"
@@ -12153,7 +12153,7 @@
                             "type": "null"
                         }
                     ],
-                    "description": "How often, or how widely (most users, some owners), it holds."
+                    "description": "How often, or how widely (most shoppers, some customers), it holds."
                 },
                 "held_by": {
                     "description": "Whose preference, view or wish this is.",
@@ -12617,7 +12617,7 @@
                     ]
                 },
                 "exclusive": {
-                    "description": "True when the source says only these (only analysts, the only channel with carts).",
+                    "description": "True when the source says only these (only analysts, the only warehouse that ships abroad).",
                     "type": [
                         "boolean",
                         "null"
@@ -12643,7 +12643,7 @@
                             "type": "null"
                         }
                     ],
-                    "description": "How often, or how widely (most users, some owners), it holds."
+                    "description": "How often, or how widely (most shoppers, some customers), it holds."
                 },
                 "held_by": {
                     "description": "Whose preference, view or wish this is.",
@@ -13111,7 +13111,7 @@
                     ]
                 },
                 "exclusive": {
-                    "description": "True when the source says only these (only analysts, the only channel with carts).",
+                    "description": "True when the source says only these (only analysts, the only warehouse that ships abroad).",
                     "type": [
                         "boolean",
                         "null"
@@ -13137,7 +13137,7 @@
                             "type": "null"
                         }
                     ],
-                    "description": "How often, or how widely (most users, some owners), it holds."
+                    "description": "How often, or how widely (most shoppers, some customers), it holds."
                 },
                 "held_by": {
                     "description": "Whose preference, view or wish this is.",
@@ -13591,7 +13591,7 @@
                     ]
                 },
                 "exclusive": {
-                    "description": "True when the source says only these (only analysts, the only channel with carts).",
+                    "description": "True when the source says only these (only analysts, the only warehouse that ships abroad).",
                     "type": [
                         "boolean",
                         "null"
@@ -13617,7 +13617,7 @@
                             "type": "null"
                         }
                     ],
-                    "description": "How often, or how widely (most users, some owners), it holds."
+                    "description": "How often, or how widely (most shoppers, some customers), it holds."
                 },
                 "held_by": {
                     "description": "Whose preference, view or wish this is.",
@@ -14089,7 +14089,7 @@
                     ]
                 },
                 "exclusive": {
-                    "description": "True when the source says only these (only analysts, the only channel with carts).",
+                    "description": "True when the source says only these (only analysts, the only warehouse that ships abroad).",
                     "type": [
                         "boolean",
                         "null"
@@ -14115,7 +14115,7 @@
                             "type": "null"
                         }
                     ],
-                    "description": "How often, or how widely (most users, some owners), it holds."
+                    "description": "How often, or how widely (most shoppers, some customers), it holds."
                 },
                 "held_by": {
                     "description": "Whose preference, view or wish this is.",
@@ -14645,7 +14645,7 @@
                     ]
                 },
                 "exclusive": {
-                    "description": "True when the source says only these (only analysts, the only channel with carts).",
+                    "description": "True when the source says only these (only analysts, the only warehouse that ships abroad).",
                     "type": [
                         "boolean",
                         "null"
@@ -14671,7 +14671,7 @@
                             "type": "null"
                         }
                     ],
-                    "description": "How often, or how widely (most users, some owners), it holds."
+                    "description": "How often, or how widely (most shoppers, some customers), it holds."
                 },
                 "held_by": {
                     "description": "Whose preference, view or wish this is.",
@@ -15139,7 +15139,7 @@
                     ]
                 },
                 "exclusive": {
-                    "description": "True when the source says only these (only analysts, the only channel with carts).",
+                    "description": "True when the source says only these (only analysts, the only warehouse that ships abroad).",
                     "type": [
                         "boolean",
                         "null"
@@ -15165,7 +15165,7 @@
                             "type": "null"
                         }
                     ],
-                    "description": "How often, or how widely (most users, some owners), it holds."
+                    "description": "How often, or how widely (most shoppers, some customers), it holds."
                 },
                 "held_by": {
                     "description": "Whose preference, view or wish this is.",
@@ -15659,7 +15659,7 @@
                     ]
                 },
                 "exclusive": {
-                    "description": "True when the source says only these (only analysts, the only channel with carts).",
+                    "description": "True when the source says only these (only analysts, the only warehouse that ships abroad).",
                     "type": [
                         "boolean",
                         "null"
@@ -15685,7 +15685,7 @@
                             "type": "null"
                         }
                     ],
-                    "description": "How often, or how widely (most users, some owners), it holds."
+                    "description": "How often, or how widely (most shoppers, some customers), it holds."
                 },
                 "held_by": {
                     "description": "Whose preference, view or wish this is.",
@@ -16333,7 +16333,7 @@
                     ]
                 },
                 "exclusive": {
-                    "description": "True when the source says only these (only analysts, the only channel with carts).",
+                    "description": "True when the source says only these (only analysts, the only warehouse that ships abroad).",
                     "type": [
                         "boolean",
                         "null"
@@ -16359,7 +16359,7 @@
                             "type": "null"
                         }
                     ],
-                    "description": "How often, or how widely (most users, some owners), it holds."
+                    "description": "How often, or how widely (most shoppers, some customers), it holds."
                 },
                 "held_by": {
                     "description": "Whose preference, view or wish this is.",
@@ -16817,7 +16817,7 @@
                     ]
                 },
                 "exclusive": {
-                    "description": "True when the source says only these (only analysts, the only channel with carts).",
+                    "description": "True when the source says only these (only analysts, the only warehouse that ships abroad).",
                     "type": [
                         "boolean",
                         "null"
@@ -16843,7 +16843,7 @@
                             "type": "null"
                         }
                     ],
-                    "description": "How often, or how widely (most users, some owners), it holds."
+                    "description": "How often, or how widely (most shoppers, some customers), it holds."
                 },
                 "held_by": {
                     "description": "Whose preference, view or wish this is.",
@@ -17320,7 +17320,7 @@
                     ]
                 },
                 "exclusive": {
-                    "description": "True when the source says only these (only analysts, the only channel with carts).",
+                    "description": "True when the source says only these (only analysts, the only warehouse that ships abroad).",
                     "type": [
                         "boolean",
                         "null"
@@ -17346,7 +17346,7 @@
                             "type": "null"
                         }
                     ],
-                    "description": "How often, or how widely (most users, some owners), it holds."
+                    "description": "How often, or how widely (most shoppers, some customers), it holds."
                 },
                 "held_by": {
                     "description": "Whose preference, view or wish this is.",
@@ -17684,7 +17684,7 @@
             "description": "A norm. When the conditions hold, the action must, must not, should, may or by default is done.",
             "properties": {
                 "absolute": {
-                    "description": "True for a hard rule that nothing may override.",
+                    "description": "True for a rule that nothing may override.",
                     "type": [
                         "boolean",
                         "null"
@@ -17871,7 +17871,7 @@
                     ]
                 },
                 "exclusive": {
-                    "description": "True when the source says only these (only analysts, the only channel with carts).",
+                    "description": "True when the source says only these (only analysts, the only warehouse that ships abroad).",
                     "type": [
                         "boolean",
                         "null"
@@ -17897,7 +17897,7 @@
                             "type": "null"
                         }
                     ],
-                    "description": "How often, or how widely (most users, some owners), it holds."
+                    "description": "How often, or how widely (most shoppers, some customers), it holds."
                 },
                 "held_by": {
                     "description": "Whose preference, view or wish this is.",
@@ -18183,7 +18183,7 @@
             "description": "A named group of rules that share a scope, a strength or a precedence (\"these rules override team guidelines\").",
             "properties": {
                 "absolute": {
-                    "description": "True for a hard rule that nothing may override.",
+                    "description": "True for a rule that nothing may override.",
                     "type": [
                         "boolean",
                         "null"
@@ -18357,7 +18357,7 @@
                     ]
                 },
                 "exclusive": {
-                    "description": "True when the source says only these (only analysts, the only channel with carts).",
+                    "description": "True when the source says only these (only analysts, the only warehouse that ships abroad).",
                     "type": [
                         "boolean",
                         "null"
@@ -18383,7 +18383,7 @@
                             "type": "null"
                         }
                     ],
-                    "description": "How often, or how widely (most users, some owners), it holds."
+                    "description": "How often, or how widely (most shoppers, some customers), it holds."
                 },
                 "held_by": {
                     "description": "Whose preference, view or wish this is.",
@@ -18853,7 +18853,7 @@
                     ]
                 },
                 "exclusive": {
-                    "description": "True when the source says only these (only analysts, the only channel with carts).",
+                    "description": "True when the source says only these (only analysts, the only warehouse that ships abroad).",
                     "type": [
                         "boolean",
                         "null"
@@ -18879,7 +18879,7 @@
                             "type": "null"
                         }
                     ],
-                    "description": "How often, or how widely (most users, some owners), it holds."
+                    "description": "How often, or how widely (most shoppers, some customers), it holds."
                 },
                 "held_by": {
                     "description": "Whose preference, view or wish this is.",
@@ -19353,7 +19353,7 @@
                     ]
                 },
                 "exclusive": {
-                    "description": "True when the source says only these (only analysts, the only channel with carts).",
+                    "description": "True when the source says only these (only analysts, the only warehouse that ships abroad).",
                     "type": [
                         "boolean",
                         "null"
@@ -19379,7 +19379,7 @@
                             "type": "null"
                         }
                     ],
-                    "description": "How often, or how widely (most users, some owners), it holds."
+                    "description": "How often, or how widely (most shoppers, some customers), it holds."
                 },
                 "held_by": {
                     "description": "Whose preference, view or wish this is.",
@@ -19964,7 +19964,7 @@
                     ]
                 },
                 "exclusive": {
-                    "description": "True when the source says only these (only analysts, the only channel with carts).",
+                    "description": "True when the source says only these (only analysts, the only warehouse that ships abroad).",
                     "type": [
                         "boolean",
                         "null"
@@ -19990,7 +19990,7 @@
                             "type": "null"
                         }
                     ],
-                    "description": "How often, or how widely (most users, some owners), it holds."
+                    "description": "How often, or how widely (most shoppers, some customers), it holds."
                 },
                 "held_by": {
                     "description": "Whose preference, view or wish this is.",
@@ -20662,7 +20662,7 @@
                     ]
                 },
                 "exclusive": {
-                    "description": "True when the source says only these (only analysts, the only channel with carts).",
+                    "description": "True when the source says only these (only analysts, the only warehouse that ships abroad).",
                     "type": [
                         "boolean",
                         "null"
@@ -20688,7 +20688,7 @@
                             "type": "null"
                         }
                     ],
-                    "description": "How often, or how widely (most users, some owners), it holds."
+                    "description": "How often, or how widely (most shoppers, some customers), it holds."
                 },
                 "held_by": {
                     "description": "Whose preference, view or wish this is.",
@@ -21157,7 +21157,7 @@
                     ]
                 },
                 "exclusive": {
-                    "description": "True when the source says only these (only analysts, the only channel with carts).",
+                    "description": "True when the source says only these (only analysts, the only warehouse that ships abroad).",
                     "type": [
                         "boolean",
                         "null"
@@ -21183,7 +21183,7 @@
                             "type": "null"
                         }
                     ],
-                    "description": "How often, or how widely (most users, some owners), it holds."
+                    "description": "How often, or how widely (most shoppers, some customers), it holds."
                 },
                 "held_by": {
                     "description": "Whose preference, view or wish this is.",
@@ -21779,7 +21779,7 @@
                     ]
                 },
                 "exclusive": {
-                    "description": "True when the source says only these (only analysts, the only channel with carts).",
+                    "description": "True when the source says only these (only analysts, the only warehouse that ships abroad).",
                     "type": [
                         "boolean",
                         "null"
@@ -21805,7 +21805,7 @@
                             "type": "null"
                         }
                     ],
-                    "description": "How often, or how widely (most users, some owners), it holds."
+                    "description": "How often, or how widely (most shoppers, some customers), it holds."
                 },
                 "from_state": {
                     "type": [
@@ -22271,7 +22271,7 @@
                     ]
                 },
                 "exclusive": {
-                    "description": "True when the source says only these (only analysts, the only channel with carts).",
+                    "description": "True when the source says only these (only analysts, the only warehouse that ships abroad).",
                     "type": [
                         "boolean",
                         "null"
@@ -22297,7 +22297,7 @@
                             "type": "null"
                         }
                     ],
-                    "description": "How often, or how widely (most users, some owners), it holds."
+                    "description": "How often, or how widely (most shoppers, some customers), it holds."
                 },
                 "held_by": {
                     "description": "Whose preference, view or wish this is.",
@@ -22769,7 +22769,7 @@
                     ]
                 },
                 "exclusive": {
-                    "description": "True when the source says only these (only analysts, the only channel with carts).",
+                    "description": "True when the source says only these (only analysts, the only warehouse that ships abroad).",
                     "type": [
                         "boolean",
                         "null"
@@ -22795,7 +22795,7 @@
                             "type": "null"
                         }
                     ],
-                    "description": "How often, or how widely (most users, some owners), it holds."
+                    "description": "How often, or how widely (most shoppers, some customers), it holds."
                 },
                 "held_by": {
                     "description": "Whose preference, view or wish this is.",
@@ -23376,7 +23376,7 @@
                     ]
                 },
                 "exclusive": {
-                    "description": "True when the source says only these (only analysts, the only channel with carts).",
+                    "description": "True when the source says only these (only analysts, the only warehouse that ships abroad).",
                     "type": [
                         "boolean",
                         "null"
@@ -23402,7 +23402,7 @@
                             "type": "null"
                         }
                     ],
-                    "description": "How often, or how widely (most users, some owners), it holds."
+                    "description": "How often, or how widely (most shoppers, some customers), it holds."
                 },
                 "held_by": {
                     "description": "Whose preference, view or wish this is.",
@@ -23941,6 +23941,6 @@
     ],
     "title": "bigcontext_schema",
     "type": "object",
-    "version": "1.0.0"
+    "version": "1.0.1"
 }
 

@@ -4,7 +4,7 @@
 responsibilities. People, software and AI agents all read it the same way, and every statement points back to the
 exact words it came from.**
 
-Status: version 1.0.0. Licence: Apache 2.0, free for anyone to use and build on.
+Status: version 1.0.1. Licence: Apache 2.0, free for anyone to use and build on.
 
 ---
 
@@ -226,7 +226,7 @@ Permanent address: `https://w3id.org/bigcontext-schema` (being registered).
 
 ## Citing
 
-Big Context & Company (2026). *BigContext Schema*, version 1.0.0. https://w3id.org/bigcontext-schema
+Big Context & Company (2026). *BigContext Schema*, version 1.0.1. https://w3id.org/bigcontext-schema
 
 `CITATION.cff` gives the same in a form citation tools read.
 

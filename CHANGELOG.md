@@ -3,6 +3,11 @@
 What changed in each version of BigContext Schema. Versions follow the rules in the README: patch, minor and major,
 with drafts (`0.9.x-draft`) before 1.0.
 
+## 1.0.1 (2026-10-30)
+
+Wording only: the examples in the guide and in the schema's descriptions are rewritten in the guide's own
+online-store setting. Every 1.0.0 document stays valid, and no field, value or statement type changed.
+
 ## 1.0.0 (2026-10-30)
 
 The first stable version. From here on a minor version (1.1) only adds statement types, fields or allowed values and

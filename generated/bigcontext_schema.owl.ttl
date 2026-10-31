@@ -221,7 +221,7 @@ bcs:ConceptTypeEnum\#calendar a owl:Class ;
 bcs:ConceptTypeEnum\#category_value a owl:Class ;
 	rdfs:label "category_value" ;
 	rdfs:subClassOf bcs:ConceptTypeEnum ;
-	skos:definition "One value of a category (weather as a cancellation reason)." .
+	skos:definition "One value of a category (damaged as a return reason)." .
 bcs:ConceptTypeEnum\#dimension a owl:Class ;
 	rdfs:label "dimension" ;
 	rdfs:subClassOf bcs:ConceptTypeEnum .
@@ -377,7 +377,7 @@ bcs:Definition a owl:Class ;
 bcs:DerivedFrom a owl:Class ;
 	rdfs:label "DerivedFrom" ;
 	rdfs:subClassOf bcs:Statement , _:c14n116 , _:c14n122 , _:c14n14 , _:c14n273 , _:c14n375 ;
-	skos:definition "An element is built or sourced from another (an aggregate built on a mart; a table built from a vendor's export)." ;
+	skos:definition "An element is built or sourced from another (a summary table built on the orders table; a table built from a vendor's export)." ;
 	skos:exactMatch prov:wasDerivedFrom ;
 	skos:inScheme <https://w3id.org/bigcontext-schema> .
 bcs:DescribedIn a owl:Class ;
@@ -459,7 +459,7 @@ bcs:Groups a owl:Class ;
 bcs:Has a owl:Class ;
 	rdfs:label "Has" ;
 	rdfs:subClassOf bcs:Statement , _:c14n338 , _:c14n395 , _:c14n500 , _:c14n653 , _:c14n686 , _:c14n709 ;
-	skos:definition "Each subject has some number of the object (a boat has one owner; a user has many sessions)." ;
+	skos:definition "Each subject has some number of the object (an order has one invoice; a customer has many orders)." ;
 	skos:inScheme <https://w3id.org/bigcontext-schema> .
 bcs:HasAccess a owl:Class ;
 	rdfs:label "HasAccess" ;
@@ -1311,7 +1311,7 @@ bcs:about a owl:ObjectProperty ;
 bcs:absolute a owl:DatatypeProperty ;
 	rdfs:label "absolute" ;
 	rdfs:range xsd:boolean ;
-	skos:definition "True for a hard rule that nothing may override." ;
+	skos:definition "True for a rule that nothing may override." ;
 	skos:inScheme <https://w3id.org/bigcontext-schema> .
 bcs:access a owl:ObjectProperty ;
 	rdfs:label "access" ;
@@ -1547,7 +1547,7 @@ bcs:evidence a owl:ObjectProperty ;
 bcs:exclusive a owl:DatatypeProperty ;
 	rdfs:label "exclusive" ;
 	rdfs:range xsd:boolean ;
-	skos:definition "True when the source says only these (only analysts, the only channel with carts)." ;
+	skos:definition "True when the source says only these (only analysts, the only warehouse that ships abroad)." ;
 	skos:inScheme <https://w3id.org/bigcontext-schema> .
 bcs:expression a owl:DatatypeProperty ;
 	rdfs:label "expression" ;
@@ -1573,7 +1573,7 @@ bcs:filters a owl:ObjectProperty ;
 bcs:frequency a owl:ObjectProperty ;
 	rdfs:label "frequency" ;
 	rdfs:range bcs:FrequencyEnum ;
-	skos:definition "How often, or how widely (most users, some owners), it holds." ;
+	skos:definition "How often, or how widely (most shoppers, some customers), it holds." ;
 	skos:inScheme <https://w3id.org/bigcontext-schema> .
 bcs:from_field a owl:ObjectProperty ;
 	rdfs:label "from_field" ;
@@ -1988,7 +1988,7 @@ bcs:version a owl:DatatypeProperty ;
 bcs:via a owl:ObjectProperty ;
 	rdfs:label "via" ;
 	rdfs:range bcs:Element ;
-	skos:definition "The channel, tool or intermediary (an escalation through #help); for a Rule it goes in its action's via." , "The channel, tool or intermediary the action goes through (PagerDuty, Slack, the account manager)." ;
+	skos:definition "The channel, tool or intermediary (an escalation through #help); for a Rule it goes in its action's via." , "The channel, tool or intermediary the action goes through (PagerDuty, Slack, the support desk)." ;
 	skos:inScheme <https://w3id.org/bigcontext-schema> .
 bcs:when a owl:ObjectProperty ;
 	rdfs:label "when" ;
@@ -2011,7 +2011,7 @@ bcs:within a owl:ObjectProperty ;
 	skos:definition "A time limit ('answer within 4 business hours')." ;
 	skos:inScheme <https://w3id.org/bigcontext-schema> .
 <https://w3id.org/bigcontext-schema> dcterms:title "BigContext Schema" ;
-	pav:version "1.0.0" ;
+	pav:version "1.0.1" ;
 	a owl:Ontology ;
 	rdfs:label "bigcontext_schema" ;
 	skos:definition "A small, closed set of building blocks for expressing business context taken from natural language: simple rules, long procedures, company structure, data and mappings. Tier 1 is the element types, tier 2 the statement types (predicates) whose roles come from one shared dictionary of slots, tier 3 the qualifiers every statement can carry. A document can carry fields of its own under `extensions`. Shared groups of fields any statement can carry (decision, assignment, snapshot, data profile) cover kinds of context that recur across many statement types. A computable core (key pairs, filters, aggregations, metric types, time grains) lets metric and join definitions move to and from semantic-layer formats." .

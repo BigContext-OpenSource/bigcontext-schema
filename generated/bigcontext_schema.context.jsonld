@@ -239,6 +239,12 @@
          },
          "@id": "party_responsibility"
       },
+      "time_of_day": {
+         "@id": "time_of_day"
+      },
+      "time_zone": {
+         "@id": "time_zone"
+      },
       "statements": {
          "@type": "@id",
          "@id": "statements"
@@ -836,6 +842,10 @@
       "applies_to": {
          "@type": "@id",
          "@id": "applies_to"
+      },
+      "counted_from": {
+         "@type": "@id",
+         "@id": "counted_from"
       },
       "datatype": {
          "@context": {

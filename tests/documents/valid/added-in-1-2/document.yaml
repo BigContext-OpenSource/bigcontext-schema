@@ -1,0 +1,206 @@
+schema_version: 1.2.0-draft
+source:
+  id: orders-data-operations
+  title: Orders data operations notes
+  as_of: '2026-12-01'
+things:
+- id: t.orders_pipeline
+  label: orders pipeline
+  thing_type: job
+  evidence:
+  - quote: The orders pipeline
+- id: t.fct_orders
+  label: fct_orders
+  thing_type: table
+  evidence:
+  - quote: loads fct_orders
+- id: t.load_audit
+  label: load_audit
+  thing_type: table
+  evidence:
+  - quote: load_audit shows status success
+- id: t.load_audit.status
+  label: status
+  thing_type: field
+  evidence:
+  - quote: load_audit shows status success
+- id: t.daily_sales_report
+  label: Daily Sales Report
+  thing_type: report
+  evidence:
+  - quote: The Daily Sales Report is built from fct_orders.
+- id: t.on_call
+  label: on-call engineer
+  thing_type: post
+  evidence:
+  - quote: pages the on-call engineer
+- id: t.platform_lead
+  label: Data Platform lead
+  thing_type: post
+  evidence:
+  - quote: The Data Platform lead is paged
+- id: t.head_of_data
+  label: Head of Data
+  thing_type: post
+  evidence:
+  - quote: to the Head of Data instead
+concepts:
+- id: c.orders_load
+  label: orders load
+  concept_type: activity
+  evidence:
+  - quote: The orders load is complete
+- id: c.orders_load_complete
+  label: orders load complete
+  concept_type: state
+  evidence:
+  - quote: The orders load is complete
+- id: c.data_incident
+  label: data incident
+  concept_type: entity_type
+  evidence:
+  - quote: a data incident is created
+- id: c.incident_opened
+  label: incident opened
+  concept_type: state
+  evidence:
+  - quote: of the incident being opened
+- id: c.sev1
+  label: Sev1 incident
+  concept_type: state
+  evidence:
+  - quote: A Sev1 incident pages the on-call engineer
+- id: c.sev2
+  label: Sev2 incident
+  concept_type: state
+  evidence:
+  - quote: Sev2 incidents escalate
+- id: c.sev1_acknowledged
+  label: Sev1 incident acknowledged
+  concept_type: state
+  evidence:
+  - quote: a Sev1 incident is not acknowledged
+- id: c.incident_reopened
+  label: incident reopened
+  concept_type: state
+  evidence:
+  - quote: or is reopened
+statements:
+- id: s.1
+  predicate: Triggers
+  subject: t.orders_pipeline
+  recurrence: every day at 02:00 UTC
+  action:
+    verb: load
+    objects:
+    - t.fct_orders
+  evidence:
+  - quote: The orders pipeline loads fct_orders every day at 02:00 UTC.
+- id: s.2
+  predicate: DerivedFrom
+  subject: t.daily_sales_report
+  object: t.fct_orders
+  evidence:
+  - quote: The Daily Sales Report is built from fct_orders.
+- id: s.3
+  predicate: Transition
+  subject: c.orders_load
+  to_state: c.orders_load_complete
+  when:
+  - description: load_audit shows status success for today
+    about:
+    - t.load_audit
+    field: t.load_audit.status
+    comparator: equal
+    values:
+    - value: success
+  evidence:
+  - quote: The orders load is complete when load_audit shows status success for today.
+- id: s.4
+  predicate: Rule
+  modality: must
+  action:
+    verb: create
+    objects:
+    - c.data_incident
+  unless:
+  - description: the orders load is complete
+    about:
+    - c.orders_load_complete
+    time_of_day: 07:00
+    time_zone: ET
+  evidence:
+  - quote: If the orders load is not complete by 07:00 ET, a data incident is created.
+- id: s.5
+  predicate: Rule
+  modality: must
+  when:
+  - &id001
+    description: the incident is Sev1
+    about:
+    - c.sev1
+  action:
+    verb: notify
+    specific_verb: page
+    to:
+    - t.on_call
+  within:
+    value: '15'
+    unit: minutes
+    datatype: duration
+    value_role: maximum
+    counted_from: c.incident_opened
+  evidence:
+  - quote: A Sev1 incident pages the on-call engineer within 15 minutes of the incident being opened.
+- id: s.6
+  predicate: Rule
+  modality: must
+  action:
+    verb: notify
+    specific_verb: page
+    to:
+    - t.platform_lead
+  when_any:
+  - description: the Sev1 incident is acknowledged
+    about:
+    - c.sev1_acknowledged
+    negated: true
+  - description: the incident is reopened
+    about:
+    - c.incident_reopened
+  evidence:
+  - quote: The Data Platform lead is paged when a Sev1 incident is not acknowledged or is reopened.
+- id: s.7
+  predicate: EscalatesTo
+  subject: t.on_call
+  object: t.platform_lead
+  when:
+  - *id001
+  evidence:
+  - quote: Sev1 incidents escalate from the on-call engineer to the Data Platform lead.
+- id: s.8
+  predicate: EscalatesTo
+  subject: t.on_call
+  object: t.head_of_data
+  when:
+  - *id001
+  valid_from: '2026-11-15'
+  supersedes:
+  - s.7
+  evidence:
+  - quote: From 2026-11-15, Sev1 incidents escalate from the on-call engineer to the Head of Data instead.
+- id: s.9
+  predicate: EscalatesTo
+  subject: t.on_call
+  object: t.platform_lead
+  decision_status: proposed
+  when:
+  - description: the incident is Sev2
+    about:
+    - c.sev2
+  evidence:
+  - quote: It is proposed that Sev2 incidents escalate from the on-call engineer to the Data Platform lead.
+skipped:
+- reason: heading
+  evidence:
+  - quote: Orders data operations notes

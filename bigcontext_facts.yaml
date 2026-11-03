@@ -2,7 +2,7 @@
 id: https://w3id.org/bigcontext-schema/facts
 name: bigcontext_facts
 title: BigContext Schema facts
-version: 1.0.0
+version: 1.1.0-draft
 description: >-
   The direct links a BigContext Schema graph projects from statements in force, and the logic a reasoner applies to
   them: which links are transitive, which are the inverse of which, and which chains of links imply another.
@@ -21,6 +21,11 @@ imports:
 classes:
   Node:
     description: Any element of a BigContext Schema document that a fact links.
+  InForce:
+    description: >-
+      A statement or procedure in force on the graph's date, as graph.md's rule decides or as the caller that keeps
+      its own versions says. The named graph in_force types each one so; the questions on the record graph return only
+      these. Added in 1.2.
 
 slots:
   # company structure

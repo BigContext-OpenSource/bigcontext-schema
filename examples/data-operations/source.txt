@@ -1,0 +1,158 @@
+# Data Operations Playbook
+
+Owner: Data Platform team. Applies to every data product in the enterprise data warehouse.
+
+## 1. Definitions
+
+A data product is a table, view, dashboard or report that the Data Platform team publishes for other teams to use.
+Each data product has a named owner, who answers for its definition, its quality and its consumers.
+
+A data incident is any event where a data product is late, incomplete or wrong, and a consumer could make a
+decision on it. A dashboard that shows yesterday's numbers after its freshness deadline is a data incident. A
+failed job that is rerun successfully before any deadline is not.
+
+A business day is Monday to Friday, excluding company holidays in the company calendar.
+
+Freshness is the time between the last successful load of a data product and now. Completeness is the share of
+expected rows that arrived, measured against the 7-day average for the same weekday.
+
+Net revenue is gross order value minus discounts, refunds and taxes, for orders with status completed. It is
+reported in USD.
+
+## 2. Pipelines and schedules
+
+The orders pipeline loads fct_orders every day at 02:00 UTC. The customers pipeline loads dim_customers every day
+at 03:00 UTC, after the orders pipeline has finished.
+
+The finance pipeline runs on the first business day of each month at 06:00 UTC and builds fct_monthly_revenue from
+fct_orders.
+
+Every pipeline writes one row per run to load_audit, with the run's status, row count and finish time.
+
+## 3. Readiness and freshness
+
+The orders load is complete when load_audit shows status success for today and the row count is at least 90% of
+the 7-day average for the same weekday.
+
+Executive dashboards must show data loaded by 07:00 local time each business day. Operational dashboards must be no
+more than 2 hours old during business hours.
+
+The Daily Sales Report must not be sent until the orders load is complete. If the orders load is not complete by
+07:30 local time, the report is sent with a banner that says the numbers are provisional.
+
+## 4. Data quality checks
+
+Every data product has at least one quality check, owned by the data product's owner.
+
+A dbt test checks that order_line_id in fct_orders is unique. A dbt test checks that customer_id in fct_orders is
+never null. A monitor checks that the null rate of email in dim_customers stays at or below 1%.
+
+A volume monitor flags fct_orders when today's row count is more than 30% below the 7-day average for the same
+weekday.
+
+Net revenue is anomalous when daily net revenue is more than 20% below its 28-day average, unless the day is a
+company holiday.
+
+## 5. Check failures
+
+If the uniqueness test on fct_orders fails, the orders load fails and a ticket is opened automatically in the Data
+Platform queue.
+
+If a quality check fails three runs in a row, the data product's owner must review the check within one business
+day and either fix the data or change the check.
+
+A failed check never blocks a pipeline unless the check is marked blocking.
+
+## 6. Data incidents
+
+### Creation
+
+If the orders load is not complete by 07:00 ET, the on-call data engineer must create a data incident.
+
+Anyone who sees a data product that looks wrong may create a data incident. When in doubt, create one; a
+duplicate costs less than a missed incident.
+
+### Severity
+
+- Sev1: a customer-facing number, a regulatory report or a payment is wrong or missing.
+- Sev2: an internal dashboard used for a decision today is wrong, or late by more than 4 hours.
+- Sev3: a data product is late or wrong and nobody needs it today.
+
+The person who creates the incident sets its severity. The incident commander may change it.
+
+### Routing
+
+Every data incident is posted in #data-incidents. A Sev1 also pages the on-call data engineer, who must acknowledge
+the page within 15 minutes. A Sev2 is assigned to the owner of the affected data product within 1 business hour.
+
+### Escalation
+
+If nobody acknowledges a Sev1 page within 30 minutes, escalate to the Data Platform lead. If the Data Platform lead
+does not respond within a further 30 minutes, escalate to the Head of Data.
+
+The on-call data engineer answers to the Data Platform lead during an incident.
+
+### Lifecycle
+
+An incident is open, then mitigated, then resolved, then closed. It is mitigated when consumers are no longer
+making decisions on wrong data, for example because the dashboard shows a banner. It is resolved when the data is
+correct again. It is closed when the review is done.
+
+Every Sev1 and Sev2 incident has a review within 5 business days of being resolved.
+
+### Updates
+
+For a Sev1, tell affected stakeholders every two hours until the incident is mitigated. For a Sev2, post an update
+in #data-incidents at least once per business day.
+
+## 7. Known causes
+
+When fct_orders has duplicate order lines, the usual cause is the order system resending orders after a timeout.
+
+A drop in completeness on a Monday is usually caused by the weekend batch from the payments provider arriving late.
+
+Late arrival of the payments file is correlated with month-end, but does not cause it.
+
+Higher discount rates decrease net revenue.
+
+## 8. Consumers and delivery
+
+The Daily Sales Report is built from fct_orders and goes to regional managers every business day at 08:00 local
+time.
+
+fct_monthly_revenue feeds the board pack, which Finance owns.
+
+The marketing team reads dim_customers through the customer_segments view and never queries dim_customers directly.
+
+## 9. Change management and deprecation
+
+Schema changes to fct_orders must be announced in #data-announce at least two weeks before they ship.
+
+A change that renames or removes a column needs approval from the owner of every data product that reads the column.
+
+analytics.orders_v1 is deprecated and will be retired on 2026-12-31. Use fct_orders instead.
+
+## 10. Freezes, backfills and restatements
+
+No changes are deployed to the warehouse in the last 3 business days of a quarter, unless the change fixes a Sev1
+incident.
+
+Do not backfill during business hours, unless the incident is Sev1.
+
+If a backfill changes last month's net revenue by more than 1%, tell Finance before the change is published, and
+add a note to the board pack.
+
+## 11. Roles
+
+The Data Platform lead owns the data platform and approves exceptions to the freeze.
+
+The on-call data engineer is the incident commander for every incident until they hand the role to someone else.
+
+The analytics engineering team owns fct_orders, dim_customers and the customer_segments view.
+
+Finance owns fct_monthly_revenue and the board pack.
+
+## 12. Change history
+
+- 2026-10-01: Sev2 incidents are assigned within 1 business hour (was 4 business hours).
+- From 2026-11-15, data incidents must be posted in #data-incidents-response-team instead of #data-incidents.

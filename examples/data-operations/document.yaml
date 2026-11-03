@@ -1,0 +1,860 @@
+schema_version: "1.2.0-draft"
+source: {id: data-operations-playbook, title: "Data Operations Playbook", as_of: "2026-11-01"}
+
+revisions:
+  - date: "2026-10-01"
+    summary: "Sev2 incidents are assigned within 1 business hour (was 4 business hours)."
+    evidence: [{quote: "2026-10-01: Sev2 incidents are assigned within 1 business hour (was 4 business hours)."}]
+  - summary: "From 2026-11-15, data incidents must be posted in #data-incidents-response-team instead of #data-incidents."
+    evidence: [{quote: "From 2026-11-15, data incidents must be posted in #data-incidents-response-team instead of #data-incidents."}]
+
+things:
+  - {id: t.data_operations_playbook, label: Data Operations Playbook, thing_type: document, evidence: [{quote: "Data Operations Playbook"}]}
+  - {id: t.data_platform_team, label: Data Platform team, thing_type: team, evidence: [{quote: "Owner: Data Platform team."}, {quote: "the Data Platform team publishes"}]}
+  - {id: t.enterprise_data_warehouse, label: enterprise data warehouse, thing_type: data_container, aliases: [warehouse], evidence: [{quote: "the enterprise data warehouse"}, {quote: "deployed to the warehouse"}]}
+  - {id: t.orders_pipeline, label: orders pipeline, thing_type: job, evidence: [{quote: "The orders pipeline loads fct_orders"}]}
+  - {id: t.customers_pipeline, label: customers pipeline, thing_type: job, evidence: [{quote: "The customers pipeline loads dim_customers"}]}
+  - {id: t.finance_pipeline, label: finance pipeline, thing_type: job, evidence: [{quote: "The finance pipeline runs"}]}
+  - {id: t.table.fct_orders, label: fct_orders, thing_type: table, physical_name: "fct_orders", evidence: [{quote: "loads fct_orders"}]}
+  - {id: t.table.dim_customers, label: dim_customers, thing_type: table, physical_name: "dim_customers", evidence: [{quote: "loads dim_customers"}]}
+  - {id: t.table.fct_monthly_revenue, label: fct_monthly_revenue, thing_type: table, physical_name: "fct_monthly_revenue", evidence: [{quote: "builds fct_monthly_revenue"}]}
+  - {id: t.table.load_audit, label: load_audit, thing_type: table, physical_name: "load_audit", evidence: [{quote: "one row per run to load_audit"}]}
+  - {id: t.table.load_audit.status, label: status, thing_type: field, evidence: [{quote: "with the run's status"}]}
+  - {id: t.table.load_audit.row_count, label: row count, thing_type: field, evidence: [{quote: "row count and finish time"}]}
+  - {id: t.table.load_audit.finish_time, label: finish time, thing_type: field, evidence: [{quote: "row count and finish time"}]}
+  - {id: t.table.fct_orders.order_line_id, label: order_line_id, thing_type: field, physical_name: "order_line_id", evidence: [{quote: "order_line_id in fct_orders"}]}
+  - {id: t.table.fct_orders.customer_id, label: customer_id, thing_type: field, physical_name: "customer_id", evidence: [{quote: "customer_id in fct_orders"}]}
+  - {id: t.table.dim_customers.email, label: email, thing_type: field, physical_name: "email", evidence: [{quote: "email in dim_customers"}]}
+  - {id: t.table.customer_segments, label: customer_segments, thing_type: view, physical_name: "customer_segments", evidence: [{quote: "the customer_segments view"}]}
+  - {id: t.analytics.orders_v1, label: orders_v1, thing_type: table, physical_name: "analytics.orders_v1", evidence: [{quote: "analytics.orders_v1"}]}
+  - {id: t.order_line_id_unique_test, label: uniqueness test on fct_orders, thing_type: job, evidence: [{quote: "A dbt test checks that order_line_id in fct_orders is unique."}, {quote: "the uniqueness test on fct_orders"}]}
+  - {id: t.customer_id_not_null_test, label: not-null test on customer_id in fct_orders, thing_type: job, evidence: [{quote: "A dbt test checks that customer_id in fct_orders is never null."}]}
+  - {id: t.email_null_rate_monitor, label: null rate monitor on email in dim_customers, thing_type: job, evidence: [{quote: "A monitor checks that the null rate of email in dim_customers"}]}
+  - {id: t.volume_monitor, label: volume monitor, thing_type: job, evidence: [{quote: "A volume monitor flags fct_orders"}]}
+  - {id: t.daily_sales_report, label: Daily Sales Report, thing_type: report, evidence: [{quote: "The Daily Sales Report"}]}
+  - {id: t.board_pack, label: board pack, thing_type: report, evidence: [{quote: "the board pack"}]}
+  - {id: t.data_platform_queue, label: Data Platform queue, thing_type: system, evidence: [{quote: "the Data Platform queue"}]}
+  - {id: t.on_call_data_engineer, label: on-call data engineer, thing_type: post, evidence: [{quote: "the on-call data engineer"}]}
+  - {id: t.incident_commander, label: incident commander, thing_type: post, evidence: [{quote: "The incident commander"}]}
+  - {id: t.data_platform_lead, label: Data Platform lead, thing_type: post, evidence: [{quote: "the Data Platform lead"}]}
+  - {id: t.head_of_data, label: Head of Data, thing_type: post, evidence: [{quote: "the Head of Data"}]}
+  - {id: t.data_incidents, label: "#data-incidents", thing_type: channel, evidence: [{quote: "posted in #data-incidents."}]}
+  - {id: t.data_incidents_response_team, label: "#data-incidents-response-team", thing_type: channel, evidence: [{quote: "#data-incidents-response-team"}]}
+  - {id: t.data_announce, label: "#data-announce", thing_type: channel, evidence: [{quote: "#data-announce"}]}
+  - {id: t.finance, label: Finance, thing_type: unit, evidence: [{quote: "which Finance owns"}]}
+  - {id: t.marketing_team, label: marketing team, thing_type: team, evidence: [{quote: "The marketing team"}]}
+  - {id: t.analytics_engineering_team, label: analytics engineering team, thing_type: team, evidence: [{quote: "The analytics engineering team"}]}
+  - {id: t.data_platform, label: data platform, thing_type: system, evidence: [{quote: "owns the data platform"}]}
+
+concepts:
+  # definitions
+  - {id: c.data_product, label: data product, concept_type: entity_type, evidence: [{quote: "A data product is a table, view, dashboard or report"}]}
+  - {id: c.data_product_owner, label: data product owner, concept_type: role, evidence: [{quote: "a named owner"}, {quote: "the data product's owner"}]}
+  - {id: c.data_product_definition, label: data product definition, concept_type: other, evidence: [{quote: "its definition"}]}
+  - {id: c.data_product_quality, label: data product quality, concept_type: other, evidence: [{quote: "its quality"}]}
+  - {id: c.data_product_consumer, label: data product consumer, concept_type: role, evidence: [{quote: "its consumers"}]}
+  - {id: c.data_incident, label: data incident, concept_type: entity_type, aliases: [incident], evidence: [{quote: "A data incident is any event"}]}
+  - {id: c.dashboard_past_freshness_deadline, label: dashboard that shows yesterday's numbers after its freshness deadline, concept_type: entity_type, evidence: [{quote: "A dashboard that shows yesterday's numbers after its freshness deadline"}]}
+  - {id: c.failed_job_rerun_before_deadline, label: failed job that is rerun successfully before any deadline, concept_type: entity_type, evidence: [{quote: "A failed job that is rerun successfully before any deadline"}]}
+  - {id: c.business_day, label: business day, concept_type: period, evidence: [{quote: "A business day is Monday to Friday"}]}
+  - {id: c.company_holiday, label: company holiday, concept_type: period, evidence: [{quote: "company holidays in the company calendar"}, {quote: "the day is a company holiday"}]}
+  - {id: c.freshness, label: freshness, concept_type: metric, evidence: [{quote: "Freshness is the time between"}]}
+  - {id: c.last_successful_load, label: last successful load of a data product, concept_type: activity, evidence: [{quote: "the last successful load of a data product"}]}
+  - {id: c.now, label: now, concept_type: other, evidence: [{quote: "a data product and now."}]}
+  - {id: c.completeness, label: completeness, concept_type: metric, evidence: [{quote: "Completeness is the share"}]}
+  - {id: c.rows_arrived, label: rows that arrived, concept_type: metric, evidence: [{quote: "expected rows that arrived"}]}
+  - {id: c.expected_rows, label: expected rows, concept_type: metric, evidence: [{quote: "the share of expected rows"}]}
+  - {id: c.net_revenue, label: net revenue, concept_type: metric, evidence: [{quote: "Net revenue is gross order value"}]}
+  - {id: c.gross_order_value, label: gross order value, concept_type: metric, evidence: [{quote: "gross order value"}]}
+  - {id: c.discounts, label: discounts, concept_type: metric, evidence: [{quote: "minus discounts, refunds and taxes"}]}
+  - {id: c.refunds, label: refunds, concept_type: metric, evidence: [{quote: "minus discounts, refunds and taxes"}]}
+  - {id: c.taxes, label: taxes, concept_type: metric, evidence: [{quote: "minus discounts, refunds and taxes"}]}
+  - {id: c.order_status, label: order status, concept_type: dimension, evidence: [{quote: "for orders with status completed"}]}
+  # pipelines
+  - {id: c.pipeline, label: pipeline, concept_type: entity_type, evidence: [{quote: "Every pipeline writes"}]}
+  - {id: c.pipeline_run, label: pipeline run, concept_type: entity_type, evidence: [{quote: "one row per run"}]}
+  - {id: c.orders_pipeline_finished, label: orders pipeline finished, concept_type: state, evidence: [{quote: "after the orders pipeline has finished"}]}
+  # readiness and freshness
+  - {id: c.orders_load, label: orders load, concept_type: activity, evidence: [{quote: "The orders load is complete when"}]}
+  - {id: c.orders_load_complete, label: orders load complete, concept_type: state, evidence: [{quote: "The orders load is complete"}]}
+  - {id: c.executive_dashboard, label: executive dashboard, concept_type: entity_type, evidence: [{quote: "Executive dashboards"}]}
+  - {id: c.operational_dashboard, label: operational dashboard, concept_type: entity_type, evidence: [{quote: "Operational dashboards"}]}
+  - {id: c.business_hours, label: business hours, concept_type: period, evidence: [{quote: "during business hours"}]}
+  - {id: c.regional_manager, label: regional manager, concept_type: role, evidence: [{quote: "goes to regional managers"}]}
+  # quality checks
+  - {id: c.quality_check, label: quality check, concept_type: entity_type, evidence: [{quote: "at least one quality check"}]}
+  - {id: c.row_count_drop, label: drop of today's row count below the 7-day average for the same weekday, concept_type: metric, evidence: [{quote: "today's row count is more than 30% below the 7-day average for the same weekday"}]}
+  - {id: c.net_revenue_anomalous, label: net revenue anomalous, concept_type: state, evidence: [{quote: "Net revenue is anomalous"}]}
+  - {id: c.net_revenue_drop, label: drop of daily net revenue below its 28-day average, concept_type: metric, evidence: [{quote: "daily net revenue is more than 20% below its 28-day average"}]}
+  - {id: c.net_revenue_28_day_average, label: 28-day average of daily net revenue, concept_type: metric, evidence: [{quote: "its 28-day average"}]}
+  # check failures
+  - {id: c.uniqueness_test_failed, label: uniqueness test on fct_orders failed, concept_type: state, evidence: [{quote: "If the uniqueness test on fct_orders fails"}]}
+  - {id: c.ticket, label: ticket, concept_type: entity_type, evidence: [{quote: "a ticket is opened automatically"}]}
+  - {id: c.quality_check_failed, label: quality check failed, concept_type: state, evidence: [{quote: "If a quality check fails three runs in a row"}, {quote: "A failed check"}]}
+  - {id: c.blocking_check, label: quality check marked blocking, concept_type: state, evidence: [{quote: "the check is marked blocking"}]}
+  # incidents
+  - {id: c.data_product_looks_wrong, label: data product looks wrong, concept_type: state, evidence: [{quote: "a data product that looks wrong"}]}
+  - {id: c.sev1_incident, label: Sev1 incident, concept_type: state, evidence: [{quote: "Sev1: a customer-facing number"}]}
+  - {id: c.sev2_incident, label: Sev2 incident, concept_type: state, evidence: [{quote: "Sev2: an internal dashboard"}]}
+  - {id: c.sev3_incident, label: Sev3 incident, concept_type: state, evidence: [{quote: "Sev3: a data product is late or wrong"}]}
+  - {id: c.customer_facing_number_wrong, label: customer-facing number wrong, concept_type: state, evidence: [{quote: "a customer-facing number, a regulatory report or a payment is wrong or missing"}]}
+  - {id: c.customer_facing_number_missing, label: customer-facing number missing, concept_type: state, evidence: [{quote: "a customer-facing number, a regulatory report or a payment is wrong or missing"}]}
+  - {id: c.regulatory_report_wrong, label: regulatory report wrong, concept_type: state, evidence: [{quote: "a customer-facing number, a regulatory report or a payment is wrong or missing"}]}
+  - {id: c.regulatory_report_missing, label: regulatory report missing, concept_type: state, evidence: [{quote: "a customer-facing number, a regulatory report or a payment is wrong or missing"}]}
+  - {id: c.payment_wrong, label: payment wrong, concept_type: state, evidence: [{quote: "a customer-facing number, a regulatory report or a payment is wrong or missing"}]}
+  - {id: c.payment_missing, label: payment missing, concept_type: state, evidence: [{quote: "a customer-facing number, a regulatory report or a payment is wrong or missing"}]}
+  - {id: c.internal_dashboard_used_today, label: internal dashboard used for a decision today, concept_type: state, evidence: [{quote: "an internal dashboard used for a decision today"}]}
+  - {id: c.internal_dashboard_wrong, label: internal dashboard wrong, concept_type: state, evidence: [{quote: "an internal dashboard used for a decision today is wrong"}]}
+  - {id: c.internal_dashboard_late, label: internal dashboard late, concept_type: state, evidence: [{quote: "or late by more than 4 hours"}]}
+  - {id: c.data_product_late, label: data product late, concept_type: state, evidence: [{quote: "a data product is late or wrong"}]}
+  - {id: c.data_product_wrong, label: data product wrong, concept_type: state, evidence: [{quote: "a data product is late or wrong"}]}
+  - {id: c.data_product_needed_today, label: data product needed today, concept_type: state, evidence: [{quote: "nobody needs it today"}]}
+  - {id: c.incident_creator, label: person who creates the incident, concept_type: role, evidence: [{quote: "The person who creates the incident"}]}
+  - {id: c.incident_severity, label: incident severity, concept_type: dimension, evidence: [{quote: "sets its severity"}]}
+  - {id: c.sev1_page, label: Sev1 page, concept_type: entity_type, evidence: [{quote: "A Sev1 also pages the on-call data engineer"}, {quote: "acknowledge the page"}]}
+  - {id: c.sev1_page_acknowledged, label: Sev1 page acknowledged, concept_type: state, evidence: [{quote: "If nobody acknowledges a Sev1 page"}]}
+  - {id: c.escalated_to_data_platform_lead, label: Sev1 escalated to the Data Platform lead, concept_type: state, evidence: [{quote: "escalate to the Data Platform lead"}]}
+  - {id: c.data_platform_lead_responded, label: Data Platform lead responded, concept_type: state, evidence: [{quote: "If the Data Platform lead does not respond"}]}
+  - {id: c.incident_open, label: open incident, concept_type: state, evidence: [{quote: "An incident is open"}]}
+  - {id: c.incident_mitigated, label: mitigated incident, concept_type: state, evidence: [{quote: "It is mitigated"}]}
+  - {id: c.incident_resolved, label: resolved incident, concept_type: state, evidence: [{quote: "It is resolved"}]}
+  - {id: c.incident_closed, label: closed incident, concept_type: state, evidence: [{quote: "It is closed"}]}
+  - {id: c.consumers_deciding_on_wrong_data, label: consumers making decisions on wrong data, concept_type: state, evidence: [{quote: "consumers are no longer making decisions on wrong data"}]}
+  - {id: c.incident_data_correct, label: incident data correct again, concept_type: state, evidence: [{quote: "the data is correct again"}]}
+  - {id: c.incident_review_done, label: incident review done, concept_type: state, evidence: [{quote: "the review is done"}]}
+  - {id: c.affected_stakeholder, label: affected stakeholder, concept_type: role, evidence: [{quote: "affected stakeholders"}]}
+  - {id: c.incident_update, label: incident update, concept_type: entity_type, evidence: [{quote: "post an update"}]}
+  # known causes
+  - {id: c.order_system_resending_orders, label: order system resending orders after a timeout, concept_type: activity, evidence: [{quote: "the order system resending orders after a timeout"}]}
+  - {id: c.fct_orders_duplicate_order_lines, label: duplicate order lines in fct_orders, concept_type: state, evidence: [{quote: "fct_orders has duplicate order lines"}]}
+  - {id: c.late_weekend_batch, label: weekend batch from the payments provider arriving late, concept_type: state, evidence: [{quote: "the weekend batch from the payments provider arriving late"}]}
+  - {id: c.monday, label: Monday, concept_type: period, evidence: [{quote: "on a Monday"}]}
+  - {id: c.late_payments_file, label: late arrival of the payments file, concept_type: state, evidence: [{quote: "Late arrival of the payments file"}]}
+  - {id: c.month_end, label: month-end, concept_type: period, evidence: [{quote: "month-end"}]}
+  - {id: c.discount_rate, label: discount rate, concept_type: metric, evidence: [{quote: "Higher discount rates"}]}
+  # change management, freezes
+  - {id: c.schema_change, label: schema change, concept_type: activity, evidence: [{quote: "Schema changes to fct_orders"}]}
+  - {id: c.column, label: column, concept_type: entity_type, evidence: [{quote: "renames or removes a column"}]}
+  - {id: c.column_change_approved, label: column change approved, concept_type: state, evidence: [{quote: "needs approval from the owner of every data product that reads the column"}]}
+  - {id: c.warehouse_change, label: change deployed to the warehouse, concept_type: activity, evidence: [{quote: "No changes are deployed to the warehouse"}]}
+  - {id: c.quarter_end_freeze, label: last 3 business days of a quarter, concept_type: period, aliases: [freeze], evidence: [{quote: "the last 3 business days of a quarter"}, {quote: "the freeze"}]}
+  - {id: c.backfill_net_revenue_change, label: change a backfill makes to last month's net revenue, concept_type: metric, evidence: [{quote: "a backfill changes last month's net revenue"}]}
+  - {id: c.board_pack_note, label: note to the board pack, concept_type: other, evidence: [{quote: "add a note to the board pack"}]}
+  - {id: c.freeze_exception, label: exception to the freeze, concept_type: other, evidence: [{quote: "exceptions to the freeze"}]}
+  - {id: c.incident_command_handed_over, label: incident commander role handed to someone else, concept_type: state, evidence: [{quote: "until they hand the role to someone else"}]}
+
+statements:
+  # front matter
+  - id: s.DO.1
+    predicate: ResponsibleFor
+    subject: t.data_platform_team
+    responsibility: owns
+    object: t.data_operations_playbook
+    evidence: [{quote: "Owner: Data Platform team."}]
+  - id: s.DO.2
+    predicate: GovernedBy
+    subject: c.data_product
+    each: true
+    object: t.data_operations_playbook
+    scope: [t.enterprise_data_warehouse]
+    evidence: [{quote: "Applies to every data product in the enterprise data warehouse."}]
+
+  # 1. Definitions
+  - id: s.DO.3
+    predicate: Definition
+    subject: c.data_product
+    text: "a table, view, dashboard or report that the Data Platform team publishes for other teams to use"
+    evidence: [{quote: "A data product is a table, view, dashboard or report that the Data Platform team publishes for other teams to use."}]
+  - id: s.DO.4
+    predicate: Has
+    subject: c.data_product
+    each: true
+    object: c.data_product_owner
+    cardinality: exactly_one
+    evidence: [{quote: "Each data product has a named owner"}]
+  - {id: s.DO.5, predicate: ResponsibleFor, subject: c.data_product_owner, responsibility: accountable, object: c.data_product_definition, evidence: [{quote: "who answers for its definition, its quality and its consumers."}]}
+  - {id: s.DO.6, predicate: ResponsibleFor, subject: c.data_product_owner, responsibility: accountable, object: c.data_product_quality, evidence: [{quote: "who answers for its definition, its quality and its consumers."}]}
+  - {id: s.DO.7, predicate: ResponsibleFor, subject: c.data_product_owner, responsibility: accountable, object: c.data_product_consumer, evidence: [{quote: "who answers for its definition, its quality and its consumers."}]}
+  - id: s.DO.8
+    predicate: Definition
+    subject: c.data_incident
+    text: "any event where a data product is late, incomplete or wrong, and a consumer could make a decision on it"
+    evidence: [{quote: "A data incident is any event where a data product is late, incomplete or wrong, and a consumer could make a decision on it."}]
+  - id: s.DO.9
+    predicate: IsA
+    subject: c.dashboard_past_freshness_deadline
+    object: c.data_incident
+    evidence: [{quote: "A dashboard that shows yesterday's numbers after its freshness deadline is a data incident."}]
+  - id: s.DO.10
+    predicate: IsA
+    subject: c.failed_job_rerun_before_deadline
+    object: c.data_incident
+    negated: true
+    evidence: [{quote: "A failed job that is rerun successfully before any deadline is not."}]
+  - id: s.DO.11
+    predicate: Definition
+    subject: c.business_day
+    text: "Monday to Friday, excluding company holidays in the company calendar"
+    evidence: [{quote: "A business day is Monday to Friday, excluding company holidays in the company calendar."}]
+  - id: s.DO.12
+    predicate: ComputedAs
+    subject: c.freshness
+    expression: "the time between the last successful load of a data product and now"
+    inputs: [c.last_successful_load, c.now]
+    evidence: [{quote: "Freshness is the time between the last successful load of a data product and now."}]
+  - id: s.DO.13
+    predicate: ComputedAs
+    subject: c.completeness
+    metric_type: ratio
+    expression: "rows_arrived / expected_rows"
+    numerator: c.rows_arrived
+    denominator: c.expected_rows
+    evidence: [{quote: "Completeness is the share of expected rows that arrived"}]
+  - id: s.DO.14
+    predicate: ComputedAs
+    subject: c.expected_rows
+    expression: "the 7-day average of rows that arrived, for the same weekday"
+    inputs: [c.rows_arrived]
+    evidence: [{quote: "measured against the 7-day average for the same weekday."}]
+  - id: s.DO.15
+    predicate: ComputedAs
+    subject: c.net_revenue
+    metric_type: derived
+    expression: "gross_order_value - discounts - refunds - taxes"
+    inputs: [c.gross_order_value, c.discounts, c.refunds, c.taxes]
+    filters:
+      - {description: "orders with status completed", field: c.order_status, comparator: equal, values: [{value: completed}]}
+    evidence: [{quote: "Net revenue is gross order value minus discounts, refunds and taxes, for orders with status completed."}]
+  - id: s.DO.16
+    predicate: HasProperty
+    subject: c.net_revenue
+    standard_attribute: unit
+    property_value: {value: USD}
+    evidence: [{quote: "It is reported in USD."}]
+
+  # 2. Pipelines and schedules
+  - id: s.DO.17
+    predicate: Triggers
+    subject: t.orders_pipeline
+    action: {verb: load, objects: [t.table.fct_orders]}
+    recurrence: "every day at 02:00 UTC"
+    evidence: [{quote: "The orders pipeline loads fct_orders every day at 02:00 UTC."}]
+  - id: s.DO.18
+    predicate: Triggers
+    subject: t.customers_pipeline
+    action: {verb: load, objects: [t.table.dim_customers]}
+    recurrence: "every day at 03:00 UTC"
+    when:
+      - {description: "the orders pipeline has finished", about: [c.orders_pipeline_finished]}
+    evidence: [{quote: "The customers pipeline loads dim_customers every day at 03:00 UTC, after the orders pipeline has finished."}]
+  - id: s.DO.19
+    predicate: Triggers
+    subject: t.finance_pipeline
+    action: {verb: load, specific_verb: build, objects: [t.table.fct_orders], to: [t.table.fct_monthly_revenue]}
+    recurrence: "on the first business day of each month at 06:00 UTC"
+    evidence: [{quote: "The finance pipeline runs on the first business day of each month at 06:00 UTC and builds fct_monthly_revenue from fct_orders."}]
+  - id: s.DO.20
+    predicate: DerivedFrom
+    subject: t.table.fct_monthly_revenue
+    object: t.table.fct_orders
+    evidence: [{quote: "builds fct_monthly_revenue from fct_orders."}]
+  - id: s.DO.21
+    predicate: Triggers
+    subject: c.pipeline
+    each: true
+    action: {verb: load, specific_verb: write, objects: [t.table.load_audit]}
+    recurrence: "per run"
+    evidence: [{quote: "Every pipeline writes one row per run to load_audit"}]
+  - id: s.DO.22
+    predicate: HasGrain
+    subject: t.table.load_audit
+    text: "one row per run"
+    members: [c.pipeline_run]
+    evidence: [{quote: "one row per run to load_audit"}]
+  - {id: s.DO.23, predicate: Contains, subject: t.table.load_audit, object: t.table.load_audit.status, data_role: dimension, evidence: [{quote: "with the run's status, row count and finish time."}]}
+  - {id: s.DO.24, predicate: Contains, subject: t.table.load_audit, object: t.table.load_audit.row_count, data_role: measure, evidence: [{quote: "with the run's status, row count and finish time."}]}
+  - {id: s.DO.25, predicate: Contains, subject: t.table.load_audit, object: t.table.load_audit.finish_time, data_role: time_dimension, evidence: [{quote: "with the run's status, row count and finish time."}]}
+
+  # 3. Readiness and freshness
+  - id: s.DO.26
+    predicate: Transition
+    subject: c.orders_load
+    to_state: c.orders_load_complete
+    when:
+      - description: "load_audit shows status success for today"
+        about: [t.table.load_audit]
+        field: t.table.load_audit.status
+        comparator: equal
+        values: [{value: success}]
+      - description: "the row count is at least 90% of the 7-day average for the same weekday"
+        about: [c.completeness, t.table.load_audit.row_count]
+        values: [{value: "90", datatype: percent, value_role: threshold, comparator: at_least}]
+    evidence: [{quote: "The orders load is complete when load_audit shows status success for today and the row count is at least 90% of the 7-day average for the same weekday."}]
+  - id: s.DO.27
+    predicate: Rule
+    modality: must
+    scope: [c.executive_dashboard]
+    action: {verb: show, detail: "data loaded"}
+    due_by: "07:00 local time"
+    recurrence: "each business day"
+    evidence: [{quote: "Executive dashboards must show data loaded by 07:00 local time each business day."}]
+  - id: s.DO.28
+    predicate: Rule
+    modality: must
+    action:
+      verb: check
+      objects: [c.operational_dashboard]
+      detail: "freshness"
+      values: [{value: "2", unit: hours, datatype: duration, value_role: maximum}]
+    when:
+      - {description: "during business hours", about: [c.business_hours]}
+    evidence: [{quote: "Operational dashboards must be no more than 2 hours old during business hours."}]
+  - id: s.DO.29
+    predicate: Rule
+    modality: must_not
+    action: {verb: share, specific_verb: send, objects: [t.daily_sales_report]}
+    unless:
+      - {description: "the orders load is complete", about: [c.orders_load_complete]}
+    evidence: [{quote: "The Daily Sales Report must not be sent until the orders load is complete."}]
+  - id: s.DO.30
+    predicate: Rule
+    modality: must
+    action: {verb: share, specific_verb: send, objects: [t.daily_sales_report], detail: "with a banner that says the numbers are provisional"}
+    unless:
+      - {description: "the orders load is complete by 07:30 local time", about: [c.orders_load_complete], time_of_day: "07:30", time_zone: local}
+    overrides: [s.DO.29]
+    evidence: [{quote: "If the orders load is not complete by 07:30 local time, the report is sent with a banner that says the numbers are provisional."}]
+
+  # 4. Data quality checks
+  - id: s.DO.31
+    predicate: Has
+    subject: c.data_product
+    each: true
+    object: c.quality_check
+    cardinality: one_or_more
+    evidence: [{quote: "Every data product has at least one quality check"}]
+  - id: s.DO.32
+    predicate: ResponsibleFor
+    subject: c.data_product_owner
+    responsibility: owns
+    object: c.quality_check
+    evidence: [{quote: "owned by the data product's owner."}]
+  - id: s.DO.33
+    predicate: Triggers
+    subject: t.order_line_id_unique_test
+    action: {verb: check, objects: [t.table.fct_orders.order_line_id], detail: "is unique"}
+    evidence: [{quote: "A dbt test checks that order_line_id in fct_orders is unique."}]
+  - id: s.DO.34
+    predicate: Triggers
+    subject: t.customer_id_not_null_test
+    action: {verb: check, objects: [t.table.fct_orders.customer_id], detail: "is never null"}
+    evidence: [{quote: "A dbt test checks that customer_id in fct_orders is never null."}]
+  - id: s.DO.35
+    predicate: Triggers
+    subject: t.email_null_rate_monitor
+    action:
+      verb: check
+      objects: [t.table.dim_customers.email]
+      detail: "null rate"
+      values: [{value: "1", datatype: percent, value_role: maximum}]
+    evidence: [{quote: "A monitor checks that the null rate of email in dim_customers stays at or below 1%."}]
+  - id: s.DO.36
+    predicate: Triggers
+    subject: t.volume_monitor
+    action: {verb: label, specific_verb: flag, objects: [t.table.fct_orders]}
+    when:
+      - description: "today's row count is more than 30% below the 7-day average for the same weekday"
+        about: [c.row_count_drop]
+        values: [{value: "30", datatype: percent, value_role: threshold, comparator: more_than}]
+    evidence: [{quote: "A volume monitor flags fct_orders when today's row count is more than 30% below the 7-day average for the same weekday."}]
+  - id: s.DO.37
+    predicate: ComputedAs
+    subject: c.row_count_drop
+    metric_type: derived
+    expression: "(expected_rows - rows_arrived) / expected_rows, for fct_orders today"
+    inputs: [c.rows_arrived, c.expected_rows]
+    evidence: [{quote: "today's row count is more than 30% below the 7-day average for the same weekday"}]
+  - id: s.DO.38
+    predicate: Transition
+    subject: c.net_revenue
+    to_state: c.net_revenue_anomalous
+    when:
+      - description: "daily net revenue is more than 20% below its 28-day average"
+        about: [c.net_revenue_drop]
+        values: [{value: "20", datatype: percent, value_role: threshold, comparator: more_than}]
+    unless:
+      - {description: "the day is a company holiday", about: [c.company_holiday]}
+    evidence: [{quote: "Net revenue is anomalous when daily net revenue is more than 20% below its 28-day average, unless the day is a company holiday."}]
+  - id: s.DO.39
+    predicate: ComputedAs
+    subject: c.net_revenue_drop
+    metric_type: derived
+    expression: "(net_revenue_28_day_average - net revenue of the day) / net_revenue_28_day_average"
+    inputs: [c.net_revenue, c.net_revenue_28_day_average]
+    evidence: [{quote: "daily net revenue is more than 20% below its 28-day average"}]
+  - id: s.DO.40
+    predicate: ComputedAs
+    subject: c.net_revenue_28_day_average
+    expression: "the average of daily net revenue over 28 days"
+    inputs: [c.net_revenue]
+    evidence: [{quote: "its 28-day average"}]
+
+  # 5. Check failures
+  - id: s.DO.41
+    predicate: Triggers
+    subject: t.order_line_id_unique_test
+    when:
+      - description: "the uniqueness test on fct_orders fails"
+        about: [c.uniqueness_test_failed, t.table.fct_orders, t.table.fct_orders.order_line_id]
+    action:
+      verb: stop
+      specific_verb: fail
+      objects: [c.orders_load]
+      then:
+        - {verb: create, specific_verb: open, objects: [c.ticket], to: [t.data_platform_queue]}
+    evidence: [{quote: "If the uniqueness test on fct_orders fails, the orders load fails and a ticket is opened automatically in the Data Platform queue."}]
+  - id: s.DO.42
+    predicate: Rule
+    modality: must
+    binds: [c.data_product_owner]
+    when:
+      - description: "a quality check fails three runs in a row"
+        about: [c.quality_check_failed]
+        values: [{value: "3", unit: "runs in a row", value_role: threshold, comparator: at_least}]
+    action:
+      verb: review
+      objects: [c.quality_check]
+      then:
+        - verb: update
+          alternatives:
+            - {verb: update, specific_verb: fix, objects: [c.data_product]}
+            - {verb: update, specific_verb: change, objects: [c.quality_check]}
+    within: {value: "1", unit: business days, datatype: duration, value_role: maximum, counted_from: c.quality_check_failed}
+    evidence: [{quote: "If a quality check fails three runs in a row, the data product's owner must review the check within one business day and either fix the data or change the check."}]
+  - id: s.DO.43
+    predicate: Rule
+    modality: must_not
+    action: {verb: stop, specific_verb: block, objects: [c.pipeline]}
+    when:
+      - {description: "the check has failed", about: [c.quality_check_failed]}
+    unless:
+      - {description: "the check is marked blocking", about: [c.blocking_check]}
+    evidence: [{quote: "A failed check never blocks a pipeline unless the check is marked blocking."}]
+
+  # 6. Data incidents: creation
+  - id: s.DO.44
+    predicate: Rule
+    modality: must
+    binds: [t.on_call_data_engineer]
+    action: {verb: create, objects: [c.data_incident]}
+    unless:
+      - {description: "the orders load is complete by 07:00 ET", about: [c.orders_load_complete], time_of_day: "07:00", time_zone: ET}
+    evidence: [{quote: "If the orders load is not complete by 07:00 ET, the on-call data engineer must create a data incident."}]
+  - id: s.DO.45
+    predicate: Rule
+    modality: may
+    action: {verb: create, objects: [c.data_incident]}
+    when:
+      - {description: "someone sees a data product that looks wrong", about: [c.data_product_looks_wrong]}
+    evidence: [{quote: "Anyone who sees a data product that looks wrong may create a data incident."}]
+  - id: s.DO.46
+    predicate: Rule
+    modality: must
+    action: {verb: create, objects: [c.data_incident]}
+    when:
+      - {description: "in doubt whether to create a data incident", about: [c.data_incident]}
+    because:
+      - {description: "a duplicate costs less than a missed incident", about: [c.data_incident]}
+    evidence: [{quote: "When in doubt, create one; a duplicate costs less than a missed incident."}]
+
+  # 6. Severity
+  - id: s.DO.47
+    predicate: Transition
+    subject: c.data_incident
+    to_state: c.sev1_incident
+    when_any:
+      - {description: "a customer-facing number is wrong", about: [c.customer_facing_number_wrong]}
+      - {description: "a customer-facing number is missing", about: [c.customer_facing_number_missing]}
+      - {description: "a regulatory report is wrong", about: [c.regulatory_report_wrong]}
+      - {description: "a regulatory report is missing", about: [c.regulatory_report_missing]}
+      - {description: "a payment is wrong", about: [c.payment_wrong]}
+      - {description: "a payment is missing", about: [c.payment_missing]}
+    evidence: [{quote: "Sev1: a customer-facing number, a regulatory report or a payment is wrong or missing."}]
+  - id: s.DO.48
+    predicate: Transition
+    subject: c.data_incident
+    to_state: c.sev2_incident
+    when:
+      - {description: "an internal dashboard is used for a decision today", about: [c.internal_dashboard_used_today]}
+    when_any:
+      - {description: "the dashboard is wrong", about: [c.internal_dashboard_wrong]}
+      - description: "the dashboard is late by more than 4 hours"
+        about: [c.internal_dashboard_late]
+        values: [{value: "4", unit: hours, datatype: duration, value_role: threshold, comparator: more_than}]
+    evidence: [{quote: "Sev2: an internal dashboard used for a decision today is wrong, or late by more than 4 hours."}]
+  - id: s.DO.49
+    predicate: Transition
+    subject: c.data_incident
+    to_state: c.sev3_incident
+    when_any:
+      - {description: "a data product is late", about: [c.data_product_late]}
+      - {description: "a data product is wrong", about: [c.data_product_wrong]}
+    unless:
+      - {description: "someone needs the data product today", about: [c.data_product_needed_today]}
+    evidence: [{quote: "Sev3: a data product is late or wrong and nobody needs it today."}]
+  - id: s.DO.50
+    predicate: ResponsibleFor
+    subject: c.incident_creator
+    responsibility: decides
+    object: c.incident_severity
+    evidence: [{quote: "The person who creates the incident sets its severity."}]
+  - id: s.DO.51
+    predicate: Rule
+    modality: may
+    binds: [t.incident_commander]
+    action: {verb: update, specific_verb: change, objects: [c.incident_severity]}
+    evidence: [{quote: "The incident commander may change it."}]
+
+  # 6. Routing
+  - id: s.DO.52
+    predicate: Rule
+    modality: must
+    action: {verb: tell, specific_verb: post, objects: [c.data_incident], to: [t.data_incidents]}
+    evidence: [{quote: "Every data incident is posted in #data-incidents."}]
+  - id: s.DO.53
+    predicate: Rule
+    modality: must
+    when:
+      - {description: "the incident is Sev1", about: [c.sev1_incident]}
+    action: {verb: notify, specific_verb: page, to: [t.on_call_data_engineer]}
+    evidence: [{quote: "A Sev1 also pages the on-call data engineer"}]
+  - id: s.DO.54
+    predicate: Rule
+    modality: must
+    binds: [t.on_call_data_engineer]
+    action: {verb: other, specific_verb: acknowledge, objects: [c.sev1_page]}
+    within: {value: "15", unit: minutes, datatype: duration, value_role: maximum, counted_from: c.sev1_page}
+    evidence: [{quote: "who must acknowledge the page within 15 minutes."}]
+  - id: s.DO.55
+    predicate: Rule
+    modality: must
+    when:
+      - {description: "the incident is Sev2", about: [c.sev2_incident]}
+    action: {verb: assign, objects: [c.data_incident], to: [c.data_product_owner]}
+    within: {value: "1", unit: business hours, datatype: duration, value_role: maximum, counted_from: c.sev2_incident}
+    valid_from: "2026-10-01"
+    supersedes: [s.DO.56]
+    evidence: [{quote: "A Sev2 is assigned to the owner of the affected data product within 1 business hour."}, {quote: "2026-10-01: Sev2 incidents are assigned within 1 business hour"}]
+  - id: s.DO.56
+    predicate: Rule
+    modality: must
+    when:
+      - {description: "the incident is Sev2", about: [c.sev2_incident]}
+    action: {verb: assign, objects: [c.data_incident], to: [c.data_product_owner]}
+    within: {value: "4", unit: business hours, datatype: duration, value_role: maximum, counted_from: c.sev2_incident}
+    currently: false
+    evidence: [{quote: "Sev2 incidents are assigned within 1 business hour (was 4 business hours)."}]
+
+  # 6. Escalation
+  - id: s.DO.57
+    predicate: EscalatesTo
+    subject: t.on_call_data_engineer
+    object: t.data_platform_lead
+    when:
+      - {description: "the incident is Sev1", about: [c.sev1_incident]}
+    unless:
+      - description: "the Sev1 page is acknowledged within 30 minutes"
+        about: [c.sev1_page_acknowledged]
+        values: [{value: "30", unit: minutes, datatype: duration, value_role: threshold, comparator: at_most, counted_from: c.sev1_page}]
+    evidence: [{quote: "If nobody acknowledges a Sev1 page within 30 minutes, escalate to the Data Platform lead."}]
+  - id: s.DO.58
+    predicate: EscalatesTo
+    subject: t.data_platform_lead
+    object: t.head_of_data
+    when:
+      - {description: "the incident is Sev1", about: [c.sev1_incident]}
+    unless:
+      - description: "the Data Platform lead responds within a further 30 minutes"
+        about: [c.data_platform_lead_responded]
+        values: [{value: "30", unit: minutes, datatype: duration, value_role: threshold, comparator: at_most, counted_from: c.escalated_to_data_platform_lead}]
+    evidence: [{quote: "If the Data Platform lead does not respond within a further 30 minutes, escalate to the Head of Data."}]
+  - id: s.DO.59
+    predicate: ResponsibleFor
+    subject: t.on_call_data_engineer
+    responsibility: responsible
+    object: c.data_incident
+    answers_to: [t.data_platform_lead]
+    valid_while:
+      - {description: "during an incident", about: [c.data_incident]}
+    evidence: [{quote: "The on-call data engineer answers to the Data Platform lead during an incident."}]
+
+  # 6. Lifecycle
+  - id: s.DO.60
+    predicate: Transition
+    subject: c.data_incident
+    from_state: c.incident_open
+    to_state: c.incident_mitigated
+    unless:
+      - {description: "consumers are making decisions on wrong data", about: [c.consumers_deciding_on_wrong_data]}
+    evidence: [{quote: "An incident is open, then mitigated"}, {quote: "It is mitigated when consumers are no longer making decisions on wrong data"}]
+  - id: s.DO.61
+    predicate: Example
+    subject: s.DO.60
+    text: "the dashboard shows a banner"
+    evidence: [{quote: "for example because the dashboard shows a banner."}]
+  - id: s.DO.62
+    predicate: Transition
+    subject: c.data_incident
+    from_state: c.incident_mitigated
+    to_state: c.incident_resolved
+    when:
+      - {description: "the data is correct again", about: [c.incident_data_correct]}
+    evidence: [{quote: "then mitigated, then resolved"}, {quote: "It is resolved when the data is correct again."}]
+  - id: s.DO.63
+    predicate: Transition
+    subject: c.data_incident
+    from_state: c.incident_resolved
+    to_state: c.incident_closed
+    when:
+      - {description: "the review is done", about: [c.incident_review_done]}
+    evidence: [{quote: "then resolved, then closed."}, {quote: "It is closed when the review is done."}]
+  - id: s.DO.64
+    predicate: Rule
+    modality: must
+    when_any:
+      - {description: "the incident is Sev1", about: [c.sev1_incident]}
+      - {description: "the incident is Sev2", about: [c.sev2_incident]}
+    action: {verb: review, objects: [c.data_incident]}
+    within: {value: "5", unit: business days, datatype: duration, value_role: maximum, counted_from: c.incident_resolved}
+    evidence: [{quote: "Every Sev1 and Sev2 incident has a review within 5 business days of being resolved."}]
+
+  # 6. Updates
+  - id: s.DO.65
+    predicate: Rule
+    modality: must
+    when:
+      - {description: "the incident is Sev1", about: [c.sev1_incident]}
+    unless:
+      - {description: "the incident is mitigated", about: [c.incident_mitigated]}
+    action: {verb: tell, to: [c.affected_stakeholder]}
+    recurrence: "every two hours"
+    evidence: [{quote: "For a Sev1, tell affected stakeholders every two hours until the incident is mitigated."}]
+  - id: s.DO.66
+    predicate: Rule
+    modality: must
+    when:
+      - {description: "the incident is Sev2", about: [c.sev2_incident]}
+    action: {verb: tell, specific_verb: post, objects: [c.incident_update], to: [t.data_incidents]}
+    recurrence: "at least once per business day"
+    evidence: [{quote: "For a Sev2, post an update in #data-incidents at least once per business day."}]
+
+  # 7. Known causes
+  - id: s.DO.67
+    predicate: Influences
+    subject: c.order_system_resending_orders
+    object: c.fct_orders_duplicate_order_lines
+    frequency: usually
+    evidence: [{quote: "When fct_orders has duplicate order lines, the usual cause is the order system resending orders after a timeout."}]
+  - id: s.DO.68
+    predicate: Influences
+    subject: c.late_weekend_batch
+    object: c.completeness
+    direction: decreases
+    frequency: usually
+    when:
+      - {description: "on a Monday", about: [c.monday]}
+    evidence: [{quote: "A drop in completeness on a Monday is usually caused by the weekend batch from the payments provider arriving late."}]
+  - id: s.DO.69
+    predicate: CorrelatesWith
+    subject: c.late_payments_file
+    object: c.month_end
+    text: "correlated with month-end, but does not cause it"
+    evidence: [{quote: "Late arrival of the payments file is correlated with month-end, but does not cause it."}]
+  - id: s.DO.70
+    predicate: Influences
+    subject: c.discount_rate
+    object: c.net_revenue
+    direction: decreases
+    evidence: [{quote: "Higher discount rates decrease net revenue."}]
+
+  # 8. Consumers and delivery
+  - id: s.DO.71
+    predicate: DerivedFrom
+    subject: t.daily_sales_report
+    object: t.table.fct_orders
+    evidence: [{quote: "The Daily Sales Report is built from fct_orders"}]
+  - id: s.DO.72
+    predicate: Rule
+    modality: must
+    action: {verb: share, objects: [t.daily_sales_report], to: [c.regional_manager]}
+    recurrence: "every business day at 08:00 local time"
+    evidence: [{quote: "goes to regional managers every business day at 08:00 local time."}]
+  - id: s.DO.73
+    predicate: DerivedFrom
+    subject: t.board_pack
+    object: t.table.fct_monthly_revenue
+    evidence: [{quote: "fct_monthly_revenue feeds the board pack"}]
+  - id: s.DO.74
+    predicate: ResponsibleFor
+    subject: t.finance
+    responsibility: owns
+    object: t.board_pack
+    evidence: [{quote: "the board pack, which Finance owns."}, {quote: "Finance owns fct_monthly_revenue and the board pack."}]
+  - id: s.DO.75
+    predicate: HasAccess
+    subject: t.marketing_team
+    object: t.table.dim_customers
+    access: read
+    via: [t.table.customer_segments]
+    evidence: [{quote: "The marketing team reads dim_customers through the customer_segments view"}]
+  - id: s.DO.76
+    predicate: Rule
+    modality: must_not
+    binds: [t.marketing_team]
+    action: {verb: use, specific_verb: query, objects: [t.table.dim_customers], detail: "directly"}
+    evidence: [{quote: "and never queries dim_customers directly."}]
+
+  # 9. Change management and deprecation
+  - id: s.DO.77
+    predicate: Rule
+    modality: must
+    scope: [t.table.fct_orders]
+    action: {verb: tell, specific_verb: announce, objects: [c.schema_change], to: [t.data_announce]}
+    due_by: "at least two weeks before they ship"
+    evidence: [{quote: "Schema changes to fct_orders must be announced in #data-announce at least two weeks before they ship."}]
+  - id: s.DO.78
+    predicate: Rule
+    modality: must_not
+    action:
+      verb: update
+      alternatives:
+        - {verb: update, specific_verb: rename, objects: [c.column]}
+        - {verb: delete, specific_verb: remove, objects: [c.column]}
+    unless:
+      - description: "the owner of every data product that reads the column approves the change"
+        about: [c.column_change_approved, c.data_product_owner]
+    evidence: [{quote: "A change that renames or removes a column needs approval from the owner of every data product that reads the column."}]
+  - id: s.DO.79
+    predicate: HasStatus
+    subject: t.analytics.orders_v1
+    status: deprecated
+    evidence: [{quote: "analytics.orders_v1 is deprecated"}]
+  - id: s.DO.80
+    predicate: HasStatus
+    subject: t.analytics.orders_v1
+    status: retired
+    valid_from: "2026-12-31"
+    evidence: [{quote: "will be retired on 2026-12-31."}]
+  - id: s.DO.81
+    predicate: Rule
+    modality: must
+    action: {verb: use, objects: [t.table.fct_orders]}
+    overrides: [t.analytics.orders_v1]
+    evidence: [{quote: "Use fct_orders instead."}]
+
+  # 10. Freezes, backfills and restatements
+  - id: s.DO.82
+    predicate: Rule
+    modality: must_not
+    action: {verb: update, specific_verb: deploy, objects: [c.warehouse_change], to: [t.enterprise_data_warehouse]}
+    when:
+      - {description: "in the last 3 business days of a quarter", about: [c.quarter_end_freeze]}
+    unless:
+      - {description: "the change fixes a Sev1 incident", about: [c.sev1_incident]}
+    evidence: [{quote: "No changes are deployed to the warehouse in the last 3 business days of a quarter, unless the change fixes a Sev1 incident."}]
+  - id: s.DO.83
+    predicate: Rule
+    modality: must_not
+    action: {verb: load, specific_verb: backfill}
+    when:
+      - {description: "during business hours", about: [c.business_hours]}
+    unless:
+      - {description: "the incident is Sev1", about: [c.sev1_incident]}
+    evidence: [{quote: "Do not backfill during business hours, unless the incident is Sev1."}]
+  - id: s.DO.84
+    predicate: Rule
+    modality: must
+    when:
+      - description: "a backfill changes last month's net revenue by more than 1%"
+        about: [c.backfill_net_revenue_change]
+        values: [{value: "1", datatype: percent, value_role: threshold, comparator: more_than}]
+    action: {verb: tell, to: [t.finance]}
+    due_by: "before the change is published"
+    evidence: [{quote: "If a backfill changes last month's net revenue by more than 1%, tell Finance before the change is published"}]
+  - id: s.DO.85
+    predicate: Rule
+    modality: must
+    when:
+      - description: "a backfill changes last month's net revenue by more than 1%"
+        about: [c.backfill_net_revenue_change]
+        values: [{value: "1", datatype: percent, value_role: threshold, comparator: more_than}]
+    action: {verb: update, specific_verb: add, objects: [c.board_pack_note], to: [t.board_pack]}
+    evidence: [{quote: "If a backfill changes last month's net revenue by more than 1%"}, {quote: "and add a note to the board pack."}]
+  - id: s.DO.86
+    predicate: ComputedAs
+    subject: c.backfill_net_revenue_change
+    expression: "the change a backfill makes to last month's net revenue, as a share of last month's net revenue"
+    inputs: [c.net_revenue]
+    evidence: [{quote: "a backfill changes last month's net revenue by more than 1%"}]
+
+  # 11. Roles
+  - {id: s.DO.87, predicate: ResponsibleFor, subject: t.data_platform_lead, responsibility: owns, object: t.data_platform, evidence: [{quote: "The Data Platform lead owns the data platform"}]}
+  - {id: s.DO.88, predicate: ResponsibleFor, subject: t.data_platform_lead, responsibility: approves, object: c.freeze_exception, evidence: [{quote: "and approves exceptions to the freeze."}]}
+  - id: s.DO.89
+    predicate: HoldsRole
+    subject: t.on_call_data_engineer
+    object: t.incident_commander
+    scope: [c.data_incident]
+    unless:
+      - {description: "they have handed the role to someone else", about: [c.incident_command_handed_over]}
+    evidence: [{quote: "The on-call data engineer is the incident commander for every incident until they hand the role to someone else."}]
+  - {id: s.DO.90, predicate: ResponsibleFor, subject: t.analytics_engineering_team, responsibility: owns, object: t.table.fct_orders, evidence: [{quote: "The analytics engineering team owns fct_orders, dim_customers and the customer_segments view."}]}
+  - {id: s.DO.91, predicate: ResponsibleFor, subject: t.analytics_engineering_team, responsibility: owns, object: t.table.dim_customers, evidence: [{quote: "The analytics engineering team owns fct_orders, dim_customers and the customer_segments view."}]}
+  - {id: s.DO.92, predicate: ResponsibleFor, subject: t.analytics_engineering_team, responsibility: owns, object: t.table.customer_segments, evidence: [{quote: "The analytics engineering team owns fct_orders, dim_customers and the customer_segments view."}]}
+  - {id: s.DO.93, predicate: ResponsibleFor, subject: t.finance, responsibility: owns, object: t.table.fct_monthly_revenue, evidence: [{quote: "Finance owns fct_monthly_revenue and the board pack."}]}
+
+  # 12. Change history
+  - id: s.DO.94
+    predicate: Rule
+    modality: must
+    action: {verb: tell, specific_verb: post, objects: [c.data_incident], to: [t.data_incidents_response_team]}
+    valid_from: "2026-11-15"
+    supersedes: [s.DO.52]
+    evidence: [{quote: "From 2026-11-15, data incidents must be posted in #data-incidents-response-team instead of #data-incidents."}]
+
+# the parts of sentences no field holds; each statement above keeps them in its words (guide, "Faithfulness beats coverage")
+unmapped:
+  - {evidence: [{quote: "yesterday's numbers after its freshness deadline"}], proposed_predicate: "a condition field for a date relative to the day checked, and one for an order relative to a deadline", why: "s.DO.9 names the dashboard in a concept's words; no field says 'yesterday' or 'after its deadline'"}
+  - {evidence: [{quote: "rerun successfully before any deadline"}], proposed_predicate: "a condition field for an order relative to a deadline", why: "s.DO.10 names the job in a concept's words; no field says 'before any deadline'"}
+  - {evidence: [{quote: "the last successful load of a data product and now"}], proposed_predicate: "a field for a date relative to the day checked", why: "s.DO.12 keeps 'now' in its expression"}
+  - {evidence: [{quote: "measured against the 7-day average for the same weekday"}], proposed_predicate: "a field for a date relative to the day checked", why: "s.DO.13 divides by the expected rows; no field says they are taken for the same weekday"}
+  - {evidence: [{quote: "status success for today"}], proposed_predicate: "a condition field for a date relative to the day checked", why: "s.DO.26 keeps 'today' and 'the same weekday' in its conditions' descriptions"}
+  - {evidence: [{quote: "owned by the data product's owner"}], proposed_predicate: "a party named through another element (the owner of the product the check belongs to)", why: "s.DO.32 names the role concept 'data product owner', not the owner of that product"}
+  - {evidence: [{quote: "today's row count"}], proposed_predicate: "a condition field for a date relative to the day checked", why: "s.DO.37 keeps 'today' in its expression"}
+  - {evidence: [{quote: "fails three runs in a row"}], proposed_predicate: "a value for a count of runs in a row", why: "s.DO.42 writes 3 as a threshold with unit 'runs in a row'; no field says the runs are consecutive"}
+  - {evidence: [{quote: "the data product's owner must review the check"}], proposed_predicate: "a party named through another element (the owner of the product the check belongs to)", why: "s.DO.42 binds the role concept 'data product owner', not the owner of that product"}
+  - {evidence: [{quote: "used for a decision today"}], proposed_predicate: "a condition field for a date relative to the day checked", why: "s.DO.48 keeps 'today' in its condition's description"}
+  - {evidence: [{quote: "nobody needs it today"}], proposed_predicate: "a condition field for a date relative to the day checked", why: "s.DO.49 keeps 'today' in its condition's description"}
+  - {evidence: [{quote: "the owner of the affected data product"}], proposed_predicate: "a party named through another element (the owner of the product the incident affects)", why: "s.DO.55 assigns to the role concept 'data product owner', not the owner of that product"}
+  - {evidence: [{quote: "the owner of every data product that reads the column"}], proposed_predicate: "a party named through another element (the owners of the products that read a column)", why: "the approval rule names the role concept, not the owners of those products"}
+  - {evidence: [{quote: "the last 3 business days of a quarter"}], proposed_predicate: "a period counted back from the end of another period", why: "the freeze rule keeps 'the last 3 business days of a quarter' in its condition's description"}
+
+skipped:
+  - {reason: heading, evidence: [{quote: "## 1. Definitions"}]}
+  - {reason: heading, evidence: [{quote: "## 2. Pipelines and schedules"}]}
+  - {reason: heading, evidence: [{quote: "## 3. Readiness and freshness"}]}
+  - {reason: heading, evidence: [{quote: "## 4. Data quality checks"}]}
+  - {reason: heading, evidence: [{quote: "## 5. Check failures"}]}
+  - {reason: heading, evidence: [{quote: "## 6. Data incidents"}]}
+  - {reason: heading, evidence: [{quote: "### Creation"}]}
+  - {reason: heading, evidence: [{quote: "### Severity"}]}
+  - {reason: heading, evidence: [{quote: "### Routing"}]}
+  - {reason: heading, evidence: [{quote: "### Escalation"}]}
+  - {reason: heading, evidence: [{quote: "### Lifecycle"}]}
+  - {reason: heading, evidence: [{quote: "### Updates"}]}
+  - {reason: heading, evidence: [{quote: "## 7. Known causes"}]}
+  - {reason: heading, evidence: [{quote: "## 8. Consumers and delivery"}]}
+  - {reason: heading, evidence: [{quote: "## 9. Change management and deprecation"}]}
+  - {reason: heading, evidence: [{quote: "## 10. Freezes, backfills and restatements"}]}
+  - {reason: heading, evidence: [{quote: "## 11. Roles"}]}
+  - {reason: heading, evidence: [{quote: "## 12. Change history"}]}

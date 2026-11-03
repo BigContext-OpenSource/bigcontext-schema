@@ -2,7 +2,7 @@
 id: https://w3id.org/bigcontext-schema
 name: bigcontext_schema
 title: BigContext Schema
-version: 1.1.0
+version: 1.2.0-draft
 description: >-
   A small, closed set of building blocks for expressing business context taken from natural language:
   simple rules, long procedures, company structure, data and mappings. Tier 1 is the element types, tier 2 the
@@ -109,12 +109,24 @@ classes:
       distinct:
         range: boolean
         description: True when the value counts different individuals ("two different managers").
+      counted_from:
+        range: Element
+        description: >-
+          The event or element a duration is counted from ("within 24 hours of the source update": the source
+          update). Added in 1.2.
 
   Condition:
     close_mappings: ["odrl:Constraint"]
     description: >-
       When something holds. The description is a short phrase; about names the elements it mentions. A condition
       that is a data filter also gives field, comparator and values, so it can be run.
+    slots: [negated]
+    slot_usage:
+      negated:
+        description: >-
+          True when the condition holds when its description does not ("unless the load is complete" inside when_any,
+          so_that, an action's, branch's or case's when, or a procedure's trigger, where no unless can say it). A
+          statement's own when and unless need it not. A filter negates with its comparator. Added in 1.2.
     attributes:
       description: {required: true}
       about: {range: Element, multivalued: true}
@@ -132,16 +144,26 @@ classes:
           The responsibility whoever is acting must hold ("only the metric's owner may change it": owns), for what the
           rule acts on, or, with field, for the element that column names on the row (the metric a change is about).
           Only in a Rule's when or unless; never with values or compare_to.
+      time_of_day:
+        pattern: "^([01]\\d|2[0-3]):[0-5]\\d$"
+        description: >-
+          A time of day the condition names, as HH:MM on a 24-hour clock ("not complete by 07:00 ET": 07:00). Added in
+          1.2.
+      time_zone:
+        description: >-
+          The time zone of time_of_day as the text gives it (UTC, ET, Europe/Berlin, local). Added in 1.2.
     none_of:
       - slot_conditions: {values: {required: true}, compare_to: {required: true}}
       - slot_conditions: {party_responsibility: {required: true}, values: {required: true}}
       - slot_conditions: {party_responsibility: {required: true}, compare_to: {required: true}}
+    annotations:
+      links: [{path: values.applies_to, checked_from: "1.2"}]
 
   Case:
     description: One row of a step-wise calculation (when this holds, the result is that value).
     attributes:
       when: {range: Condition, required: true, inlined: true}
-      result: {range: Value, required: true, inlined: true, description: "The result when the condition holds."}
+      result: {range: Value, required: true, inlined: true, description: "The result when the condition holds.", annotations: {links: [{checked_from: "1.2"}]}}
 
   Period:
     exact_mappings: ["dcterms:PeriodOfTime"]
@@ -186,26 +208,34 @@ classes:
         description: >-
           The verb as the text uses it, in lower case, when it is more specific than the closed class
           (page, recommend, deduplicate, invite). It is the organization's vocabulary, not a closed list.
-      objects: {range: Element, multivalued: true}
-      values: {range: Value, multivalued: true, inlined_as_list: true}
+      objects: {range: Element, multivalued: true, annotations: {links: [{role: acts_on}, {role: produces, where: {verb: [create]}}, {role: written_by, where: {subject: [job], verb: [load, create, update], element: [table, view, data_container], without: {to: [table, view, data_container]}}}]}}
+      values: {range: Value, multivalued: true, inlined_as_list: true, annotations: {links: [{role: values}]}}
       via:
         range: Element
         multivalued: true
         description: The channel, tool or intermediary the action goes through (PagerDuty, Slack, the support desk).
+        annotations:
+          links: [{role: routes_to}]
       to:
         range: Element
         multivalued: true
         description: Who receives the action or where its result goes.
+        annotations:
+          links: [{role: routes_to}, {role: written_by, where: {subject: [job], element: [table, view, data_container]}}]
       by:
         range: Element
         multivalued: true
         description: >-
           The dimensions an analysis is broken down by ("spend by channel"). Never who does the action: a rule's
           party goes in binds, a step's in performer.
+        annotations:
+          links: [{role: by}]
       options_in_order:
         range: Element
         multivalued: true
         description: Alternatives in order of preference, first preferred.
+        annotations:
+          links: [{role: options_in_order}]
       detail:
         description: Only what the rest cannot carry (a short phrase).
       when:
@@ -213,6 +243,8 @@ classes:
         multivalued: true
         inlined_as_list: true
         description: Conditions for this action, used when an action is one of several alternatives.
+        annotations:
+          condition: true
       alternatives:
         range: Action
         multivalued: true
@@ -223,6 +255,11 @@ classes:
         multivalued: true
         inlined_as_list: true
         description: Actions that follow this one within the same instruction ("stop and ask").
+    annotations:
+      links:
+        - {path: when.field, checked_from: "1.2"}
+        - {path: when.compare_to, checked_from: "1.2"}
+        - {path: when.values.per, checked_from: "1.2"}
 
   # ---------------------------------------------------------------- tier 2: statement types
   Statement:
@@ -251,7 +288,8 @@ classes:
     slot_usage:
       subject: {required: true, description: "The term or thing being defined or described."}
       text: {required: true, description: "The meaning, as the source gives it."}
-      object: {description: "The broader category it belongs to, if the source names one."}
+      object: {description: "The broader category it belongs to, if the source names one.", annotations: {links: [{role: is_a, fact: is_a}]}}
+    annotations: {fact_link: true}
   IsA:
     close_mappings: ["skos:broader"]
     is_a: Statement
@@ -259,7 +297,8 @@ classes:
     slots: [subject, object]
     slot_usage:
       subject: {required: true}
-      object: {required: true, description: "The category."}
+      object: {required: true, description: "The category.", annotations: {links: [{role: is_a, fact: is_a}]}}
+    annotations: {fact_link: true}
   Overlaps:
     is_a: Statement
     description: >-
@@ -268,7 +307,7 @@ classes:
     slots: [subject, object]
     slot_usage:
       subject: {required: true}
-      object: {required: true}
+      object: {required: true, annotations: {links: [{role: overlaps}]}}
   SynonymOf:
     close_mappings: ["skos:altLabel"]
     is_a: Statement
@@ -283,7 +322,8 @@ classes:
     slots: [subject, members, complete, divided_by]
     slot_usage:
       subject: {required: true, description: "The group."}
-      members: {required: true}
+      members: {required: true, annotations: {links: [{role: members, fact: has_member}]}}
+    annotations: {fact_link: true}
   HasValues:
     is_a: Statement
     description: The values a field or dimension can take, as literals or as concepts (at least one of the two).
@@ -299,6 +339,18 @@ classes:
     slot_usage:
       subject: {required: true, description: "What is calculated."}
       expression: {required: true, description: "The calculation in the source's notation or plain words."}
+    annotations:
+      links:
+        - {path: inputs, fact: has_input}
+        - {path: numerator, fact: has_numerator}
+        - {path: denominator, fact: has_denominator}
+        - {path: base, fact: aggregates_over}
+        - {path: time_dimension, fact: counted_by}
+        - {path: entity, fact: depends_on}
+        - {path: non_additive.across, fact: depends_on}
+        - {path: non_additive.per, fact: depends_on}
+        - {path: filters.field, role: filters_on, fact: filters_on}
+        - {path: filters.compare_to, role: filters_on, fact: filters_on, fact_where: {element: [field]}}
   Sequence:
     is_a: Statement
     description: Items in a meaningful order (a funnel, hierarchy levels, a derivation chain, a response format).
@@ -324,7 +376,7 @@ classes:
     slot_usage:
       subject: {required: true}
       text: {required: true, description: "The purpose, in words."}
-      object: {description: "The activity or question type it serves, if it is an element."}
+      object: {description: "The activity or question type it serves, if it is an element.", annotations: {links: [{role: used_for}]}}
 
   # rules
   Rule:
@@ -335,14 +387,24 @@ classes:
     slot_usage:
       modality: {required: true}
       action: {required: true}
+      overrides: {annotations: {links: [{role: overrides, fact: overrides}]}}
+      binds: {annotations: {links: [{role: binds, fact: binds}]}}
+      scope: {annotations: {links: [{role: scope, fact: binds, fact_where: {element: party}}]}}
+    annotations:
+      from_self: true
+      links:
+        - {path: action.objects, role: acts_on, fact: about}
+        - {path: action.objects, role: produces, where: {verb: [create]}}
   RuleSet:
     close_mappings: ["odrl:Policy"]
     is_a: Statement
     description: A named group of rules that share a scope, a strength or a precedence ("these rules override team guidelines").
     slots: [subject, members, overrides, absolute]
     slot_usage:
-      members: {description: "The ids of the rules in the set, when the source lists them."}
+      members: {description: "The ids of the rules in the set, when the source lists them.", annotations: {links: [{role: members, fact: in_rule_set, fact_reverse: true}]}}
       subject: {description: "A concept naming the set, if the source names it."}
+      overrides: {annotations: {links: [{role: overrides, fact: overrides}]}}
+    annotations: {from_self: true}
 
   # company structure
   PartOf:
@@ -353,8 +415,9 @@ classes:
     slots: [subject, object, cardinality, complete]
     slot_usage:
       subject: {required: true, description: "The part."}
-      object: {required: true, description: "The whole."}
+      object: {required: true, description: "The whole.", annotations: {links: [{role: part_of, fact: part_of}]}}
       complete: {description: "True when the source says these are all the parts of the whole."}
+    annotations: {fact_link: true, fact_backup: true, fact_dotted: true}
   MemberOf:
     exact_mappings: ["org:memberOf"]
     is_a: Statement
@@ -362,7 +425,8 @@ classes:
     slots: [subject, object, role]
     slot_usage:
       subject: {required: true}
-      object: {required: true, description: "The unit."}
+      object: {required: true, description: "The unit.", annotations: {links: [{role: member_of, fact: member_of}]}}
+    annotations: {fact_link: true, fact_backup: true, fact_dotted: true}
   HoldsRole:
     close_mappings: ["org:holds"]
     is_a: Statement
@@ -370,7 +434,8 @@ classes:
     slots: [subject, object]
     slot_usage:
       subject: {required: true}
-      object: {required: true, description: "The role or post."}
+      object: {required: true, description: "The role or post.", annotations: {links: [{role: holds_role, fact: holds_role}]}}
+    annotations: {fact_link: true, fact_backup: true, fact_dotted: true}
   ReportsTo:
     exact_mappings: ["org:reportsTo"]
     is_a: Statement
@@ -378,7 +443,8 @@ classes:
     slots: [subject, object, direct]
     slot_usage:
       subject: {required: true, description: "Who reports."}
-      object: {required: true, description: "Who is reported to."}
+      object: {required: true, description: "Who is reported to.", annotations: {links: [{role: reports_to, fact: reports_to}]}}
+    annotations: {fact_link: true, fact_backup: true, fact_dotted: true}
   Heads:
     exact_mappings: ["org:headOf"]
     is_a: Statement
@@ -386,7 +452,8 @@ classes:
     slots: [subject, object]
     slot_usage:
       subject: {required: true, description: "The person or post at the head."}
-      object: {required: true, description: "The unit, team or organization."}
+      object: {required: true, description: "The unit, team or organization.", annotations: {links: [{role: heads, fact: heads}]}}
+    annotations: {fact_link: true, fact_backup: true, fact_dotted: true}
   ResponsibleFor:
     is_a: Statement
     description: A party has a responsibility for something, possibly answering to someone for it.
@@ -395,6 +462,8 @@ classes:
       subject: {required: true, description: "The person, post, team or unit."}
       responsibility: {required: true}
       text: {description: "The responsibility in words when no element names it."}
+      object: {annotations: {links: [{role: responsible_for, fact: {by: responsibility, values: {owns: owns, manages: manages, accountable: accountable_for, responsible: responsible, performs: performs, approves: approves, decides: decides, supervises: supervises, coordinates: coordinates, reviews: reviews, advises: advises, assists: assists}, default: responsible, skip: [consulted, kept_informed]}}]}}
+    annotations: {fact_link: true, fact_backup: true}
   HasAccess:
     close_mappings: ["odrl:Permission"]
     is_a: Statement
@@ -402,8 +471,9 @@ classes:
     slots: [subject, object, access, filters]
     slot_usage:
       subject: {required: true}
-      object: {required: true}
+      object: {required: true, annotations: {links: [{role: has_access, fact: {by: access, values: {use: can_use, read: can_read, admin: can_admin, masked: can_see_masked, granted: access_granted}}}]}}
       access: {required: true}
+    annotations: {fact_link: true}
   Appoints:
     is_a: Statement
     description: A party appoints or designates the holder of a post, possibly with another party's consent.
@@ -417,14 +487,15 @@ classes:
     slots: [subject, object]
     slot_usage:
       subject: {required: true}
-      object: {required: true}
+      object: {required: true, annotations: {links: [{role: escalates_to, fact: escalates_to}]}}
+    annotations: {fact_link: true, fact_backup: true, fact_dotted: true}
   WorksWith:
     is_a: Statement
     description: Two parties work together, coordinate or keep liaison, optionally on a topic.
     slots: [subject, object, text]
     slot_usage:
       subject: {required: true}
-      object: {required: true}
+      object: {required: true, annotations: {links: [{role: works_with}]}}
       text: {description: "What they work together on."}
   Represents:
     is_a: Statement
@@ -447,7 +518,8 @@ classes:
     slots: [subject, object, text]
     slot_usage:
       subject: {required: true}
-      object: {required: true, description: "The law, policy, agreement or document."}
+      object: {required: true, description: "The law, policy, agreement or document.", annotations: {links: [{role: governed_by, fact: governed_by}]}}
+    annotations: {fact_link: true, fact_backup: true, fact_dotted: true}
 
   # lifecycles and behaviour
   Transition:
@@ -455,9 +527,11 @@ classes:
     description: Something moves from one state to another, when something happens (one edge of a lifecycle).
     slots: [subject, from_state, to_state, alternative_states, performer]
     slot_usage:
-      subject: {required: true, description: "What changes state (an incident, an order)."}
-      to_state: {required: true}
-      alternative_states: {description: "Other states it may end in instead ('deleted, aggregated or de-identified')."}
+      subject: {required: true, description: "What changes state (an incident, an order).", annotations: {links: [{role: subject}, {role: state_input}]}}
+      to_state: {required: true, annotations: {links: [{role: produces}]}}
+      alternative_states: {description: "Other states it may end in instead ('deleted, aggregated or de-identified').", annotations: {links: [{role: produces}]}}
+      from_state: {annotations: {links: [{role: state_input}]}}
+    annotations: {condition_role: state_input}
   Triggers:
     is_a: Statement
     description: When something happens, a system or party does something automatically (not a norm, a behaviour).
@@ -485,25 +559,28 @@ classes:
     slots: [subject, object, match, justification]
     slot_usage:
       subject: {required: true}
-      object: {required: true}
+      object: {required: true, annotations: {links: [{role: maps_to, fact: {by: match, values: {exact: same_as}}}]}}
       match: {required: true}
+    annotations: {fact_link: true}
   ImplementedBy:
     is_a: Statement
     description: A business concept is represented in data by a field, table or filter.
     slots: [subject, object, expression, primary]
     slot_usage:
       subject: {required: true, description: "The concept."}
-      object: {required: true, description: "The field, table or other data element."}
+      object: {required: true, description: "The field, table or other data element.", annotations: {links: [{role: implemented_by, fact: implemented_by}]}}
       expression: {description: "The filter or expression, if any."}
+    annotations: {fact_link: true, fact_backup: true, fact_dotted: true}
   JoinsTo:
     is_a: Statement
     description: How two data elements join.
     slots: [subject, object, keys, key_pairs, cardinality, expected_cardinality, dedup, join_type, role]
     slot_usage:
       subject: {required: true}
-      object: {required: true}
+      object: {required: true, annotations: {links: [{role: joins_to, fact: joins_to}]}}
       cardinality: {description: "What the data has; what it should be, when the text says the data breaks it, is expected_cardinality."}
       role: {description: "The role the joined element plays through this join (buyer, recipient)."}
+    annotations: {fact_link: true, fact_backup: true, fact_dotted: true}
   RecordMatch:
     is_a: Statement
     description: >-
@@ -523,7 +600,8 @@ classes:
     slots: [subject, object, data_role, time_grain]
     slot_usage:
       subject: {required: true, description: "The table or dataset."}
-      object: {required: true, description: "The field, concept or entity it holds information about."}
+      object: {required: true, description: "The field, concept or entity it holds information about.", annotations: {links: [{role: contains, fact: {by: data_role, values: {time_dimension: time_column, key: key_column}, default: has_column}, fact_where: {element: [field]}}]}}
+    annotations: {fact_link: true}
   HasGrain:
     is_a: Statement
     description: What one row of a table stands for ("one row per order line").
@@ -531,7 +609,7 @@ classes:
     slot_usage:
       subject: {required: true}
       text: {required: true, description: "The grain as the source gives it."}
-      members: {description: "The elements that together make up one row, when named."}
+      members: {description: "The elements that together make up one row, when named.", annotations: {links: [{role: members}]}}
   Covers:
     close_mappings: ["dcterms:coverage"]
     is_a: Statement
@@ -557,22 +635,25 @@ classes:
     slots: [subject, object, text]
     slot_usage:
       subject: {required: true}
-      object: {required: true, description: "What it is built or sourced from."}
+      object: {required: true, description: "What it is built or sourced from.", annotations: {links: [{role: derived_from, fact: derived_from}]}}
       text: {description: "How, if the source says."}
+      via: {annotations: {links: [{role: via}]}}
+    annotations: {fact_link: true, fact_backup: true, fact_dotted: true}
   IdentifiedBy:
     is_a: Statement
     description: The elements that together identify each instance of the subject (a table's unique key).
     slots: [subject, members, primary, stable]
     slot_usage:
       subject: {required: true}
-      members: {required: true, description: "The fields or elements that together identify it."}
+      members: {required: true, description: "The fields or elements that together identify it.", annotations: {links: [{role: members, fact: key_column}]}}
+    annotations: {fact_link: true}
   Has:
     is_a: Statement
     description: Each subject has some number of the object (an order has one invoice; a customer has many orders).
     slots: [subject, object, cardinality, role]
     slot_usage:
       subject: {required: true}
-      object: {required: true}
+      object: {required: true, annotations: {links: [{role: has}]}}
       cardinality: {description: "How many of the object each subject has."}
       role: {description: "The role the object plays, if named (recipient)."}
   Caveat:
@@ -592,13 +673,15 @@ classes:
     slots: [subject, text, values]
     slot_usage:
       text: {required: true, description: "The conclusion."}
+    annotations: {condition_role: causes}
   Influences:
     is_a: Statement
     description: One element affects another.
     slots: [subject, object, direction, text]
     slot_usage:
       subject: {required: true, description: "The cause."}
-      object: {required: true, description: "The effect."}
+      object: {required: true, description: "The effect.", annotations: {links: [{role: causes, fact: {by: direction, values: {increases: increases, decreases: decreases}, default: influences}}]}}
+    annotations: {fact_link: true}
   CorrelatesWith:
     is_a: Statement
     description: >-
@@ -607,7 +690,7 @@ classes:
     slots: [subject, object, direction, text]
     slot_usage:
       subject: {required: true}
-      object: {required: true}
+      object: {required: true, annotations: {links: [{role: correlates_with}]}}
       direction: {description: "increases when they rise and fall together, decreases when one rises as the other falls."}
 
   # patterns, gaps and examples
@@ -655,7 +738,7 @@ classes:
     slots: [subject, object, text]
     slot_usage:
       subject: {required: true, description: "What is described."}
-      object: {required: true, description: "The document, page or section that describes it."}
+      object: {required: true, description: "The document, page or section that describes it.", annotations: {links: [{role: described_in}]}}
 
   # ---------------------------------------------------------------- procedures
   Procedure:
@@ -667,6 +750,7 @@ classes:
       label: {required: true}
       mode: {required: true}
       steps: {required: true}
+    annotations: {from_self: true}
   Step:
     description: One step of a procedure.
     slots: [id, order, source_label, modality, action, performer, or_more_senior, automatic, when,
@@ -678,9 +762,10 @@ classes:
       evidence:
         minimum_cardinality: 1
         description: The exact words of the source; a step of a procedure with stated_by and no source text may leave it out.
+    annotations: {from_self: true}
   Branch:
     attributes:
-      when: {range: Condition, required: true, inlined: true}
+      when: {range: Condition, required: true, inlined: true, annotations: {condition: true}}
       go_to: {description: "The id of the step to go to."}
       outcome: {description: "Where the procedure ends up if it does not go to a step (stop, escalate, done)."}
 
@@ -702,7 +787,7 @@ classes:
     description: A statement BigContext Schema could not express. Kept, never dropped.
     attributes:
       evidence: {range: Evidence, multivalued: true, inlined_as_list: true, required: true, minimum_cardinality: 1}
-      proposed_predicate: {required: true, description: "The statement type you would have needed."}
+      proposed_predicate: {required: true, description: "The statement type you would have needed; for a part of a sentence a statement holds the rest of, the field."}
       why: {required: true, description: "Why no building block fits."}
   Skipped:
     description: Source text that carries no context to express (a heading, formatting, navigation).
@@ -741,19 +826,19 @@ slots:
   revisions: {range: Revision, multivalued: true, inlined_as_list: true}
   as_of: {description: "The date what a statement describes was observed (a snapshot), as an ISO date (2026-10, 2026-10-01); on the source, the date every statement without its own as_of, valid_from or valid_to holds as of.", pattern: "^\\d{4}(-\\d{2}(-\\d{2})?)?$"}
   standard_attribute: {range: StandardAttributeEnum}
-  within: {range: Value, inlined: true, description: "A time limit ('answer within 4 business hours')."}
+  within: {range: Value, inlined: true, description: "A time limit ('answer within 4 business hours').", annotations: {links: [{checked_from: "1.2"}, {path: counted_from, role: reacts_to}]}}
   exclusive: {range: boolean, description: "True when the source says only these (only analysts, the only warehouse that ships abroad)."}
-  held_by: {range: Element, multivalued: true, description: "Whose preference, view or wish this is."}
-  proposed_by: {range: Element, multivalued: true}
-  decided_by: {range: Element, multivalued: true}
+  held_by: {range: Element, multivalued: true, description: "Whose preference, view or wish this is.", annotations: {provenance: true}}
+  proposed_by: {range: Element, multivalued: true, annotations: {provenance: true}}
+  decided_by: {range: Element, multivalued: true, annotations: {provenance: true}}
   decided_on: {pattern: "^\\d{4}(-\\d{2}(-\\d{2})?)?$", description: "When it was decided, as an ISO date."}
-  decided_in: {range: Element, description: "Where it was decided or recorded (a meeting, a channel, a ticket, a document)."}
-  ratified_by: {range: Element, multivalued: true}
+  decided_in: {range: Element, description: "Where it was decided or recorded (a meeting, a channel, a ticket, a document).", annotations: {provenance: true}}
+  ratified_by: {range: Element, multivalued: true, annotations: {provenance: true}}
   ratified_on: {pattern: "^\\d{4}(-\\d{2}(-\\d{2})?)?$", description: "When it was ratified, as an ISO date."}
-  ratified_in: {range: Element, description: "Where it was ratified (a meeting, a council, a document)."}
-  endorsed_by: {range: Element, multivalued: true, description: "Who agreed or supported it (+1, 'fine for now')."}
-  disputed_by: {range: Element, multivalued: true, description: "Who disagreed or objected."}
-  informed: {range: Element, multivalued: true, description: "Who was told."}
+  ratified_in: {range: Element, description: "Where it was ratified (a meeting, a council, a document).", annotations: {provenance: true, links: [{checked_from: "1.2"}]}}
+  endorsed_by: {range: Element, multivalued: true, description: "Who agreed or supported it (+1, 'fine for now').", annotations: {provenance: true}}
+  disputed_by: {range: Element, multivalued: true, description: "Who disagreed or objected.", annotations: {provenance: true}}
+  informed: {range: Element, multivalued: true, description: "Who was told.", annotations: {provenance: true}}
   decision_status: {range: DecisionStatusEnum, description: "How far it got: proposed, decided, ratified, rejected, withdrawn..."}
   supersedes: {range: Element, multivalued: true, description: "Statements this one replaces."}
   progress: {range: ProgressEnum, description: "How far an action item or piece of work has got."}
@@ -766,7 +851,7 @@ slots:
   capacity: {range: CapacityEnum, description: "In what capacity a role, membership or responsibility is held."}
   acting_for: {range: Element, description: "Whom an acting or interim holder stands in for."}
   line: {range: LineEnum, description: "Solid or dotted reporting or membership line."}
-  share: {range: Value, inlined: true, description: "The share of time (50%)."}
+  share: {range: Value, inlined: true, description: "The share of time (50%).", annotations: {links: [{checked_from: "1.2"}, {path: counted_from, role: reacts_to}]}}
   cadence: {description: "How a rotation turns over ('every two weeks, from Friday 17:00')."}
   physical_name: {description: "The object's name in its system (tpcds.public.store_sales; a tool's name in its MCP server)."}
   key_pairs: {range: KeyPair, multivalued: true, inlined_as_list: true}
@@ -776,7 +861,7 @@ slots:
   time_dimension: {range: Element, description: "The time column a measure is counted by. Expected when the text says which date counts it, and when its base table has no time column or several; left out when the text does not say."}
   numerator: {range: Element}
   denominator: {range: Element}
-  filters: {range: Condition, multivalued: true, inlined_as_list: true, description: "Row filters: on a metric, applied before aggregating; on access, the rows it is limited to."}
+  filters: {range: Condition, multivalued: true, inlined_as_list: true, description: "Row filters: on a metric, applied before aggregating; on access, the rows it is limited to.", annotations: {links: [{role: filters_on}]}}
   grain_to_date: {range: TimeGrainEnum, description: "A cumulative metric taken from the start of this grain (year for year to date), in the metric's calendar."}
   calendar: {range: Concept, description: "The calendar a metric's grains, windows and offsets follow when it is not the ordinary one (a fiscal calendar, a concept of type calendar)."}
   reporting_grain: {range: TimeGrainEnum, description: "The time grain a metric is reported at unless asked otherwise ('for each day')."}
@@ -817,8 +902,8 @@ slots:
   items: {range: Element, multivalued: true}
   inputs: {range: Element, multivalued: true}
   outputs: {range: Element, multivalued: true}
-  values: {range: Value, multivalued: true, inlined_as_list: true}
-  property_value: {range: Value, inlined: true, description: "The value the element has for the attribute."}
+  values: {range: Value, multivalued: true, inlined_as_list: true, annotations: {links: [{path: counted_from, role: reacts_to}]}}
+  property_value: {range: Value, inlined: true, description: "The value the element has for the attribute.", annotations: {links: [{path: counted_from, role: reacts_to}]}}
   cases: {range: Case, multivalued: true, inlined_as_list: true}
   attribute: {range: Concept}
   expression: {}
@@ -844,7 +929,7 @@ slots:
   direct: {range: boolean, description: "True when the source says the reporting line is direct."}
   with_consent_of: {range: Element, multivalued: true}
   audience: {range: Element, multivalued: true, description: "Who the representation is towards."}
-  via: {range: Element, multivalued: true, description: "The channel, tool or intermediary (an escalation through #help); for a Rule it goes in its action's via."}
+  via: {range: Element, multivalued: true, description: "The channel, tool or intermediary (an escalation through #help); for a Rule it goes in its action's via.", annotations: {links: [{role: routes_to}]}}
   from_state: {range: Concept}
   to_state: {range: Concept}
   alternative_states: {range: Concept, multivalued: true}
@@ -853,12 +938,12 @@ slots:
   direction: {range: DirectionEnum}
 
   # qualifiers
-  when: {range: Condition, multivalued: true, inlined_as_list: true, description: "Conditions that must all hold."}
-  when_any: {range: Condition, multivalued: true, inlined_as_list: true, description: "Conditions of which any one is enough."}
-  unless: {range: Condition, multivalued: true, inlined_as_list: true, description: "Exceptions; any one is enough to set the statement aside."}
-  even_if: {range: Condition, multivalued: true, inlined_as_list: true, description: "Conditions under which the statement still holds ('even if', 'including when')."}
-  especially_when: {range: Condition, multivalued: true, inlined_as_list: true, description: "Conditions under which it holds most often or most strongly ('especially if', 'particularly when'); unlike when, it also holds without them."}
-  divided_by: {range: Element, multivalued: true, description: "The field or dimension that divides a group into its members (returns divided by reason into damaged and unwanted)."}
+  when: {range: Condition, multivalued: true, inlined_as_list: true, description: "Conditions that must all hold.", annotations: {condition: true}}
+  when_any: {range: Condition, multivalued: true, inlined_as_list: true, description: "Conditions of which any one is enough.", annotations: {condition: true}}
+  unless: {range: Condition, multivalued: true, inlined_as_list: true, description: "Exceptions; any one is enough to set the statement aside.", annotations: {condition: true}}
+  even_if: {range: Condition, multivalued: true, inlined_as_list: true, description: "Conditions under which the statement still holds ('even if', 'including when').", annotations: {condition: true}}
+  especially_when: {range: Condition, multivalued: true, inlined_as_list: true, description: "Conditions under which it holds most often or most strongly ('especially if', 'particularly when'); unlike when, it also holds without them.", annotations: {condition: true}}
+  divided_by: {range: Element, multivalued: true, description: "The field or dimension that divides a group into its members (returns divided by reason into damaged and unwanted).", annotations: {links: [{checked_from: "1.2"}]}}
   because: {range: Condition, multivalued: true, inlined_as_list: true, description: "The reasons the source gives."}
   so_that: {range: Condition, multivalued: true, inlined_as_list: true, description: "The purpose the source gives ('in order to', 'so that')."}
   scope: {range: Element, multivalued: true, description: "The elements the statement is limited to."}
@@ -869,15 +954,15 @@ slots:
   currently: {range: boolean, description: "True when the source says it holds now and may change ('currently', 'right now'); false when it says it no longer holds without giving dates ('former', 'emeritus', 'previously')."}
   valid_from: {description: "The first day it holds, as an ISO date: 2027-10 for 'October 2027' (a year or month means its first day).", pattern: "^\\d{4}(-\\d{2}(-\\d{2})?)?$"}
   valid_to: {description: "The last day it holds, as an ISO date: 2027-10 for 'October 2027' (a year or month means its last day).", pattern: "^\\d{4}(-\\d{2}(-\\d{2})?)?$"}
-  valid_while: {range: Condition, multivalued: true, inlined_as_list: true, description: "Holds only while these last ('for the duration of the incident')."}
-  stated_by: {range: Element, multivalued: true}
+  valid_while: {range: Condition, multivalued: true, inlined_as_list: true, description: "Holds only while these last ('for the duration of the incident').", annotations: {condition: true}}
+  stated_by: {range: Element, multivalued: true, annotations: {provenance: true}}
 
   # procedures
   mode: {range: ProcedureModeEnum}
   goal: {}
   performer: {range: Element, multivalued: true, description: "Who does it; several when they do it together."}
   automatic: {range: boolean, description: "True when it happens by itself, with no person acting (a system does the step; 'they are removed')."}
-  trigger: {range: Condition, inlined: true}
+  trigger: {range: Condition, inlined: true, annotations: {condition: true}}
   steps: {range: Step, multivalued: true, inlined_as_list: true}
   order: {range: integer}
   source_label: {description: "The step's own number or letter in the source (3a, 4.)."}
@@ -891,23 +976,25 @@ slots:
 enums:
   ThingTypeEnum:
     permissible_values:
-      person: {}
-      team: {}
-      unit: {description: "An organizational unit inside an organization (an office, a division, a department).", exact_mappings: ["org:OrganizationalUnit"]}
-      post: {description: "A position that people hold or rotate through (Director of X, Engineer On Call).", exact_mappings: ["org:Post"]}
-      organization: {exact_mappings: ["org:Organization"]}
-      agent: {description: "A non-human actor (an AI agent, a bot, a service account)."}
+      person: {annotations: {party: true}}
+      team: {annotations: {party: true}}
+      unit: {description: "An organizational unit inside an organization (an office, a division, a department).", exact_mappings: ["org:OrganizationalUnit"], annotations: {party: true}}
+      post: {description: "A position that people hold or rotate through (Director of X, Engineer On Call).", exact_mappings: ["org:Post"], annotations: {party: true}}
+      organization: {exact_mappings: ["org:Organization"], annotations: {party: true}}
+      agent: {description: "A non-human actor (an AI agent, a bot, a service account).", annotations: {party: true}}
       system: {}
       data_container: {description: "A database, project, schema or dataset."}
       data_product: {description: "A curated, owned set of data assets offered for named uses (Customer 360).", close_mappings: ["dcat:Dataset"]}
       table: {}
       view: {}
       field: {}
-      access_group: {description: "A group, database role, IAM role or policy tag that grants access."}
+      access_group: {description: "A group, database role, IAM role or policy tag that grants access.", annotations: {party: true}}
       meeting: {description: "A meeting or other dated event."}
       document: {}
       tool: {description: "A tool an agent or person can call (an MCP tool, an API operation). Its physical_name is its name in its server, where its parameters are defined."}
       channel: {description: "A communication channel (a Slack channel, a mailing list)."}
+      job: {description: "A piece of data work that runs on a schedule or a trigger (a pipeline, a dbt job, a load). Added in 1.2.", close_mappings: ["prov:Plan"]}
+      report: {description: "A report or dashboard that people read, built from data (the Daily Sales Report). Added in 1.2."}
       place: {}
       product: {}
       other: {}

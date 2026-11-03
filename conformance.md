@@ -61,11 +61,15 @@ understands and reports the rest.
 ## A conforming graph builder
 
 - **G1** It builds the record graph as `graph.md` describes ("The record graph"), at the address `graph.md` gives;
-  the record graph of a conforming document passes `generated/bigcontext_schema.shacl.ttl`.
+  the record graph of a conforming document passes `generated/bigcontext_schema.shacl.ttl`. From 1.2, for a date it
+  also builds the in-force graph (`graph.md`, "Questions on the record graph"): exactly the statements and procedures
+  in force are `bcf:InForce`.
 - **G2** For a date, it states exactly the facts `graph.md` lists ("Which statements become facts").
 - **G3** It works out exactly the facts that follow from the stated ones under OWL 2 RL with
   `generated/bigcontext_facts.owl.ttl`, and keeps them apart from the stated facts.
-- **G4** Its answers to the questions in `queries/` (SPARQL) or `cypher/` (openCypher) are the expected ones.
+- **G4** Its answers to the questions in `queries/` (SPARQL) or `cypher/` (openCypher) are the expected ones; from
+  1.2, so are those of `queries/record/connections.rq`, run on the record and in-force graphs: exactly the links the
+  link annotations give, for the statements and procedures in force.
 
 ## The cases
 

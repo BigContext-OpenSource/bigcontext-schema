@@ -4,6 +4,9 @@
 This guide is for anyone, person or AI agent, who turns a source text into a BigContext Schema document.
 **Faithfulness beats coverage.** If something does not fit, record it as `unmapped` with the statement type you
 would have needed. Never bend a statement type to make it fit, and never invent content the text does not say.
+When only part of a sentence fits, write the statement with what fits, keep the rest in its words (a condition's
+`description`, the statement's `text`), and record that part as `unmapped` too: its quote, the field you would have
+needed, and why ("the data product's owner": a party named through another element).
 
 The schema is `bigcontext_schema.yaml` (LinkML), beside this guide. This guide explains how to use it.
 
@@ -159,7 +162,9 @@ Rules
   strict majority", "at least two-thirds") is a condition with a threshold value:
   `{value: "2/3", value_role: threshold, comparator: at_least, unit: "of votes cast"}`. A consequence with no one named as acting ("they are removed", "the council
   is dissolved", "it is moved out automatically") is a `Transition` to the new state with `automatic: true` when
-  the text says it happens by itself; never invent who does it. Which source wins over another ("the finance team's formula is the one that runs"; "the payments system is the source of truth for refunds"; "tax filings use the ledger") is a
+  the text says it happens by itself; never invent who does it. When the text names the check, job or system whose
+  event sets it off ("when the uniqueness test fails, the load is marked failed"), it is that one's `Triggers`, as
+  under Data operations. Which source wins over another ("the finance team's formula is the one that runs"; "the payments system is the source of truth for refunds"; "tax filings use the ledger") is a
   `Rule` to use one source, with the purpose it is for ("fiscal revenue", "tax filings") in `scope`, not `when`,
   and `overrides` when it names the rule or source it beats.
 
@@ -228,8 +233,10 @@ Mapping and data
 - `DerivedFrom`, `Has` (cardinality one_to_many | many_to_one | one_to_one | many_to_many | exactly_one |
   one_or_more | more_than_one | zero_or_more: a count for each subject, or a pair value when the text gives both
   directions ("orders and invoices match one to one"); "can have" is zero_or_more, "more than one" is more_than_one), `Caveat` (`object` for a second element it concerns). A known problem a reader must
-  allow for is one Caveat with its cause in its text, even when it names a behaviour ("the feed sometimes sends
-  rows twice, which causes duplicates").
+  allow for whose cause names no element is one Caveat with its cause in its text. A cause between two named
+  elements ("when fct_orders has duplicates, the usual cause is the source system resending orders on retry") is
+  `Influences`: the cause in `subject`, the effect in `object` (fct_orders' duplicates, never a condition), "usually"
+  in `frequency`.
 - `JoinsTo` join_type: none for an ordinary (inner) join, `left`, `semi` (keeps the rows of the first that have a
   match, adding no columns) or `anti` (keeps the rows of the first that have none: "customers with no order"); record
   another as unmapped. Its `cardinality` takes the pair values (one_to_one, one_to_many, many_to_one, many_to_many)
@@ -372,6 +379,53 @@ subject. Several definitions with none marked canonical are reported and none is
 `canonical` only when the text says so: when the other definitions are deprecated or variants, the one left in force
 is exported without it.
 
+## Data operations
+
+One form for each kind of sentence in a data team's runbook; the same fact in other words takes the same form. A job
+is a thing of type `job`, a report or dashboard one of type `report`.
+
+| Sentence | Form |
+|---|---|
+| Job and schedule: "The orders pipeline loads fct_orders every day at 02:00 UTC." | `Triggers`: the job in `subject`; `action` with `verb: load` and the table it writes in `objects`; `recurrence`. A source and a target ("loads raw.orders into fct_orders") are the source in `objects` and the target in `to`. |
+| Readiness: "The orders load is complete when load_audit shows status 'success' for today and row_count is at least 90% of the 7-day average." | `Transition`: `subject` what changes state, `to_state` the state concept ("orders load complete"), `when` the conditions, each naming in `about` what it tests (a field, a metric with its `ComputedAs`), with its threshold as a value. |
+| Freshness: "Dashboards must show fresh data by 07:00 local time each business day." | `Rule` with `due_by` the deadline in the text's words. A maximum age ("no more than 2 hours old") is a check: `verb: check`, the dashboards in `objects`, `detail` freshness, the age as a value with `value_role: maximum`. |
+| Gate: "Do not send the Daily Sales Report to regional managers until the orders load is complete." | `Rule` `must_not`, the report in `objects`, the managers in `to`, `unless` the state. "Until" a state ("every two hours until it is mitigated") is `unless` that state. |
+| Quality check: "A dbt test checks that ORDER_LINE_ID in fct_orders is unique." | An action with `verb: check`, the checked table or field in `objects` (never in `by`), what is checked in `detail`, a tolerance as a value with `value_role` minimum or maximum: in a `Rule` for a duty to check, in a `Triggers` for a monitor or test that runs by itself, its subject the test or monitor as a thing of type `job`. |
+| Check failure: "If the uniqueness test fails, the load fails and a ticket is opened automatically." | `Triggers` with the check in `subject` (a thing of type `job`), also when the text says no one acts ("without anyone raising it"): its condition names in `about` the failure state, the checked table, and the field when the check names one; what fails in its `action` (`verb: stop`, `specific_verb: fail`); what it creates in a `then` action with `verb: create`. |
+| Monitor: "Revenue is anomalous when daily revenue is more than 20% below its 28-day average." | `Transition` to the state ("revenue anomalous"), its condition about the metric, with the threshold value. |
+| Incident creation: "If the orders load is not complete by 07:00 ET, a data incident should be created." | `Rule` `should`, `verb: create`, the incident concept in `objects`, `unless` the state with `time_of_day` 07:00 and `time_zone` ET on that condition. |
+| Severity: "Sev2: an internal dashboard is wrong, or late by more than 4 hours." | `Transition` to the severity state, its alternatives in `when_any`: this defines the severity. Putting one incident the text names in a severity ("this is a Sev2") is `IsA`. |
+| Routing: "A Sev1 pages the on-call engineer within 15 minutes." | `Rule` `must` when the text names no system that does it, `Triggers` when it does; `verb: notify` (`specific_verb` page, post), the recipient or channel in `to`, `within` counted from the event the text names, or from the state the condition names when it names none. |
+| Escalation: "If nobody acknowledges a Sev1 within 30 minutes, escalate to the Data Platform lead." | `EscalatesTo`, also when the text says it as an instruction ("escalate to"), not a `Rule`: from the party who escalates (the one paged, when the text does not say) to the next, `unless` the acknowledged state with the duration as a value counted from the Sev1 state; a path in order is a chain of them. Whom a party answers to for a responsibility is `ResponsibleFor`'s `answers_to`. |
+| Lifecycle and updates: "An incident is open, then mitigated, then resolved, then closed. For a Sev1, tell affected stakeholders every two hours." | One `Transition` per step (`from_state`, `to_state`); a `Rule` with `when` the Sev1 state, `to` the stakeholders and `recurrence`. |
+| Known cause: "When fct_orders has duplicates, the usual cause is the source system resending orders on retry." | `Influences`, as under Statement types: the cause in `subject`, the effect in `object`, `frequency: usually`. |
+| Consumers: "The Daily Sales Report is built from fct_orders and goes to regional managers every morning." | `DerivedFrom` from the table; a `Rule` (or a `Triggers`, when the text names what sends it) with `verb: share`, the managers in `to` and `recurrence`. A job that builds one table from another gives both: the job's `Triggers` and the table's `DerivedFrom`. |
+| Change and deprecation: "Schema changes to fct_orders must be announced in #data-announce two weeks before they ship. analytics.orders_v1 is retired on 2026-12-31." | `Rule` with `verb: tell`, the channel in `to`, `due_by` the text's words; `HasStatus` retired with `valid_from`. |
+| Freeze and restatement: "Do not backfill during business hours, unless the incident is Sev1. If a backfill changes last month's revenue by more than 1%, tell Finance." | `Rule` `must_not` with `verb: load` (`specific_verb` backfill), `when` business hours, `unless` the Sev1 state; `Rule` with `when` about the change in the metric and its threshold. |
+| Dated change: "From 2026-11-15, data incidents must be posted in #data-incidents-response-team." | The new statement, whole, with `valid_from` and `supersedes` the one it replaces. |
+
+- A state concept belongs to one subject: "orders load complete", "Sev1 incident", never "complete" alone.
+- A condition on a check's result names the failure state and the checked table in `about`, and the field when the
+  check names one ("the uniqueness test on ORDER_LINE_ID failed": the failure state, fct_orders, ORDER_LINE_ID).
+- A later text that changes part of a statement ("from today, page the platform lead instead") is a new statement
+  that repeats every part that still holds, changes the part that changed, and `supersedes` the old one.
+- A duration defined between two events with no number ("the time between an entry made upstream and the data
+  available in PROD") is a `ComputedAs` with both events in `inputs`.
+- A negation where no `unless` can hold it (inside `when_any`, `so_that`, an action's, branch's or case's `when`, or a
+  procedure's `trigger`) is `negated: true` on that condition; a statement's own condition uses `unless`, and a
+  filter negates with its comparator (`not_equal`, `not_in`). A statement that says something is not so ("a rerun
+  that succeeds is not an incident") takes the statement's own `negated`.
+- A time of day inside a condition is the condition's `time_of_day` (HH:MM, 24-hour) and `time_zone` (the text's
+  zone).
+- These have no field, and are each a part recorded as `unmapped` beside the statement: a date relative to the day
+  checked ("today's row count", "for the same weekday"); an order relative to a deadline ("before any deadline"); a
+  party named through another element ("the owner of the affected data product"); a count of runs in a row ("fails
+  three runs in a row"); a window counted back from the end of a period ("the last 3 business days of a quarter").
+- The same fact in other words keeps one form: an automatic reaction is `Triggers`, never a `Habit` (Habit is what a
+  party usually does); a cause between named elements is `Influences`, and `Indicates` and `CorrelatesWith` only as
+  Statement types says; an escalation path is `EscalatesTo` or `answers_to`; a recipient or destination goes in the
+  action's `to`; a category the text names is `IsA`.
+
 ## Tools and what agents learn
 
 - A tool (an MCP tool, an API operation) is a thing with `thing_type: tool` and `physical_name` its name in its
@@ -404,7 +458,8 @@ statement type.
 - **Work and time**: `due_by` is a deadline ("by 30 November", "by the end of each fiscal quarter"), also one relative
   to an event, in the text's words ("two days before launch", "before the review starts"; but "check with Y before X"
   is a condition, as in the strength table); `within` is a
-  duration ("within 30 days"); `recurrence` is a duty or an automatic behaviour that recurs ("every month", "daily at 02:00 UTC"); `cadence` is how a rotation
+  duration ("within 30 days"), and the event it is counted from goes in its `counted_from` ("within 24 hours of the
+  source update": the source update), never in `due_by` text; `recurrence` is a duty or an automatic behaviour that recurs ("every month", "daily at 02:00 UTC"); `cadence` is how a rotation
   turns over; `frequency` is how often something is true. A step can carry `due_by` and `recurrence` too.
 - **Classes and questions**: a statement about each member of a class ("nine offices, each headed by an
   Assistant Administrator") names the class and has `each: true`; one about only some of them ("some customers
@@ -470,7 +525,8 @@ votes cast"). The condition's own `comparator` is only for a data filter, with `
 measures in `about`: a metric concept ("returns", "p-value", "week-over-week change in orders"), with its
 `ComputedAs` when the text says how it is calculated; a condition that something is in a state or category ("the
 incident is Sev1", "the data is late") names that state concept. A time since an event ("after 7 days") needs
-neither. This is what lets a rule's condition be checked against data.
+neither; the event goes in the value's `counted_from` when the text names it ("7 days after the incident is
+resolved": the resolved state). This is what lets a rule's condition be checked against data.
 
 Amounts follow one rule: `value_role` says the part a value plays, and `comparator` how it is compared. In a
 condition the value is a `threshold` with its comparator ("orders over $50": more_than; "at least two managers":

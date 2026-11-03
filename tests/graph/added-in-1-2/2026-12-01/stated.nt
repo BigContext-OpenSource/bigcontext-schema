@@ -1,0 +1,2 @@
+<urn:bigcontext-schema:orders-data-operations/s.4> <https://w3id.org/bigcontext-schema/facts/about> <urn:bigcontext-schema:orders-data-operations/c.data_incident> .
+<urn:bigcontext-schema:orders-data-operations/t.daily_sales_report> <https://w3id.org/bigcontext-schema/facts/derived_from> <urn:bigcontext-schema:orders-data-operations/t.fct_orders> .

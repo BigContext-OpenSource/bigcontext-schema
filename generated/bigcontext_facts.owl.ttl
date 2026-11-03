@@ -6,6 +6,10 @@
 @prefix owl: <http://www.w3.org/2002/07/owl#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix pav: <http://purl.org/pav/> .
+bcf:InForce a owl:Class ;
+	rdfs:label "InForce" ;
+	skos:definition "A statement or procedure in force on the graph's date, as graph.md's rule decides or as the caller that keeps its own versions says. The named graph in_force types each one so; the questions on the record graph return only these. Added in 1.2." ;
+	skos:inScheme <https://w3id.org/bigcontext-schema/facts> .
 bcf:Node a owl:Class ;
 	rdfs:label "Node" ;
 	skos:definition "Any element of a BigContext Schema document that a fact links." ;
@@ -282,7 +286,7 @@ bcf:worked_out_by a owl:DatatypeProperty ;
 	skos:inScheme <https://w3id.org/bigcontext-schema/facts> .
 <https://w3id.org/bigcontext-schema/facts> dcterms:license "Apache-2.0" ;
 	dcterms:title "BigContext Schema facts" ;
-	pav:version "1.0.0" ;
+	pav:version "1.1.0-draft" ;
 	a owl:Ontology ;
 	rdfs:label "bigcontext_facts" ;
 	skos:definition "The direct links a BigContext Schema graph projects from statements in force, and the logic a reasoner applies to them: which links are transitive, which are the inverse of which, and which chains of links imply another. Statements stay the record of what was said, with their conditions, dates and quotes; facts are what reasoning follows. graph.md says which statements become which facts. A chain is written as the annotation property_chain (several separated by \";\"), which generation turns into OWL property chains." .

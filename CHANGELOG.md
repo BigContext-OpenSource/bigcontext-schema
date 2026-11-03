@@ -3,6 +3,40 @@
 What changed in each version of BigContext Schema. Versions follow the rules in the README: patch, minor and major,
 with drafts (`0.9.x-draft`) before 1.0.
 
+## 1.2.0 (draft, 1.2.0-draft)
+
+Every 1.0 and 1.1 document is valid under 1.2.0 and keeps its meaning, its graph facts and every message of the
+reference checker. The additions come from data operations runbooks: jobs and schedules, states and checks,
+incidents, routing, impact and cause. Each has a line in the guide and is used in the conformance case
+`tests/documents/valid/added-in-1-2/`.
+
+Conditions and values
+- `negated` on a condition: it holds when its description does not, where no `unless` can say it (inside
+  `when_any`, `so_that`, an action's, branch's or case's `when`, a procedure's `trigger`).
+- `time_of_day` and `time_zone` on a condition ("not complete by 07:00 ET").
+- `counted_from` on a value: the event a duration is counted from ("within 24 hours of the source update").
+
+Thing types
+- `job` (a pipeline, a dbt job, a load; close to `prov:Plan`) and `report` (a report or dashboard people read).
+
+Links
+- Every link between a statement and an element its fields name, and the fact it gives, is written once, as
+  annotations on the schema's fields (`links`, `condition`, `condition_role`, `from_self`, `provenance`, `fact_link`,
+  `fact_backup`, `fact_dotted`, `party`). Annotations change no document's validity and no generated file; the link
+  table `generated/bigcontext_links.json` and the question `queries/record/connections.rq` are generated from them.
+- The in-force graph: a named graph typing each statement and procedure in force `bcf:InForce` (fact vocabulary
+  1.1.0); questions on the record graph read only these (graph.md, "Questions on the record graph"; conformance G1,
+  G4).
+- The reference check also reads, in documents of 1.2 and later, the elements named in `divided_by`, `ratified_in`,
+  `within`, `share`, a case's `result`, a condition's `values[].applies_to`, and an action condition's `field`,
+  `compare_to` and `values[].per`.
+
+Guide
+- "Data operations": one form for each kind of runbook sentence. A cause between two named elements is
+  `Influences`; a `Caveat` holds a known problem whose cause names no element. A consequence that a named check, job
+  or system sets off is its `Triggers`, also when the text says no one acts (a consequence with no source named stays
+  a `Transition` with `automatic: true`); an instruction to escalate is `EscalatesTo`, not a `Rule`.
+
 ## 1.1.0 (2026-10-31)
 
 Every 1.0 document is valid under 1.1.0 and keeps its meaning and its graph facts. The additions come from real

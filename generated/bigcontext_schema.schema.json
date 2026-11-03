@@ -2118,6 +2118,13 @@
                         "null"
                     ]
                 },
+                "negated": {
+                    "description": "True when the condition holds when its description does not (\"unless the load is complete\" inside when_any, so_that, an action's, branch's or case's when, or a procedure's trigger, where no unless can say it). A statement's own when and unless need it not. A filter negates with its comparator. Added in 1.2.",
+                    "type": [
+                        "boolean",
+                        "null"
+                    ]
+                },
                 "party_responsibility": {
                     "anyOf": [
                         {
@@ -2128,6 +2135,21 @@
                         }
                     ],
                     "description": "The responsibility whoever is acting must hold (\"only the metric's owner may change it\": owns), for what the rule acts on, or, with field, for the element that column names on the row (the metric a change is about). Only in a Rule's when or unless; never with values or compare_to."
+                },
+                "time_of_day": {
+                    "description": "A time of day the condition names, as HH:MM on a 24-hour clock (\"not complete by 07:00 ET\": 07:00). Added in 1.2.",
+                    "pattern": "^([01]\\d|2[0-3]):[0-5]\\d$",
+                    "type": [
+                        "string",
+                        "null"
+                    ]
+                },
+                "time_zone": {
+                    "description": "The time zone of time_of_day as the text gives it (UTC, ET, Europe/Berlin, local). Added in 1.2.",
+                    "type": [
+                        "string",
+                        "null"
+                    ]
                 },
                 "values": {
                     "items": {
@@ -25636,6 +25658,8 @@
                 "document",
                 "tool",
                 "channel",
+                "job",
+                "report",
                 "place",
                 "product",
                 "other"
@@ -26722,7 +26746,7 @@
                     "type": "array"
                 },
                 "proposed_predicate": {
-                    "description": "The statement type you would have needed.",
+                    "description": "The statement type you would have needed; for a part of a sentence a statement holds the rest of, the field.",
                     "type": "string"
                 },
                 "why": {
@@ -27279,6 +27303,13 @@
                         }
                     ],
                     "description": "How the value is compared (more than, at most), for a threshold, or for a minimum or maximum whose amount itself does not count."
+                },
+                "counted_from": {
+                    "description": "The event or element a duration is counted from (\"within 24 hours of the source update\": the source update). Added in 1.2.",
+                    "type": [
+                        "string",
+                        "null"
+                    ]
                 },
                 "datatype": {
                     "anyOf": [
@@ -28194,6 +28225,6 @@
     ],
     "title": "bigcontext_schema",
     "type": "object",
-    "version": "1.1.0"
+    "version": "1.2.0-draft"
 }
 

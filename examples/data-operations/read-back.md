@@ -1,0 +1,98 @@
+# Read-back of document.yaml
+
+Each statement as a sentence, written by tools/scripts/build_conformance.py from document.yaml.
+
+- `s.DO.1`: Data Platform team owns Data Operations Playbook
+- `s.DO.2`: For each one: data product is governed by Data Operations Playbook (for enterprise data warehouse)
+- `s.DO.3`: data product means: a table, view, dashboard or report that the Data Platform team publishes for other teams to use
+- `s.DO.4`: For each one: each data product has exactly one data product owner
+- `s.DO.5`: data product owner accountable data product definition
+- `s.DO.6`: data product owner accountable data product quality
+- `s.DO.7`: data product owner accountable data product consumer
+- `s.DO.8`: data incident means: any event where a data product is late, incomplete or wrong, and a consumer could make a decision on it
+- `s.DO.9`: dashboard that shows yesterday's numbers after its freshness deadline is a data incident
+- `s.DO.10`: NOT: failed job that is rerun successfully before any deadline is a data incident
+- `s.DO.11`: business day means: Monday to Friday, excluding company holidays in the company calendar
+- `s.DO.12`: freshness is computed as the time between the last successful load of a data product and now using last successful load of a data product and now
+- `s.DO.13`: completeness is computed as rows_arrived / expected_rows
+- `s.DO.14`: expected rows is computed as the 7-day average of rows that arrived, for the same weekday using rows that arrived
+- `s.DO.15`: net revenue is computed as gross_order_value - discounts - refunds - taxes using gross order value, discounts, refunds and taxes
+- `s.DO.16`: net revenue has unit = USD
+- `s.DO.17`: orders pipeline automatically does: load fct_orders [every day at 02:00 UTC]
+- `s.DO.18`: When the orders pipeline has finished: customers pipeline automatically does: load dim_customers [every day at 03:00 UTC]
+- `s.DO.19`: finance pipeline automatically does: build fct_orders to fct_monthly_revenue [on the first business day of each month at 06:00 UTC]
+- `s.DO.20`: fct_monthly_revenue is built or sourced from fct_orders
+- `s.DO.21`: For each one: pipeline automatically does: write load_audit [per run]
+- `s.DO.22`: one row of load_audit is one row per run (pipeline run)
+- `s.DO.23`: load_audit holds status as a dimension
+- `s.DO.24`: load_audit holds row count as a measure
+- `s.DO.25`: load_audit holds finish time as a time_dimension
+- `s.DO.26`: When load_audit shows status success for today; and the row count is at least 90% of the 7-day average for the same weekday: orders load moves to orders load complete
+- `s.DO.27`: must show (data loaded) (for executive dashboard) (by 07:00 local time) [each business day]
+- `s.DO.28`: When during business hours: must check operational dashboard maximum 2 hours (freshness)
+- `s.DO.29`: must not send Daily Sales Report, unless the orders load is complete
+- `s.DO.30`: must send Daily Sales Report (with a banner that says the numbers are provisional), unless the orders load is complete by 07:30 local time (07:30 local); this takes precedence over [must not send Daily Sales Report, unless the orders load is complete]
+- `s.DO.31`: For each one: each data product has one or more quality check
+- `s.DO.32`: data product owner owns quality check
+- `s.DO.33`: uniqueness test on fct_orders automatically does: check order_line_id (is unique)
+- `s.DO.34`: not-null test on customer_id in fct_orders automatically does: check customer_id (is never null)
+- `s.DO.35`: null rate monitor on email in dim_customers automatically does: check email maximum 1 (null rate)
+- `s.DO.36`: When today's row count is more than 30% below the 7-day average for the same weekday: volume monitor automatically does: flag fct_orders
+- `s.DO.37`: drop of today's row count below the 7-day average for the same weekday is computed as (expected_rows - rows_arrived) / expected_rows, for fct_orders today using rows that arrived and expected rows
+- `s.DO.38`: When daily net revenue is more than 20% below its 28-day average: net revenue moves to net revenue anomalous, unless the day is a company holiday
+- `s.DO.39`: drop of daily net revenue below its 28-day average is computed as (net_revenue_28_day_average - net revenue of the day) / net_revenue_28_day_average using net revenue and 28-day average of daily net revenue
+- `s.DO.40`: 28-day average of daily net revenue is computed as the average of daily net revenue over 28 days using net revenue
+- `s.DO.41`: When the uniqueness test on fct_orders fails: uniqueness test on fct_orders automatically does: fail orders load, then open ticket to Data Platform queue
+- `s.DO.42`: When a quality check fails three runs in a row: must review quality check, then update either fix data product, or change quality check (binding on data product owner) (within maximum 1 business days from quality check failed)
+- `s.DO.43`: When the check has failed: must not block pipeline, unless the check is marked blocking
+- `s.DO.44`: must create data incident, unless the orders load is complete by 07:00 ET (07:00 ET) (binding on on-call data engineer)
+- `s.DO.45`: When someone sees a data product that looks wrong: may create data incident
+- `s.DO.46`: When in doubt whether to create a data incident: must create data incident, because a duplicate costs less than a missed incident
+- `s.DO.47`: When any of: a customer-facing number is wrong; or a customer-facing number is missing; or a regulatory report is wrong; or a regulatory report is missing; or a payment is wrong; or a payment is missing: data incident moves to Sev1 incident
+- `s.DO.48`: When an internal dashboard is used for a decision today: When any of: the dashboard is wrong; or the dashboard is late by more than 4 hours: data incident moves to Sev2 incident
+- `s.DO.49`: When any of: a data product is late; or a data product is wrong: data incident moves to Sev3 incident, unless someone needs the data product today
+- `s.DO.50`: person who creates the incident decides incident severity
+- `s.DO.51`: may change incident severity (binding on incident commander)
+- `s.DO.52`: must post data incident to #data-incidents
+- `s.DO.53`: When the incident is Sev1: must page to on-call data engineer
+- `s.DO.54`: must acknowledge Sev1 page (binding on on-call data engineer) (within maximum 15 minutes from Sev1 page)
+- `s.DO.55`: When the incident is Sev2: must assign data incident to data product owner (valid 2026-10-01 to ) (within maximum 1 business hours from Sev2 incident) (replaces [When the incident is Sev2: must assign data incident to data product owner [no longer] (within maximum 4 business hours from Sev2 incident)])
+- `s.DO.56`: When the incident is Sev2: must assign data incident to data product owner [no longer] (within maximum 4 business hours from Sev2 incident)
+- `s.DO.57`: When the incident is Sev1: on-call data engineer escalates to Data Platform lead, unless the Sev1 page is acknowledged within 30 minutes
+- `s.DO.58`: When the incident is Sev1: Data Platform lead escalates to Head of Data, unless the Data Platform lead responds within a further 30 minutes
+- `s.DO.59`: on-call data engineer responsible data incident, answering to Data Platform lead (while during an incident)
+- `s.DO.60`: data incident moves from open incident to mitigated incident, unless consumers are making decisions on wrong data
+- `s.DO.61`: Example of [data incident moves from open incident to mitigated incident, unless consumers are making decisions on wrong data]: the dashboard shows a banner
+- `s.DO.62`: When the data is correct again: data incident moves from mitigated incident to resolved incident
+- `s.DO.63`: When the review is done: data incident moves from resolved incident to closed incident
+- `s.DO.64`: When any of: the incident is Sev1; or the incident is Sev2: must review data incident (within maximum 5 business days from resolved incident)
+- `s.DO.65`: When the incident is Sev1: must tell affected stakeholder, unless the incident is mitigated [every two hours]
+- `s.DO.66`: When the incident is Sev2: must post incident update to #data-incidents [at least once per business day]
+- `s.DO.67`: order system resending orders after a timeout affects duplicate order lines in fct_orders [usually]
+- `s.DO.68`: When on a Monday: weekend batch from the payments provider arriving late decreases completeness [usually]
+- `s.DO.69`: late arrival of the payments file moves with month-end, a correlation, not a cause (correlated with month-end, but does not cause it)
+- `s.DO.70`: discount rate decreases net revenue
+- `s.DO.71`: Daily Sales Report is built or sourced from fct_orders
+- `s.DO.72`: must share Daily Sales Report to regional manager [every business day at 08:00 local time]
+- `s.DO.73`: board pack is built or sourced from fct_monthly_revenue
+- `s.DO.74`: Finance owns board pack
+- `s.DO.75`: marketing team has read access to dim_customers (via customer_segments)
+- `s.DO.76`: must not query dim_customers (directly) (binding on marketing team)
+- `s.DO.77`: must announce schema change to #data-announce (for fct_orders) (by at least two weeks before they ship)
+- `s.DO.78`: must not update either rename column, or remove column, unless the owner of every data product that reads the column approves the change
+- `s.DO.79`: orders_v1 is deprecated
+- `s.DO.80`: orders_v1 is retired (valid 2026-12-31 to )
+- `s.DO.81`: must use fct_orders; this takes precedence over orders_v1
+- `s.DO.82`: When in the last 3 business days of a quarter: must not deploy change deployed to the warehouse to enterprise data warehouse, unless the change fixes a Sev1 incident
+- `s.DO.83`: When during business hours: must not backfill, unless the incident is Sev1
+- `s.DO.84`: When a backfill changes last month's net revenue by more than 1%: must tell Finance (by before the change is published)
+- `s.DO.85`: When a backfill changes last month's net revenue by more than 1%: must add note to the board pack to board pack
+- `s.DO.86`: change a backfill makes to last month's net revenue is computed as the change a backfill makes to last month's net revenue, as a share of last month's net revenue using net revenue
+- `s.DO.87`: Data Platform lead owns data platform
+- `s.DO.88`: Data Platform lead approves exception to the freeze
+- `s.DO.89`: on-call data engineer holds the role incident commander, unless they have handed the role to someone else (for data incident)
+- `s.DO.90`: analytics engineering team owns fct_orders
+- `s.DO.91`: analytics engineering team owns dim_customers
+- `s.DO.92`: analytics engineering team owns customer_segments
+- `s.DO.93`: Finance owns fct_monthly_revenue
+- `s.DO.94`: must post data incident to #data-incidents-response-team (valid 2026-11-15 to ) (replaces [must post data incident to #data-incidents])

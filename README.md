@@ -160,8 +160,8 @@ converters to dbt, OSI and ODRL.
 | `conformance.md`, `tests/` | What a conforming document, producer and graph builder must do, and the cases that check it |
 | `CHANGELOG.md`, `GOVERNANCE.md`, `CONTRIBUTING.md`, `CODE_OF_CONDUCT.md` | What changed in each version; who decides changes and how; how to contribute; how everyone taking part behaves |
 | `bigcontext_facts.yaml` | The vocabulary of the graph's facts (reports to, owns, escalates to, same as) |
-| `queries/`, `cypher/` | Ready-made questions, in SPARQL and Cypher |
-| `generated/` | Files generated from the schema: JSON Schema, OWL, SHACL shapes and a JSON-LD context |
+| `queries/`, `cypher/` | Ready-made questions, in SPARQL and Cypher; `queries/record/connections.rq` returns every link of the statements in force, from the record graph |
+| `generated/` | Files generated from the schema: JSON Schema, OWL, SHACL shapes, a JSON-LD context, and the link table (`bigcontext_links.json`: which field of which statement type links to which element, by which role, and the fact it gives) |
 | `examples/` | Example documents, each beside the source text it quotes |
 
 ## Checking a document
@@ -191,7 +191,7 @@ nothing is BigContext Schema's own: the evidence-bound statement, how strongly a
 | [ODRL 2.2](https://www.w3.org/TR/odrl-model/) (policies) | Rule → `Rule`; RuleSet → `Policy`; Action → `Action`; Condition → `Constraint`; HasAccess → `Permission`; modality must, must not, may → `Duty`, `Prohibition`, `Permission`; verbs use (exact), include, show, update, retain, delete, de-identify, share, grant, copy → `include`, `display`, `modify`, `archive`, `delete`, `anonymize`, `distribute`, `grantUse`, `reproduce` (close); aggregate, ask, notify → `aggregate`, `obtainConsent`, `inform` (related) |
 | [ORG](https://www.w3.org/TR/vocab-org/) (organizations) | MemberOf → `memberOf`, ReportsTo → `reportsTo`, Heads → `headOf` (exact); HoldsRole → `holds` (close); PartOf → `unitOf` (related); thing types unit, organization, post → `OrganizationalUnit`, `Organization`, `Post`; concept type role → `Role` |
 | [SKOS](https://www.w3.org/TR/skos-reference/) (concepts) | Mapping matches exact, close, broad, narrow, related → `exactMatch`, `closeMatch`, `broadMatch`, `narrowMatch`, `relatedMatch`; Mapping → `mappingRelation`; Definition → `definition`; IsA → `broader`; SynonymOf → `altLabel`; Example → `example` (close) |
-| [PROV-O](https://www.w3.org/TR/prov-o/) (provenance) | DerivedFrom → `wasDerivedFrom` (exact); CreatedBy → `wasAttributedTo` (close); the graph's provenance part uses PROV-O throughout |
+| [PROV-O](https://www.w3.org/TR/prov-o/) (provenance) | DerivedFrom → `wasDerivedFrom` (exact); CreatedBy → `wasAttributedTo` (close); thing type job → `Plan` (close); the graph's provenance part uses PROV-O throughout |
 | [Dublin Core terms](https://www.dublincore.org/specifications/dublin-core/dcmi-terms/) | Period → `PeriodOfTime`, period → `temporal` (exact); PartOf → `isPartOf`, Covers → `coverage`, CreatedBy → `creator` (close); GovernedBy → `conformsTo` (related) |
 | [DCAT 3](https://www.w3.org/TR/vocab-dcat-3/) (datasets) | a period's start and end → `startDate`, `endDate` (exact); thing type data_product → `Dataset` (close) |
 | [DQV](https://www.w3.org/TR/vocab-dqv/) (data quality) | Caveat → `QualityAnnotation` (close) |

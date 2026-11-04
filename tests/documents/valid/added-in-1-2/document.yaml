@@ -44,6 +44,11 @@ things:
   thing_type: post
   evidence:
   - quote: to the Head of Data instead
+- id: t.orders_file
+  label: orders file
+  thing_type: data_container
+  evidence:
+  - quote: the orders file
 concepts:
 - id: c.orders_load
   label: orders load
@@ -85,6 +90,11 @@ concepts:
   concept_type: state
   evidence:
   - quote: or is reopened
+- id: c.orders_file_late
+  label: late arrival of the orders file
+  concept_type: state
+  evidence:
+  - quote: Late arrival of the orders file
 statements:
 - id: s.1
   predicate: Triggers
@@ -200,6 +210,18 @@ statements:
     - c.sev2
   evidence:
   - quote: It is proposed that Sev2 incidents escalate from the on-call engineer to the Data Platform lead.
+- id: s.10
+  predicate: Influences
+  subject: c.orders_file_late
+  object: c.orders_load
+  evidence:
+  - quote: Late arrival of the orders file delays the orders load.
+- id: s.11
+  predicate: BelongsTo
+  subject: c.orders_file_late
+  object: t.orders_file
+  evidence:
+  - quote: Late arrival of the orders file
 skipped:
 - reason: heading
   evidence:

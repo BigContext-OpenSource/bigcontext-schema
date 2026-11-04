@@ -5,6 +5,7 @@ Each statement as a sentence, written by tools/scripts/build_conformance.py from
 - `s.DO.1`: Data Platform team owns Data Operations Playbook
 - `s.DO.2`: For each one: data product is governed by Data Operations Playbook (for enterprise data warehouse)
 - `s.DO.3`: data product means: a table, view, dashboard or report that the Data Platform team publishes for other teams to use
+- `s.DO.97`: Data Platform team performs data product publishes data products for other teams to use
 - `s.DO.4`: For each one: each data product has exactly one data product owner
 - `s.DO.5`: data product owner accountable data product definition
 - `s.DO.6`: data product owner accountable data product quality
@@ -20,6 +21,7 @@ Each statement as a sentence, written by tools/scripts/build_conformance.py from
 - `s.DO.16`: net revenue has unit = USD
 - `s.DO.17`: orders pipeline automatically does: load fct_orders [every day at 02:00 UTC]
 - `s.DO.18`: When the orders pipeline has finished: customers pipeline automatically does: load dim_customers [every day at 03:00 UTC]
+- `s.DO.95`: orders pipeline finished is of orders pipeline
 - `s.DO.19`: finance pipeline automatically does: build fct_orders to fct_monthly_revenue [on the first business day of each month at 06:00 UTC]
 - `s.DO.20`: fct_monthly_revenue is built or sourced from fct_orders
 - `s.DO.21`: For each one: pipeline automatically does: write load_audit [per run]
@@ -69,6 +71,7 @@ Each statement as a sentence, written by tools/scripts/build_conformance.py from
 - `s.DO.65`: When the incident is Sev1: must tell affected stakeholder, unless the incident is mitigated [every two hours]
 - `s.DO.66`: When the incident is Sev2: must post incident update to #data-incidents [at least once per business day]
 - `s.DO.67`: order system resending orders after a timeout affects duplicate order lines in fct_orders [usually]
+- `s.DO.96`: duplicate order lines in fct_orders is of fct_orders
 - `s.DO.68`: When on a Monday: weekend batch from the payments provider arriving late decreases completeness [usually]
 - `s.DO.69`: late arrival of the payments file moves with month-end, a correlation, not a cause (correlated with month-end, but does not cause it)
 - `s.DO.70`: discount rate decreases net revenue

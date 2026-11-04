@@ -33,6 +33,46 @@ links:
   - ''
   - true
   - t.fct_orders
+- - s.10
+  - Influences
+  - causes
+  - object
+  - c.orders_file_late
+  - ''
+  - ''
+  - ''
+  - true
+  - c.orders_load
+- - s.10
+  - Influences
+  - subject
+  - subject
+  - c.orders_file_late
+  - ''
+  - ''
+  - ''
+  - true
+  - c.orders_file_late
+- - s.11
+  - BelongsTo
+  - belongs_to
+  - object
+  - c.orders_file_late
+  - ''
+  - ''
+  - ''
+  - true
+  - t.orders_file
+- - s.11
+  - BelongsTo
+  - subject
+  - subject
+  - c.orders_file_late
+  - ''
+  - ''
+  - ''
+  - true
+  - c.orders_file_late
 - - s.2
   - DerivedFrom
   - derived_from

@@ -66,6 +66,10 @@ bcf:backs_up a owl:ObjectProperty ;
 	rdfs:label "backs_up" ;
 	skos:definition "A backup or delegate for a post, role or duty. Reasoning does not treat it as the holder." ;
 	skos:inScheme <https://w3id.org/bigcontext-schema/facts> .
+bcf:belongs_to a owl:ObjectProperty ;
+	rdfs:label "belongs_to" ;
+	skos:definition "A state or event concept is of one thing (BelongsTo). Added in 1.2." ;
+	skos:inScheme <https://w3id.org/bigcontext-schema/facts> .
 bcf:binds a owl:ObjectProperty ;
 	rdfs:label "binds" ;
 	rdfs:subPropertyOf bcf:applies_to ;

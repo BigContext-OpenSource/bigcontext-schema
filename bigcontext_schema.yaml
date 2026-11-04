@@ -656,6 +656,17 @@ classes:
       object: {required: true, annotations: {links: [{role: has}]}}
       cardinality: {description: "How many of the object each subject has."}
       role: {description: "The role the object plays, if named (recipient)."}
+  BelongsTo:
+    is_a: Statement
+    description: >-
+      A state or event concept is of one thing and named after it ("late arrival of the supplier file" is of the
+      supplier file; "column rename in fct_invoices" of fct_invoices). Not needed when a Transition's subject gives the
+      thing. Added in 1.2.
+    slots: [subject, object]
+    slot_usage:
+      subject: {required: true, description: "The state or event concept."}
+      object: {required: true, description: "The thing it is of.", annotations: {links: [{role: belongs_to, fact: belongs_to}]}}
+    annotations: {fact_link: true, checked_from: "1.2"}
   Caveat:
     close_mappings: ["dqv:QualityAnnotation"]
     is_a: Statement
@@ -994,7 +1005,7 @@ enums:
       tool: {description: "A tool an agent or person can call (an MCP tool, an API operation). Its physical_name is its name in its server, where its parameters are defined."}
       channel: {description: "A communication channel (a Slack channel, a mailing list)."}
       job: {description: "A piece of data work that runs on a schedule or a trigger (a pipeline, a dbt job, a load). Added in 1.2.", close_mappings: ["prov:Plan"]}
-      report: {description: "A report or dashboard that people read, built from data (the Daily Sales Report). Added in 1.2."}
+      report: {description: "A report or dashboard that people read, built from data (the Weekly Collections Report). Added in 1.2."}
       place: {}
       product: {}
       other: {}

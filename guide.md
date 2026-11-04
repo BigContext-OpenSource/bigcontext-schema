@@ -95,7 +95,7 @@ Meaning
 - `Overlaps`: two roles or kinds the same individual can be at once ("the buyer is often also the recipient":
   `frequency: often`). Neither is a kind of the other; that would be `IsA`.
 - `IsA`: X is a Y. Putting something in a level or category the source names ("customer emails are Restricted",
-  "this is a Sev2 incident") is `IsA` that category; `HasProperty` is only for literal values. `SynonymOf`: another
+  "this is a P2 issue") is `IsA` that category; `HasProperty` is only for literal values. `SynonymOf`: another
   word for an element (`term`, `subject`, `usage` always | sometimes | abbreviation | former; use `frequency` for
   "usually" or "often").
 - `Groups`: a named group made of members (a data product's tables, a region's countries, or several values that
@@ -191,7 +191,7 @@ Company structure
   asked before, told after: a standing part in a piece of work; "consult Legal before you send it", a precondition
   for one act, is a Rule, as in the strength table); `object` or `text`; `answers_to` for "responsible to X for Y".
 - `Appoints` (`with_consent_of`), `EscalatesTo` (an escalation path, not a reporting line; `via`, `when`; a path in
-  order, "first #help, then the on-call engineer", is a chain: the problem escalates to #help, and #help to on-call),
+  order, "first #help, then the duty analyst", is a chain: the problem escalates to #help, and #help to the duty analyst),
   `WorksWith` (coordinates, liaises, works closely with; `text` the topic), `Represents` (`audience`),
   `Serves` (places or populations a unit serves), `GovernedBy` (a law, policy, agreement or document).
 
@@ -234,8 +234,8 @@ Mapping and data
   one_or_more | more_than_one | zero_or_more: a count for each subject, or a pair value when the text gives both
   directions ("orders and invoices match one to one"); "can have" is zero_or_more, "more than one" is more_than_one), `Caveat` (`object` for a second element it concerns). A known problem a reader must
   allow for whose cause names no element is one Caveat with its cause in its text. A cause between two named
-  elements ("when fct_orders has duplicates, the usual cause is the source system resending orders on retry") is
-  `Influences`: the cause in `subject`, the effect in `object` (fct_orders' duplicates, never a condition), "usually"
+  elements ("when fct_invoices has gaps, the usual cause is the payment provider sending its files late") is
+  `Influences`: the cause in `subject`, the effect in `object` (the gaps in fct_invoices, never a condition), "usually"
   in `frequency`.
 - `JoinsTo` join_type: none for an ordinary (inner) join, `left`, `semi` (keeps the rows of the first that have a
   match, adding no columns) or `anti` (keeps the rows of the first that have none: "customers with no order"); record
@@ -386,41 +386,44 @@ is a thing of type `job`, a report or dashboard one of type `report`.
 
 | Sentence | Form |
 |---|---|
-| Job and schedule: "The orders pipeline loads fct_orders every day at 02:00 UTC." | `Triggers`: the job in `subject`; `action` with `verb: load` and the table it writes in `objects`; `recurrence`. A source and a target ("loads raw.orders into fct_orders") are the source in `objects` and the target in `to`. |
-| Readiness: "The orders load is complete when load_audit shows status 'success' for today and row_count is at least 90% of the 7-day average." | `Transition`: `subject` what changes state, `to_state` the state concept ("orders load complete"), `when` the conditions, each naming in `about` what it tests (a field, a metric with its `ComputedAs`), with its threshold as a value. |
-| Freshness: "Dashboards must show fresh data by 07:00 local time each business day." | `Rule` with `due_by` the deadline in the text's words. A maximum age ("no more than 2 hours old") is a check: `verb: check`, the dashboards in `objects`, `detail` freshness, the age as a value with `value_role: maximum`. |
-| Gate: "Do not send the Daily Sales Report to regional managers until the orders load is complete." | `Rule` `must_not`, the report in `objects`, the managers in `to`, `unless` the state. "Until" a state ("every two hours until it is mitigated") is `unless` that state. |
-| Quality check: "A dbt test checks that ORDER_LINE_ID in fct_orders is unique." | An action with `verb: check`, the checked table or field in `objects` (never in `by`), what is checked in `detail`, a tolerance as a value with `value_role` minimum or maximum: in a `Rule` for a duty to check, in a `Triggers` for a monitor or test that runs by itself, its subject the test or monitor as a thing of type `job`. |
-| Check failure: "If the uniqueness test fails, the load fails and a ticket is opened automatically." | `Triggers` with the check in `subject` (a thing of type `job`), also when the text says no one acts ("without anyone raising it"): its condition names in `about` the failure state, the checked table, and the field when the check names one; what fails in its `action` (`verb: stop`, `specific_verb: fail`); what it creates in a `then` action with `verb: create`. |
-| Monitor: "Revenue is anomalous when daily revenue is more than 20% below its 28-day average." | `Transition` to the state ("revenue anomalous"), its condition about the metric, with the threshold value. |
-| Incident creation: "If the orders load is not complete by 07:00 ET, a data incident should be created." | `Rule` `should`, `verb: create`, the incident concept in `objects`, `unless` the state with `time_of_day` 07:00 and `time_zone` ET on that condition. |
-| Severity: "Sev2: an internal dashboard is wrong, or late by more than 4 hours." | `Transition` to the severity state, its alternatives in `when_any`: this defines the severity. Putting one incident the text names in a severity ("this is a Sev2") is `IsA`. |
-| Routing: "A Sev1 pages the on-call engineer within 15 minutes." | `Rule` `must` when the text names no system that does it, `Triggers` when it does; `verb: notify` (`specific_verb` page, post), the recipient or channel in `to`, `within` counted from the event the text names, or from the state the condition names when it names none. |
-| Escalation: "If nobody acknowledges a Sev1 within 30 minutes, escalate to the Data Platform lead." | `EscalatesTo`, also when the text says it as an instruction ("escalate to"), not a `Rule`: from the party who escalates (the one paged, when the text does not say) to the next, `unless` the acknowledged state with the duration as a value counted from the Sev1 state; a path in order is a chain of them. Whom a party answers to for a responsibility is `ResponsibleFor`'s `answers_to`. |
-| Lifecycle and updates: "An incident is open, then mitigated, then resolved, then closed. For a Sev1, tell affected stakeholders every two hours." | One `Transition` per step (`from_state`, `to_state`); a `Rule` with `when` the Sev1 state, `to` the stakeholders and `recurrence`. |
-| Known cause: "When fct_orders has duplicates, the usual cause is the source system resending orders on retry." | `Influences`, as under Statement types: the cause in `subject`, the effect in `object`, `frequency: usually`. |
-| Consumers: "The Daily Sales Report is built from fct_orders and goes to regional managers every morning." | `DerivedFrom` from the table; a `Rule` (or a `Triggers`, when the text names what sends it) with `verb: share`, the managers in `to` and `recurrence`. A job that builds one table from another gives both: the job's `Triggers` and the table's `DerivedFrom`. |
-| Change and deprecation: "Schema changes to fct_orders must be announced in #data-announce two weeks before they ship. analytics.orders_v1 is retired on 2026-12-31." | `Rule` with `verb: tell`, the channel in `to`, `due_by` the text's words; `HasStatus` retired with `valid_from`. |
-| Freeze and restatement: "Do not backfill during business hours, unless the incident is Sev1. If a backfill changes last month's revenue by more than 1%, tell Finance." | `Rule` `must_not` with `verb: load` (`specific_verb` backfill), `when` business hours, `unless` the Sev1 state; `Rule` with `when` about the change in the metric and its threshold. |
-| Dated change: "From 2026-11-15, data incidents must be posted in #data-incidents-response-team." | The new statement, whole, with `valid_from` and `supersedes` the one it replaces. |
+| Job and schedule: "The invoicing pipeline loads fct_invoices every day at 04:00 UTC." | `Triggers`: the job in `subject`; `action` with `verb: load` and the table it writes in `objects`; `recurrence`. A source and a target ("loads raw.invoices into fct_invoices") are the source in `objects` and the target in `to`. |
+| Readiness: "The invoice load is ready when run_log shows state 'ok' for the day and the row count is at least 95% of the 14-day median." | `Transition`: `subject` what changes state, `to_state` the state concept ("invoice load ready"), `when` the conditions, each naming in `about` what it tests (a field, a metric with its `ComputedAs`), with its threshold as a value. |
+| Freshness: "Finance dashboards must show data loaded by 09:00 local time on working days." | `Rule` with the dashboards in `scope` (`binds` is who must comply) and `due_by` the deadline in the text's words. A maximum age ("no more than 3 hours old") is a check: `verb: check`, the dashboards in `objects`, `detail` freshness, the age as a value with `value_role: maximum`. |
+| Gate: "Do not publish the Weekly Collections Report to country leads until the invoice load is ready." | `Rule` `must_not`, the report in `objects`, the leads in `to`, `unless` the state. "Until" a state ("every hour until it is contained") is `unless` that state. |
+| Quality check: "A dbt test checks that INVOICE_ID in fct_invoices is never null." | An action with `verb: check`, the checked table or field in `objects` (never in `by`), what is checked in `detail`, a tolerance as a value with `value_role` minimum or maximum: in a `Rule` for a duty to check, in a `Triggers` for a monitor or test that runs by itself, its subject the test or monitor as a thing of type `job`. |
+| Check failure: "If the null test fails, the load stops and an alert is raised automatically." | `Triggers` with the check in `subject` (a thing of type `job`), also when the text says no one acts ("without anyone raising it"): its condition names in `about` the failure state, the checked table, and the field when the check names one; what fails in its `action` (`verb: stop`, `specific_verb: fail`); what it creates in a `then` action with `verb: create`. |
+| Monitor: "Collections are low when weekly collections are more than 15% below their 12-week average." | `Transition` to the state ("collections low"), its condition about the metric, with the threshold value. |
+| Issue creation: "If the invoice load is not ready by 08:00 CET, a data issue should be logged." | `Rule` `should`, `verb: create`, the issue concept in `objects`, `unless` the state with `time_of_day` 08:00 and `time_zone` CET on that condition. |
+| Severity: "P2: a finance dashboard is wrong, or more than 6 hours late." | `Transition` to the severity state, its alternatives in `when_any`: this defines the severity. Putting one incident the text names in a severity ("this is a P2") is `IsA`. |
+| Routing: "A P1 pages the duty analyst within 10 minutes." | `Rule` `must` when the text names no system that does it, `Triggers` when it does; `verb: notify` (`specific_verb` page, post), the recipient or channel in `to`, `within` counted from the event the text names, or from the state the condition names when it names none. |
+| Escalation: "If nobody acknowledges a P1 within 20 minutes, escalate to the analytics manager." | `EscalatesTo`, also when the text says it as an instruction ("escalate to"), not a `Rule`: from the party who escalates (the one paged, when the text does not say) to the next, `unless` the acknowledged state with the duration as a value counted from the P1 state; a path in order is a chain of them. Whom a party answers to for a responsibility is `ResponsibleFor`'s `answers_to`. |
+| Lifecycle and updates: "An issue is reported, then triaged, then fixed, then verified. For a P1, update the finance team every hour." | One `Transition` per step (`from_state`, `to_state`); a `Rule` with `when` the P1 state, `to` the team and `recurrence`. |
+| Known cause: "When fct_invoices has gaps, the usual cause is the payment provider sending its files late." | `Influences`, as under Statement types: the cause in `subject`, the effect in `object`, `frequency: usually`. A cause or effect named after a thing ("gaps in fct_invoices") has a `BelongsTo` to that thing. |
+| Consumers: "The Weekly Collections Report is built from fct_invoices and goes to country leads every Monday." | `DerivedFrom` from the table; a `Rule` (or a `Triggers`, when the text names what sends it) with `verb: share`, the leads in `to` and `recurrence`. A job that builds one table from another gives both: the job's `Triggers` and the table's `DerivedFrom`. |
+| Change and deprecation: "Column renames in fct_invoices must be announced in #analytics-changes one week before they ship. reporting.invoices_old is retired on 2027-03-31." | `Rule` with `verb: tell`, the changes in `objects` and the table in `scope`, the channel in `to`, `due_by` the text's words; `HasStatus` retired with `valid_from`. |
+| Freeze and restatement: "Do not reload history during month-end close, unless the issue is P1. If a reload changes last quarter's collections by more than 0.5%, tell the controller." | `Rule` `must_not` with `verb: load` (`specific_verb` reload), `when` month-end close, `unless` the P1 state; `Rule` with `when` about the change in the metric and its threshold. |
+| Dated change: "From 2027-01-01, data issues must be logged in #analytics-issues." | The new statement, whole, with `valid_from` and `supersedes` the one it replaces. |
 
-- A state concept belongs to one subject: "orders load complete", "Sev1 incident", never "complete" alone.
+- A state concept belongs to one subject: "invoice load ready", "P1 issue", never "ready" alone. When no
+  `Transition` has that thing as its `subject` (a state or event only named, "late arrival of the supplier file"), a
+  `BelongsTo` from the concept to the thing gives it, quoting the words that name them.
 - A condition on a check's result names the failure state and the checked table in `about`, and the field when the
-  check names one ("the uniqueness test on ORDER_LINE_ID failed": the failure state, fct_orders, ORDER_LINE_ID).
-- A later text that changes part of a statement ("from today, page the platform lead instead") is a new statement
+  check names one ("the null test on INVOICE_ID failed": the failure state, fct_invoices, INVOICE_ID).
+- A later text that changes part of a statement ("from today, page the analytics manager instead") is a new statement
   that repeats every part that still holds, changes the part that changed, and `supersedes` the old one.
 - A duration defined between two events with no number ("the time between an entry made upstream and the data
   available in PROD") is a `ComputedAs` with both events in `inputs`.
 - A negation where no `unless` can hold it (inside `when_any`, `so_that`, an action's, branch's or case's `when`, or a
   procedure's `trigger`) is `negated: true` on that condition; a statement's own condition uses `unless`, and a
-  filter negates with its comparator (`not_equal`, `not_in`). A statement that says something is not so ("a rerun
-  that succeeds is not an incident") takes the statement's own `negated`.
+  filter negates with its comparator (`not_equal`, `not_in`). A statement that says something is not so ("a reload
+  that finishes on time is not an issue") takes the statement's own `negated`.
 - A time of day inside a condition is the condition's `time_of_day` (HH:MM, 24-hour) and `time_zone` (the text's
   zone).
 - These have no field, and are each a part recorded as `unmapped` beside the statement: a date relative to the day
-  checked ("today's row count", "for the same weekday"); an order relative to a deadline ("before any deadline"); a
-  party named through another element ("the owner of the affected data product"); a count of runs in a row ("fails
-  three runs in a row"); a window counted back from the end of a period ("the last 3 business days of a quarter").
+  checked ("this morning's invoice count", "for the same day last month"); an order relative to a deadline ("before
+  the cut-off"); a party named through another element ("the analyst who owns the broken report"); a count of runs in
+  a row ("misses two loads in a row"); a window counted back from the end of a period ("the last 5 working days of a
+  year").
 - The same fact in other words keeps one form: an automatic reaction is `Triggers`, never a `Habit` (Habit is what a
   party usually does); a cause between named elements is `Influences`, and `Indicates` and `CorrelatesWith` only as
   Statement types says; an escalation path is `EscalatesTo` or `answers_to`; a recipient or destination goes in the
@@ -524,7 +527,7 @@ A threshold in a condition ("if returns rise by more than 10%", "orders over $50
 votes cast"). The condition's own `comparator` is only for a data filter, with `field`. A condition on a measured amount names what it
 measures in `about`: a metric concept ("returns", "p-value", "week-over-week change in orders"), with its
 `ComputedAs` when the text says how it is calculated; a condition that something is in a state or category ("the
-incident is Sev1", "the data is late") names that state concept. A time since an event ("after 7 days") needs
+issue is P1", "the data is late") names that state concept. A time since an event ("after 7 days") needs
 neither; the event goes in the value's `counted_from` when the text names it ("7 days after the incident is
 resolved": the resolved state). This is what lets a rule's condition be checked against data.
 

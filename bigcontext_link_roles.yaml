@@ -1,0 +1,86 @@
+# serves: F-056 — Express any context in BigContext Schema
+# What each link role means: the role a statement's link gives the element it names. One line per role used by the
+# link annotations in bigcontext_schema.yaml; tools/scripts/build_spec.py refuses a role used there and not described
+# here, or described here and used nowhere, and writes these into generated/bigcontext_links.json (`roles`) and
+# graph.md's roles table. Added in 1.2.
+roles:
+  acting_for: The holder an acting or interim holder stands in for.
+  acts_on: What an action works on, the thing it checks, loads, sends, changes or creates.
+  answers: An open question (a Gap) that the statement answers.
+  answers_to: Whom a party answers to for a responsibility.
+  attribute: The attribute a statement describes, when no standard attribute fits.
+  audience: Whom a representation is towards.
+  base: The table a measure aggregates over.
+  because: An element the statement's reason names.
+  belongs_to: The thing a state or event concept is of.
+  binds: Who must comply with a rule.
+  by: The party, tool or system that carries out an action.
+  calendar: The calendar a metric's grains, windows and offsets follow.
+  calls: The procedure a step runs.
+  cases: An element a calculation's cases name.
+  causes: The effect an influence has; in an Indicates, an element its conditions name.
+  consumes: What a procedure step takes in.
+  contains: The field, concept or entity a table or dataset holds information about.
+  correlates_with: The measure another moves together with.
+  decided_by: Who decided it.
+  decided_in: Where it was decided or recorded (a meeting, a channel, a ticket, a document).
+  denominator: What a ratio divides by.
+  derived_from: What a table, report or other element is built or sourced from.
+  described_in: The document, page or section that describes an element.
+  disputed_by: Who disagreed or objected.
+  divided_by: The field or dimension that divides a group into its members.
+  endorsed_by: Who agreed with or supported it.
+  entity: The kind of thing a conversion metric follows from its first event to its second.
+  escalates_to: The party, team or channel a problem goes to next.
+  filters_on: An element a filter tests.
+  governed_by: The law, policy, agreement or document that governs an element.
+  has: A part or attribute an element has.
+  has_access: What a party may reach or use.
+  heads: The unit, team or organization a party heads.
+  held_by: Whose preference, view or wish it is.
+  holds_role: The role or post a party holds.
+  implemented_by: The field, table or other data element that holds or computes a concept.
+  informed: Who was told.
+  inputs: The tables, fields, metrics and joins a calculation or job uses.
+  is_a: The category an element is put in.
+  items: An element of a list, sequence or group.
+  joins_to: The table or dataset another joins to.
+  key_pairs: The fields a join matches on.
+  maps_to: What a value, code or element maps to.
+  member_of: The unit, team or group a party belongs to.
+  members: The elements that together make up or identify one row or group.
+  non_additive: The elements a non-additive value is kept for, one each (the last balance for each account).
+  numerator: What a ratio counts.
+  object: The second element a statement is about.
+  options_in_order: The options an action takes, in order of preference.
+  outputs: What a job, procedure or calculation produces (columns, sections).
+  overlaps: An element whose meaning or scope overlaps another's.
+  overrides: A statement this one takes precedence over.
+  part_of: The whole an element is part of.
+  performer: Who does a habit, step or activity.
+  period: The period a statement or value covers.
+  produces: What a statement brings about, the state a change reaches or what an action creates.
+  property_value: An element a property's value names.
+  proposed_by: Who proposed it.
+  ratified_by: Who ratified it.
+  ratified_in: Where it was ratified (a meeting, a council, a document).
+  reacts_to: What a statement responds to, an element its condition names.
+  reports_to: Whom a party or post reports to.
+  responsible_for: What a party answers for.
+  role: The role an element plays through a join or an action (buyer, recipient).
+  routes_to: Where an action sends something, or the channel, tool or intermediary it goes through.
+  scope: The elements a statement is limited to.
+  share: An element a share or proportion names.
+  so_that: An element the statement's purpose names.
+  state_input: What a change of state depends on, what changes, the state it leaves, what its conditions test.
+  stated_by: Who stated it.
+  subject: What the statement is about, the party that acts, the job that runs, the cause.
+  supersedes: A statement this one replaces.
+  time_dimension: The time column a measure is counted by.
+  used_for: The activity or question type an element serves.
+  values: An element a statement's values name (a unit, the event a duration is counted from).
+  via: The channel, tool or intermediary something goes through.
+  with_consent_of: Whose consent an appointment needs.
+  within: An element a time limit names or is counted from.
+  works_with: The party another coordinates or works closely with.
+  written_by: The job that writes a table, view or data container.

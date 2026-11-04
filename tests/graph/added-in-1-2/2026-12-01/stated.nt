@@ -1,2 +1,4 @@
+<urn:bigcontext-schema:orders-data-operations/c.orders_file_late> <https://w3id.org/bigcontext-schema/facts/belongs_to> <urn:bigcontext-schema:orders-data-operations/t.orders_file> .
+<urn:bigcontext-schema:orders-data-operations/c.orders_file_late> <https://w3id.org/bigcontext-schema/facts/influences> <urn:bigcontext-schema:orders-data-operations/c.orders_load> .
 <urn:bigcontext-schema:orders-data-operations/s.4> <https://w3id.org/bigcontext-schema/facts/about> <urn:bigcontext-schema:orders-data-operations/c.data_incident> .
 <urn:bigcontext-schema:orders-data-operations/t.daily_sales_report> <https://w3id.org/bigcontext-schema/facts/derived_from> <urn:bigcontext-schema:orders-data-operations/t.fct_orders> .

@@ -19,11 +19,18 @@ Conditions and values
 Thing types
 - `job` (a pipeline, a dbt job, a load; close to `prov:Plan`) and `report` (a report or dashboard people read).
 
+Statement types
+- `BelongsTo`: a state or event concept is of one thing and named after it ("late arrival of the supplier file" is
+  of the supplier file), where no `Transition` has the thing as its subject; fact `belongs_to`. The reference check
+  refuses it in a document that follows 1.0 or 1.1.
+
 Links
 - Every link between a statement and an element its fields name, and the fact it gives, is written once, as
   annotations on the schema's fields (`links`, `condition`, `condition_role`, `from_self`, `provenance`, `fact_link`,
   `fact_backup`, `fact_dotted`, `party`). Annotations change no document's validity and no generated file; the link
   table `generated/bigcontext_links.json` and the question `queries/record/connections.rq` are generated from them.
+- Each link role's meaning, once, in `bigcontext_link_roles.yaml`; the build refuses a role with no meaning; carried
+  into the link table (`roles`) and graph.md's roles table.
 - The in-force graph: a named graph typing each statement and procedure in force `bcf:InForce` (fact vocabulary
   1.1.0); questions on the record graph read only these (graph.md, "Questions on the record graph"; conformance G1,
   G4).
@@ -36,6 +43,9 @@ Guide
   `Influences`; a `Caveat` holds a known problem whose cause names no element. A consequence that a named check, job
   or system sets off is its `Triggers`, also when the text says no one acts (a consequence with no source named stays
   a `Transition` with `automatic: true`); an instruction to escalate is `EscalatesTo`, not a `Rule`.
+  What a freshness rule applies to (the dashboards) is its `scope`; `binds` is who must comply. The reference check notes
+  a thing other than a party, or a metric, dimension, state, calendar, period or term, in `binds`, in `EscalatesTo`'s
+  or `ReportsTo`'s subject or object, or in `ResponsibleFor`'s subject or `answers_to`.
 
 ## 1.1.0 (2026-10-31)
 

@@ -683,6 +683,520 @@
             "title": "Appoints",
             "type": "object"
         },
+        "BelongsTo": {
+            "additionalProperties": false,
+            "description": "A state or event concept is of one thing and named after it (\"late arrival of the supplier file\" is of the supplier file; \"column rename in fct_invoices\" of fct_invoices). Not needed when a Transition's subject gives the thing. Added in 1.2.",
+            "properties": {
+                "acting_for": {
+                    "description": "Whom an acting or interim holder stands in for.",
+                    "type": [
+                        "string",
+                        "null"
+                    ]
+                },
+                "answers": {
+                    "description": "The open questions (Gaps) this statement answers.",
+                    "items": {
+                        "type": "string"
+                    },
+                    "type": [
+                        "array",
+                        "null"
+                    ]
+                },
+                "as_of": {
+                    "description": "The date what a statement describes was observed (a snapshot), as an ISO date (2026-10, 2026-10-01); on the source, the date every statement without its own as_of, valid_from or valid_to holds as of.",
+                    "pattern": "^\\d{4}(-\\d{2}(-\\d{2})?)?$",
+                    "type": [
+                        "string",
+                        "null"
+                    ]
+                },
+                "automatic": {
+                    "description": "True when it happens by itself, with no person acting (a system does the step; 'they are removed').",
+                    "type": [
+                        "boolean",
+                        "null"
+                    ]
+                },
+                "because": {
+                    "description": "The reasons the source gives.",
+                    "items": {
+                        "$ref": "#/$defs/Condition"
+                    },
+                    "type": [
+                        "array",
+                        "null"
+                    ]
+                },
+                "cadence": {
+                    "description": "How a rotation turns over ('every two weeks, from Friday 17:00').",
+                    "type": [
+                        "string",
+                        "null"
+                    ]
+                },
+                "capacity": {
+                    "anyOf": [
+                        {
+                            "$ref": "#/$defs/CapacityEnum"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
+                    "description": "In what capacity a role, membership or responsibility is held."
+                },
+                "certainty": {
+                    "anyOf": [
+                        {
+                            "$ref": "#/$defs/CertaintyEnum"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ]
+                },
+                "currently": {
+                    "description": "True when the source says it holds now and may change ('currently', 'right now'); false when it says it no longer holds without giving dates ('former', 'emeritus', 'previously').",
+                    "type": [
+                        "boolean",
+                        "null"
+                    ]
+                },
+                "decided_by": {
+                    "items": {
+                        "type": "string"
+                    },
+                    "type": [
+                        "array",
+                        "null"
+                    ]
+                },
+                "decided_in": {
+                    "description": "Where it was decided or recorded (a meeting, a channel, a ticket, a document).",
+                    "type": [
+                        "string",
+                        "null"
+                    ]
+                },
+                "decided_on": {
+                    "description": "When it was decided, as an ISO date.",
+                    "pattern": "^\\d{4}(-\\d{2}(-\\d{2})?)?$",
+                    "type": [
+                        "string",
+                        "null"
+                    ]
+                },
+                "decision_status": {
+                    "anyOf": [
+                        {
+                            "$ref": "#/$defs/DecisionStatusEnum"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
+                    "description": "How far it got: proposed, decided, ratified, rejected, withdrawn..."
+                },
+                "disputed_by": {
+                    "description": "Who disagreed or objected.",
+                    "items": {
+                        "type": "string"
+                    },
+                    "type": [
+                        "array",
+                        "null"
+                    ]
+                },
+                "due_by": {
+                    "description": "The deadline it must be done by, in the text's own words ('2026-11-30', '30 November', 'the end of each fiscal quarter', 'two weeks before launch'); a duration goes in within.",
+                    "type": [
+                        "string",
+                        "null"
+                    ]
+                },
+                "each": {
+                    "description": "True when the statement holds for each member of a class it names, not for the class itself ('nine offices, each headed by an Assistant Administrator').",
+                    "type": [
+                        "boolean",
+                        "null"
+                    ]
+                },
+                "endorsed_by": {
+                    "description": "Who agreed or supported it (+1, 'fine for now').",
+                    "items": {
+                        "type": "string"
+                    },
+                    "type": [
+                        "array",
+                        "null"
+                    ]
+                },
+                "especially_when": {
+                    "description": "Conditions under which it holds most often or most strongly ('especially if', 'particularly when'); unlike when, it also holds without them.",
+                    "items": {
+                        "$ref": "#/$defs/Condition"
+                    },
+                    "type": [
+                        "array",
+                        "null"
+                    ]
+                },
+                "even_if": {
+                    "description": "Conditions under which the statement still holds ('even if', 'including when').",
+                    "items": {
+                        "$ref": "#/$defs/Condition"
+                    },
+                    "type": [
+                        "array",
+                        "null"
+                    ]
+                },
+                "evidence": {
+                    "description": "The exact words of the source this statement came from. A statement with no source text to quote names who stated it in stated_by instead; one of the two is always given (conformance rule D10).",
+                    "items": {
+                        "$ref": "#/$defs/Evidence"
+                    },
+                    "minItems": 1,
+                    "type": [
+                        "array",
+                        "null"
+                    ]
+                },
+                "exclusive": {
+                    "description": "True when the source says only these (only analysts, the only warehouse that ships abroad).",
+                    "type": [
+                        "boolean",
+                        "null"
+                    ]
+                },
+                "extensions": {
+                    "anyOf": [
+                        {
+                            "$ref": "#/$defs/Any"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
+                    "description": "Fields of your own, under keys that start with a prefix you own (acme:priority). Readers keep them and may ignore them; they never change what the rest of the document means."
+                },
+                "frequency": {
+                    "anyOf": [
+                        {
+                            "$ref": "#/$defs/FrequencyEnum"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
+                    "description": "How often it holds; how many members of a class it holds for is quantifier."
+                },
+                "held_by": {
+                    "description": "Whose preference, view or wish this is.",
+                    "items": {
+                        "type": "string"
+                    },
+                    "type": [
+                        "array",
+                        "null"
+                    ]
+                },
+                "id": {
+                    "pattern": "^[A-Za-z][A-Za-z0-9_-]*(\\.[A-Za-z0-9_-]+)*$",
+                    "type": "string"
+                },
+                "importance": {
+                    "anyOf": [
+                        {
+                            "$ref": "#/$defs/ImportanceEnum"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
+                    "description": "How much it matters, when the source says (critical, very important, minor)."
+                },
+                "informed": {
+                    "description": "Who was told.",
+                    "items": {
+                        "type": "string"
+                    },
+                    "type": [
+                        "array",
+                        "null"
+                    ]
+                },
+                "label": {
+                    "type": [
+                        "string",
+                        "null"
+                    ]
+                },
+                "line": {
+                    "anyOf": [
+                        {
+                            "$ref": "#/$defs/LineEnum"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
+                    "description": "Solid or dotted reporting or membership line."
+                },
+                "negated": {
+                    "type": [
+                        "boolean",
+                        "null"
+                    ]
+                },
+                "note": {
+                    "description": "A remark from whoever expressed the context; never part of its meaning.",
+                    "type": [
+                        "string",
+                        "null"
+                    ]
+                },
+                "object": {
+                    "description": "The thing it is of.",
+                    "type": "string"
+                },
+                "or_more_senior": {
+                    "description": "True when the posts or roles the statement names also cover anyone more senior ('a VP or higher').",
+                    "type": [
+                        "boolean",
+                        "null"
+                    ]
+                },
+                "period": {
+                    "anyOf": [
+                        {
+                            "$ref": "#/$defs/Period"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
+                    "description": "The stretch of data or business time the statement is about (the days data is missing, the quarter a target is for); it never ends the statement, which is valid_from and valid_to."
+                },
+                "predicate": {
+                    "enum": [
+                        "BelongsTo"
+                    ],
+                    "type": "string"
+                },
+                "progress": {
+                    "anyOf": [
+                        {
+                            "$ref": "#/$defs/ProgressEnum"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
+                    "description": "How far an action item or piece of work has got."
+                },
+                "proposed_by": {
+                    "items": {
+                        "type": "string"
+                    },
+                    "type": [
+                        "array",
+                        "null"
+                    ]
+                },
+                "quantifier": {
+                    "anyOf": [
+                        {
+                            "$ref": "#/$defs/QuantifierEnum"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
+                    "description": "How many members of a class it names the statement holds for, when not every one ('some customers', 'most shoppers'); every one is each. Like each, it makes the statement about the members, not the class."
+                },
+                "ratified_by": {
+                    "items": {
+                        "type": "string"
+                    },
+                    "type": [
+                        "array",
+                        "null"
+                    ]
+                },
+                "ratified_in": {
+                    "description": "Where it was ratified (a meeting, a council, a document).",
+                    "type": [
+                        "string",
+                        "null"
+                    ]
+                },
+                "ratified_on": {
+                    "description": "When it was ratified, as an ISO date.",
+                    "pattern": "^\\d{4}(-\\d{2}(-\\d{2})?)?$",
+                    "type": [
+                        "string",
+                        "null"
+                    ]
+                },
+                "recorded_on": {
+                    "description": "When the source says the fact or figure was recorded or restated, as an ISO date.",
+                    "pattern": "^\\d{4}(-\\d{2}(-\\d{2})?)?$",
+                    "type": [
+                        "string",
+                        "null"
+                    ]
+                },
+                "recurrence": {
+                    "description": "How often a duty recurs ('every month', 'each Monday'); a rotation's turnover goes in cadence, how often something is true in frequency.",
+                    "type": [
+                        "string",
+                        "null"
+                    ]
+                },
+                "scope": {
+                    "description": "The elements the statement is limited to.",
+                    "items": {
+                        "type": "string"
+                    },
+                    "type": [
+                        "array",
+                        "null"
+                    ]
+                },
+                "share": {
+                    "anyOf": [
+                        {
+                            "$ref": "#/$defs/Value"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
+                    "description": "The share of time (50%)."
+                },
+                "so_that": {
+                    "description": "The purpose the source gives ('in order to', 'so that').",
+                    "items": {
+                        "$ref": "#/$defs/Condition"
+                    },
+                    "type": [
+                        "array",
+                        "null"
+                    ]
+                },
+                "stated_by": {
+                    "items": {
+                        "type": "string"
+                    },
+                    "type": [
+                        "array",
+                        "null"
+                    ]
+                },
+                "subject": {
+                    "description": "The state or event concept.",
+                    "type": "string"
+                },
+                "supersedes": {
+                    "description": "Statements this one replaces.",
+                    "items": {
+                        "type": "string"
+                    },
+                    "type": [
+                        "array",
+                        "null"
+                    ]
+                },
+                "unless": {
+                    "description": "Exceptions; any one is enough to set the statement aside.",
+                    "items": {
+                        "$ref": "#/$defs/Condition"
+                    },
+                    "type": [
+                        "array",
+                        "null"
+                    ]
+                },
+                "valid_from": {
+                    "description": "The first day it holds, as an ISO date: 2027-10 for 'October 2027' (a year or month means its first day).",
+                    "pattern": "^\\d{4}(-\\d{2}(-\\d{2})?)?$",
+                    "type": [
+                        "string",
+                        "null"
+                    ]
+                },
+                "valid_to": {
+                    "description": "The last day it holds, as an ISO date: 2027-10 for 'October 2027' (a year or month means its last day).",
+                    "pattern": "^\\d{4}(-\\d{2}(-\\d{2})?)?$",
+                    "type": [
+                        "string",
+                        "null"
+                    ]
+                },
+                "valid_while": {
+                    "description": "Holds only while these last ('for the duration of the incident').",
+                    "items": {
+                        "$ref": "#/$defs/Condition"
+                    },
+                    "type": [
+                        "array",
+                        "null"
+                    ]
+                },
+                "via": {
+                    "description": "The channel, tool or intermediary (an escalation through #help); for a Rule it goes in its action's via.",
+                    "items": {
+                        "type": "string"
+                    },
+                    "type": [
+                        "array",
+                        "null"
+                    ]
+                },
+                "when": {
+                    "description": "Conditions that must all hold.",
+                    "items": {
+                        "$ref": "#/$defs/Condition"
+                    },
+                    "type": [
+                        "array",
+                        "null"
+                    ]
+                },
+                "when_any": {
+                    "description": "Conditions of which any one is enough.",
+                    "items": {
+                        "$ref": "#/$defs/Condition"
+                    },
+                    "type": [
+                        "array",
+                        "null"
+                    ]
+                },
+                "within": {
+                    "anyOf": [
+                        {
+                            "$ref": "#/$defs/Value"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
+                    "description": "A time limit ('answer within 4 business hours')."
+                }
+            },
+            "required": [
+                "subject",
+                "object",
+                "predicate",
+                "id"
+            ],
+            "title": "BelongsTo",
+            "type": "object"
+        },
         "Branch": {
             "additionalProperties": false,
             "description": "",
@@ -2930,6 +3444,9 @@
                             },
                             {
                                 "$ref": "#/$defs/Has"
+                            },
+                            {
+                                "$ref": "#/$defs/BelongsTo"
                             },
                             {
                                 "$ref": "#/$defs/Caveat"
@@ -28165,6 +28682,9 @@
                     },
                     {
                         "$ref": "#/$defs/Has"
+                    },
+                    {
+                        "$ref": "#/$defs/BelongsTo"
                     },
                     {
                         "$ref": "#/$defs/Caveat"

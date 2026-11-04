@@ -121,6 +121,8 @@ slots:
   derived_from:
     description: An element is built or sourced from another (lineage).
     transitive: true
+  belongs_to:
+    description: A state or event concept is of one thing (BelongsTo). Added in 1.2.
   implemented_by:
     description: A business concept is represented in data by a column, table or filter.
   has_member:

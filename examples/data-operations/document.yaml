@@ -165,6 +165,13 @@ statements:
     subject: c.data_product
     text: "a table, view, dashboard or report that the Data Platform team publishes for other teams to use"
     evidence: [{quote: "A data product is a table, view, dashboard or report that the Data Platform team publishes for other teams to use."}]
+  - id: s.DO.97
+    predicate: ResponsibleFor
+    subject: t.data_platform_team
+    responsibility: performs
+    object: c.data_product
+    text: "publishes data products for other teams to use"
+    evidence: [{quote: "the Data Platform team publishes for other teams to use"}]
   - id: s.DO.4
     predicate: Has
     subject: c.data_product
@@ -247,6 +254,11 @@ statements:
     when:
       - {description: "the orders pipeline has finished", about: [c.orders_pipeline_finished]}
     evidence: [{quote: "The customers pipeline loads dim_customers every day at 03:00 UTC, after the orders pipeline has finished."}]
+  - id: s.DO.95
+    predicate: BelongsTo
+    subject: c.orders_pipeline_finished
+    object: t.orders_pipeline
+    evidence: [{quote: "the orders pipeline has finished"}]
   - id: s.DO.19
     predicate: Triggers
     subject: t.finance_pipeline
@@ -655,6 +667,11 @@ statements:
     object: c.fct_orders_duplicate_order_lines
     frequency: usually
     evidence: [{quote: "When fct_orders has duplicate order lines, the usual cause is the order system resending orders after a timeout."}]
+  - id: s.DO.96
+    predicate: BelongsTo
+    subject: c.fct_orders_duplicate_order_lines
+    object: t.table.fct_orders
+    evidence: [{quote: "fct_orders has duplicate order lines"}]
   - id: s.DO.68
     predicate: Influences
     subject: c.late_weekend_batch

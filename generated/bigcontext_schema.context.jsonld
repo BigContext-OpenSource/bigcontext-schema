@@ -894,6 +894,9 @@
       "Appoints": {
          "@id": "Appoints"
       },
+      "BelongsTo": {
+         "@id": "BelongsTo"
+      },
       "Branch": {
          "@id": "Branch"
       },

@@ -1,6 +1,7 @@
 {
  "classes": {
   "Appoints": {
+   "checked_from": null,
    "condition_role": null,
    "containers": {
     "because": {
@@ -85,7 +86,94 @@
    "fact_link": false,
    "from_self": false
   },
+  "BelongsTo": {
+   "checked_from": "1.2",
+   "condition_role": null,
+   "containers": {
+    "because": {
+     "class": "Condition",
+     "slot": null
+    },
+    "because.values": {
+     "class": "Value",
+     "slot": null
+    },
+    "especially_when": {
+     "class": "Condition",
+     "slot": "especially_when"
+    },
+    "especially_when.values": {
+     "class": "Value",
+     "slot": null
+    },
+    "even_if": {
+     "class": "Condition",
+     "slot": "even_if"
+    },
+    "even_if.values": {
+     "class": "Value",
+     "slot": null
+    },
+    "period": {
+     "class": "Period",
+     "slot": null
+    },
+    "share": {
+     "class": "Value",
+     "slot": null
+    },
+    "so_that": {
+     "class": "Condition",
+     "slot": null
+    },
+    "so_that.values": {
+     "class": "Value",
+     "slot": null
+    },
+    "unless": {
+     "class": "Condition",
+     "slot": "unless"
+    },
+    "unless.values": {
+     "class": "Value",
+     "slot": null
+    },
+    "valid_while": {
+     "class": "Condition",
+     "slot": "valid_while"
+    },
+    "valid_while.values": {
+     "class": "Value",
+     "slot": null
+    },
+    "when": {
+     "class": "Condition",
+     "slot": "when"
+    },
+    "when.values": {
+     "class": "Value",
+     "slot": null
+    },
+    "when_any": {
+     "class": "Condition",
+     "slot": "when_any"
+    },
+    "when_any.values": {
+     "class": "Value",
+     "slot": null
+    },
+    "within": {
+     "class": "Value",
+     "slot": null
+    }
+   },
+   "fact_backup": false,
+   "fact_dotted": false,
+   "fact_link": true,
+   "from_self": false
+  },
   "Caveat": {
+   "checked_from": null,
    "condition_role": null,
    "containers": {
     "because": {
@@ -171,6 +259,7 @@
    "from_self": false
   },
   "ComputedAs": {
+   "checked_from": null,
    "condition_role": null,
    "containers": {
     "because": {
@@ -288,6 +377,7 @@
    "from_self": false
   },
   "Contains": {
+   "checked_from": null,
    "condition_role": null,
    "containers": {
     "because": {
@@ -373,6 +463,7 @@
    "from_self": false
   },
   "CorrelatesWith": {
+   "checked_from": null,
    "condition_role": null,
    "containers": {
     "because": {
@@ -458,6 +549,7 @@
    "from_self": false
   },
   "Covers": {
+   "checked_from": null,
    "condition_role": null,
    "containers": {
     "because": {
@@ -543,6 +635,7 @@
    "from_self": false
   },
   "CreatedBy": {
+   "checked_from": null,
    "condition_role": null,
    "containers": {
     "because": {
@@ -628,6 +721,7 @@
    "from_self": false
   },
   "Definition": {
+   "checked_from": null,
    "condition_role": null,
    "containers": {
     "because": {
@@ -713,6 +807,7 @@
    "from_self": false
   },
   "DerivedFrom": {
+   "checked_from": null,
    "condition_role": null,
    "containers": {
     "because": {
@@ -798,6 +893,7 @@
    "from_self": false
   },
   "DescribedIn": {
+   "checked_from": null,
    "condition_role": null,
    "containers": {
     "because": {
@@ -883,6 +979,7 @@
    "from_self": false
   },
   "EscalatesTo": {
+   "checked_from": null,
    "condition_role": null,
    "containers": {
     "because": {
@@ -968,6 +1065,7 @@
    "from_self": false
   },
   "Example": {
+   "checked_from": null,
    "condition_role": null,
    "containers": {
     "because": {
@@ -1053,6 +1151,7 @@
    "from_self": false
   },
   "Gap": {
+   "checked_from": null,
    "condition_role": null,
    "containers": {
     "because": {
@@ -1138,6 +1237,7 @@
    "from_self": false
   },
   "GovernedBy": {
+   "checked_from": null,
    "condition_role": null,
    "containers": {
     "because": {
@@ -1223,6 +1323,7 @@
    "from_self": false
   },
   "Groups": {
+   "checked_from": null,
    "condition_role": null,
    "containers": {
     "because": {
@@ -1308,6 +1409,7 @@
    "from_self": false
   },
   "Habit": {
+   "checked_from": null,
    "condition_role": null,
    "containers": {
     "action": {
@@ -1441,6 +1543,7 @@
    "from_self": false
   },
   "Has": {
+   "checked_from": null,
    "condition_role": null,
    "containers": {
     "because": {
@@ -1526,6 +1629,7 @@
    "from_self": false
   },
   "HasAccess": {
+   "checked_from": null,
    "condition_role": null,
    "containers": {
     "because": {
@@ -1619,6 +1723,7 @@
    "from_self": false
   },
   "HasGrain": {
+   "checked_from": null,
    "condition_role": null,
    "containers": {
     "because": {
@@ -1704,6 +1809,7 @@
    "from_self": false
   },
   "HasProperty": {
+   "checked_from": null,
    "condition_role": null,
    "containers": {
     "because": {
@@ -1793,6 +1899,7 @@
    "from_self": false
   },
   "HasStatus": {
+   "checked_from": null,
    "condition_role": null,
    "containers": {
     "because": {
@@ -1878,6 +1985,7 @@
    "from_self": false
   },
   "HasValues": {
+   "checked_from": null,
    "condition_role": null,
    "containers": {
     "because": {
@@ -1967,6 +2075,7 @@
    "from_self": false
   },
   "Heads": {
+   "checked_from": null,
    "condition_role": null,
    "containers": {
     "because": {
@@ -2052,6 +2161,7 @@
    "from_self": false
   },
   "HoldsRole": {
+   "checked_from": null,
    "condition_role": null,
    "containers": {
     "because": {
@@ -2137,6 +2247,7 @@
    "from_self": false
   },
   "IdentifiedBy": {
+   "checked_from": null,
    "condition_role": null,
    "containers": {
     "because": {
@@ -2222,6 +2333,7 @@
    "from_self": false
   },
   "ImplementedBy": {
+   "checked_from": null,
    "condition_role": null,
    "containers": {
     "because": {
@@ -2307,6 +2419,7 @@
    "from_self": false
   },
   "Indicates": {
+   "checked_from": null,
    "condition_role": "causes",
    "containers": {
     "because": {
@@ -2396,6 +2509,7 @@
    "from_self": false
   },
   "Influences": {
+   "checked_from": null,
    "condition_role": null,
    "containers": {
     "because": {
@@ -2481,6 +2595,7 @@
    "from_self": false
   },
   "IsA": {
+   "checked_from": null,
    "condition_role": null,
    "containers": {
     "because": {
@@ -2566,6 +2681,7 @@
    "from_self": false
   },
   "JoinsTo": {
+   "checked_from": null,
    "condition_role": null,
    "containers": {
     "because": {
@@ -2655,6 +2771,7 @@
    "from_self": false
   },
   "Mapping": {
+   "checked_from": null,
    "condition_role": null,
    "containers": {
     "because": {
@@ -2740,6 +2857,7 @@
    "from_self": false
   },
   "MemberOf": {
+   "checked_from": null,
    "condition_role": null,
    "containers": {
     "because": {
@@ -2825,6 +2943,7 @@
    "from_self": false
   },
   "Overlaps": {
+   "checked_from": null,
    "condition_role": null,
    "containers": {
     "because": {
@@ -2910,6 +3029,7 @@
    "from_self": false
   },
   "PartOf": {
+   "checked_from": null,
    "condition_role": null,
    "containers": {
     "because": {
@@ -2995,6 +3115,7 @@
    "from_self": false
   },
   "Procedure": {
+   "checked_from": null,
    "condition_role": null,
    "containers": {
     "because": {
@@ -3044,6 +3165,7 @@
    "from_self": true
   },
   "RecordMatch": {
+   "checked_from": null,
    "condition_role": null,
    "containers": {
     "because": {
@@ -3149,6 +3271,7 @@
    "from_self": false
   },
   "ReportsTo": {
+   "checked_from": null,
    "condition_role": null,
    "containers": {
     "because": {
@@ -3234,6 +3357,7 @@
    "from_self": false
   },
   "Represents": {
+   "checked_from": null,
    "condition_role": null,
    "containers": {
     "because": {
@@ -3319,6 +3443,7 @@
    "from_self": false
   },
   "ResponsibleFor": {
+   "checked_from": null,
    "condition_role": null,
    "containers": {
     "because": {
@@ -3404,6 +3529,7 @@
    "from_self": false
   },
   "Rule": {
+   "checked_from": null,
    "condition_role": null,
    "containers": {
     "action": {
@@ -3537,6 +3663,7 @@
    "from_self": true
   },
   "RuleSet": {
+   "checked_from": null,
    "condition_role": null,
    "containers": {
     "because": {
@@ -3622,6 +3749,7 @@
    "from_self": true
   },
   "Sequence": {
+   "checked_from": null,
    "condition_role": null,
    "containers": {
     "because": {
@@ -3707,6 +3835,7 @@
    "from_self": false
   },
   "Serves": {
+   "checked_from": null,
    "condition_role": null,
    "containers": {
     "because": {
@@ -3792,6 +3921,7 @@
    "from_self": false
   },
   "Step": {
+   "checked_from": null,
    "condition_role": null,
    "containers": {
     "action": {
@@ -3921,6 +4051,7 @@
    "from_self": true
   },
   "SynonymOf": {
+   "checked_from": null,
    "condition_role": null,
    "containers": {
     "because": {
@@ -4006,6 +4137,7 @@
    "from_self": false
   },
   "Template": {
+   "checked_from": null,
    "condition_role": null,
    "containers": {
     "because": {
@@ -4095,6 +4227,7 @@
    "from_self": false
   },
   "Transition": {
+   "checked_from": null,
    "condition_role": "state_input",
    "containers": {
     "because": {
@@ -4180,6 +4313,7 @@
    "from_self": false
   },
   "Triggers": {
+   "checked_from": null,
    "condition_role": null,
    "containers": {
     "action": {
@@ -4313,6 +4447,7 @@
    "from_self": false
   },
   "UsedFor": {
+   "checked_from": null,
    "condition_role": null,
    "containers": {
     "because": {
@@ -4398,6 +4533,7 @@
    "from_self": false
   },
   "WorksWith": {
+   "checked_from": null,
    "condition_role": null,
    "containers": {
     "because": {
@@ -4513,6 +4649,88 @@
   "informed",
   "stated_by"
  ],
+ "roles": {
+  "acting_for": "The holder an acting or interim holder stands in for.",
+  "acts_on": "What an action works on, the thing it checks, loads, sends, changes or creates.",
+  "answers": "An open question (a Gap) that the statement answers.",
+  "answers_to": "Whom a party answers to for a responsibility.",
+  "attribute": "The attribute a statement describes, when no standard attribute fits.",
+  "audience": "Whom a representation is towards.",
+  "base": "The table a measure aggregates over.",
+  "because": "An element the statement's reason names.",
+  "belongs_to": "The thing a state or event concept is of.",
+  "binds": "Who must comply with a rule.",
+  "by": "The party, tool or system that carries out an action.",
+  "calendar": "The calendar a metric's grains, windows and offsets follow.",
+  "calls": "The procedure a step runs.",
+  "cases": "An element a calculation's cases name.",
+  "causes": "The effect an influence has; in an Indicates, an element its conditions name.",
+  "consumes": "What a procedure step takes in.",
+  "contains": "The field, concept or entity a table or dataset holds information about.",
+  "correlates_with": "The measure another moves together with.",
+  "decided_by": "Who decided it.",
+  "decided_in": "Where it was decided or recorded (a meeting, a channel, a ticket, a document).",
+  "denominator": "What a ratio divides by.",
+  "derived_from": "What a table, report or other element is built or sourced from.",
+  "described_in": "The document, page or section that describes an element.",
+  "disputed_by": "Who disagreed or objected.",
+  "divided_by": "The field or dimension that divides a group into its members.",
+  "endorsed_by": "Who agreed with or supported it.",
+  "entity": "The kind of thing a conversion metric follows from its first event to its second.",
+  "escalates_to": "The party, team or channel a problem goes to next.",
+  "filters_on": "An element a filter tests.",
+  "governed_by": "The law, policy, agreement or document that governs an element.",
+  "has": "A part or attribute an element has.",
+  "has_access": "What a party may reach or use.",
+  "heads": "The unit, team or organization a party heads.",
+  "held_by": "Whose preference, view or wish it is.",
+  "holds_role": "The role or post a party holds.",
+  "implemented_by": "The field, table or other data element that holds or computes a concept.",
+  "informed": "Who was told.",
+  "inputs": "The tables, fields, metrics and joins a calculation or job uses.",
+  "is_a": "The category an element is put in.",
+  "items": "An element of a list, sequence or group.",
+  "joins_to": "The table or dataset another joins to.",
+  "key_pairs": "The fields a join matches on.",
+  "maps_to": "What a value, code or element maps to.",
+  "member_of": "The unit, team or group a party belongs to.",
+  "members": "The elements that together make up or identify one row or group.",
+  "non_additive": "The elements a non-additive value is kept for, one each (the last balance for each account).",
+  "numerator": "What a ratio counts.",
+  "object": "The second element a statement is about.",
+  "options_in_order": "The options an action takes, in order of preference.",
+  "outputs": "What a job, procedure or calculation produces (columns, sections).",
+  "overlaps": "An element whose meaning or scope overlaps another's.",
+  "overrides": "A statement this one takes precedence over.",
+  "part_of": "The whole an element is part of.",
+  "performer": "Who does a habit, step or activity.",
+  "period": "The period a statement or value covers.",
+  "produces": "What a statement brings about, the state a change reaches or what an action creates.",
+  "property_value": "An element a property's value names.",
+  "proposed_by": "Who proposed it.",
+  "ratified_by": "Who ratified it.",
+  "ratified_in": "Where it was ratified (a meeting, a council, a document).",
+  "reacts_to": "What a statement responds to, an element its condition names.",
+  "reports_to": "Whom a party or post reports to.",
+  "responsible_for": "What a party answers for.",
+  "role": "The role an element plays through a join or an action (buyer, recipient).",
+  "routes_to": "Where an action sends something, or the channel, tool or intermediary it goes through.",
+  "scope": "The elements a statement is limited to.",
+  "share": "An element a share or proportion names.",
+  "so_that": "An element the statement's purpose names.",
+  "state_input": "What a change of state depends on, what changes, the state it leaves, what its conditions test.",
+  "stated_by": "Who stated it.",
+  "subject": "What the statement is about, the party that acts, the job that runs, the cause.",
+  "supersedes": "A statement this one replaces.",
+  "time_dimension": "The time column a measure is counted by.",
+  "used_for": "The activity or question type an element serves.",
+  "values": "An element a statement's values name (a unit, the event a duration is counted from).",
+  "via": "The channel, tool or intermediary something goes through.",
+  "with_consent_of": "Whose consent an appointment needs.",
+  "within": "An element a time limit names or is counted from.",
+  "works_with": "The party another coordinates or works closely with.",
+  "written_by": "The job that writes a table, view or data container."
+ },
  "schema_version": "1.2.0-draft",
  "links": [
   {"checked_from":null,"class":"Appoints","owner":"Appoints","path":"subject","provenance":false,"role":"subject","slot":null},
@@ -4588,6 +4806,78 @@
   {"checked_from":"1.2","class":"Appoints","owner":"Value","path":"share.per","provenance":false,"role":"share","slot":null},
   {"checked_from":"1.2","class":"Appoints","owner":"Value","path":"share.applies_to","provenance":false,"role":"share","slot":null},
   {"checked_from":"1.2","class":"Appoints","owner":"Value","path":"share.counted_from","provenance":false,"role":"reacts_to","slot":null},
+  {"checked_from":null,"class":"BelongsTo","owner":"BelongsTo","path":"subject","provenance":false,"role":"subject","slot":null},
+  {"checked_from":null,"class":"BelongsTo","fact":"belongs_to","owner":"BelongsTo","path":"object","provenance":false,"role":"belongs_to","slot":null},
+  {"checked_from":null,"class":"BelongsTo","owner":"Condition","path":"when.about","provenance":false,"role":"reacts_to","slot":"when"},
+  {"checked_from":null,"class":"BelongsTo","owner":"Condition","path":"when.field","provenance":false,"role":"reacts_to","slot":"when"},
+  {"checked_from":null,"class":"BelongsTo","owner":"Value","path":"when.values.per","provenance":false,"role":"reacts_to","slot":"when"},
+  {"checked_from":"1.2","class":"BelongsTo","owner":"Value","path":"when.values.applies_to","provenance":false,"role":"reacts_to","slot":"when"},
+  {"checked_from":null,"class":"BelongsTo","owner":"Value","path":"when.values.counted_from","provenance":false,"role":"reacts_to","slot":"when"},
+  {"checked_from":null,"class":"BelongsTo","owner":"Condition","path":"when.compare_to","provenance":false,"role":"reacts_to","slot":"when"},
+  {"checked_from":null,"class":"BelongsTo","owner":"Condition","path":"when_any.about","provenance":false,"role":"reacts_to","slot":"when_any"},
+  {"checked_from":null,"class":"BelongsTo","owner":"Condition","path":"when_any.field","provenance":false,"role":"reacts_to","slot":"when_any"},
+  {"checked_from":null,"class":"BelongsTo","owner":"Value","path":"when_any.values.per","provenance":false,"role":"reacts_to","slot":"when_any"},
+  {"checked_from":"1.2","class":"BelongsTo","owner":"Value","path":"when_any.values.applies_to","provenance":false,"role":"reacts_to","slot":"when_any"},
+  {"checked_from":null,"class":"BelongsTo","owner":"Value","path":"when_any.values.counted_from","provenance":false,"role":"reacts_to","slot":"when_any"},
+  {"checked_from":null,"class":"BelongsTo","owner":"Condition","path":"when_any.compare_to","provenance":false,"role":"reacts_to","slot":"when_any"},
+  {"checked_from":null,"class":"BelongsTo","owner":"Condition","path":"unless.about","provenance":false,"role":"reacts_to","slot":"unless"},
+  {"checked_from":null,"class":"BelongsTo","owner":"Condition","path":"unless.field","provenance":false,"role":"reacts_to","slot":"unless"},
+  {"checked_from":null,"class":"BelongsTo","owner":"Value","path":"unless.values.per","provenance":false,"role":"reacts_to","slot":"unless"},
+  {"checked_from":"1.2","class":"BelongsTo","owner":"Value","path":"unless.values.applies_to","provenance":false,"role":"reacts_to","slot":"unless"},
+  {"checked_from":null,"class":"BelongsTo","owner":"Value","path":"unless.values.counted_from","provenance":false,"role":"reacts_to","slot":"unless"},
+  {"checked_from":null,"class":"BelongsTo","owner":"Condition","path":"unless.compare_to","provenance":false,"role":"reacts_to","slot":"unless"},
+  {"checked_from":null,"class":"BelongsTo","owner":"Condition","path":"even_if.about","provenance":false,"role":"reacts_to","slot":"even_if"},
+  {"checked_from":null,"class":"BelongsTo","owner":"Condition","path":"even_if.field","provenance":false,"role":"reacts_to","slot":"even_if"},
+  {"checked_from":null,"class":"BelongsTo","owner":"Value","path":"even_if.values.per","provenance":false,"role":"reacts_to","slot":"even_if"},
+  {"checked_from":"1.2","class":"BelongsTo","owner":"Value","path":"even_if.values.applies_to","provenance":false,"role":"reacts_to","slot":"even_if"},
+  {"checked_from":null,"class":"BelongsTo","owner":"Value","path":"even_if.values.counted_from","provenance":false,"role":"reacts_to","slot":"even_if"},
+  {"checked_from":null,"class":"BelongsTo","owner":"Condition","path":"even_if.compare_to","provenance":false,"role":"reacts_to","slot":"even_if"},
+  {"checked_from":null,"class":"BelongsTo","owner":"Condition","path":"especially_when.about","provenance":false,"role":"reacts_to","slot":"especially_when"},
+  {"checked_from":null,"class":"BelongsTo","owner":"Condition","path":"especially_when.field","provenance":false,"role":"reacts_to","slot":"especially_when"},
+  {"checked_from":null,"class":"BelongsTo","owner":"Value","path":"especially_when.values.per","provenance":false,"role":"reacts_to","slot":"especially_when"},
+  {"checked_from":"1.2","class":"BelongsTo","owner":"Value","path":"especially_when.values.applies_to","provenance":false,"role":"reacts_to","slot":"especially_when"},
+  {"checked_from":null,"class":"BelongsTo","owner":"Value","path":"especially_when.values.counted_from","provenance":false,"role":"reacts_to","slot":"especially_when"},
+  {"checked_from":null,"class":"BelongsTo","owner":"Condition","path":"especially_when.compare_to","provenance":false,"role":"reacts_to","slot":"especially_when"},
+  {"checked_from":null,"class":"BelongsTo","owner":"Condition","path":"because.about","provenance":false,"role":"because","slot":null},
+  {"checked_from":null,"class":"BelongsTo","owner":"Condition","path":"because.field","provenance":false,"role":"because","slot":null},
+  {"checked_from":null,"class":"BelongsTo","owner":"Value","path":"because.values.per","provenance":false,"role":"because","slot":null},
+  {"checked_from":"1.2","class":"BelongsTo","owner":"Value","path":"because.values.applies_to","provenance":false,"role":"because","slot":null},
+  {"checked_from":null,"class":"BelongsTo","owner":"Value","path":"because.values.counted_from","provenance":false,"role":"because","slot":null},
+  {"checked_from":null,"class":"BelongsTo","owner":"Condition","path":"because.compare_to","provenance":false,"role":"because","slot":null},
+  {"checked_from":null,"class":"BelongsTo","owner":"Condition","path":"so_that.about","provenance":false,"role":"so_that","slot":null},
+  {"checked_from":null,"class":"BelongsTo","owner":"Condition","path":"so_that.field","provenance":false,"role":"so_that","slot":null},
+  {"checked_from":null,"class":"BelongsTo","owner":"Value","path":"so_that.values.per","provenance":false,"role":"so_that","slot":null},
+  {"checked_from":"1.2","class":"BelongsTo","owner":"Value","path":"so_that.values.applies_to","provenance":false,"role":"so_that","slot":null},
+  {"checked_from":null,"class":"BelongsTo","owner":"Value","path":"so_that.values.counted_from","provenance":false,"role":"so_that","slot":null},
+  {"checked_from":null,"class":"BelongsTo","owner":"Condition","path":"so_that.compare_to","provenance":false,"role":"so_that","slot":null},
+  {"checked_from":null,"class":"BelongsTo","owner":"BelongsTo","path":"scope","provenance":false,"role":"scope","slot":null},
+  {"checked_from":null,"class":"BelongsTo","owner":"Condition","path":"valid_while.about","provenance":false,"role":"reacts_to","slot":"valid_while"},
+  {"checked_from":null,"class":"BelongsTo","owner":"Condition","path":"valid_while.field","provenance":false,"role":"reacts_to","slot":"valid_while"},
+  {"checked_from":null,"class":"BelongsTo","owner":"Value","path":"valid_while.values.per","provenance":false,"role":"reacts_to","slot":"valid_while"},
+  {"checked_from":"1.2","class":"BelongsTo","owner":"Value","path":"valid_while.values.applies_to","provenance":false,"role":"reacts_to","slot":"valid_while"},
+  {"checked_from":null,"class":"BelongsTo","owner":"Value","path":"valid_while.values.counted_from","provenance":false,"role":"reacts_to","slot":"valid_while"},
+  {"checked_from":null,"class":"BelongsTo","owner":"Condition","path":"valid_while.compare_to","provenance":false,"role":"reacts_to","slot":"valid_while"},
+  {"checked_from":"1.2","class":"BelongsTo","owner":"Value","path":"within.per","provenance":false,"role":"within","slot":null},
+  {"checked_from":"1.2","class":"BelongsTo","owner":"Value","path":"within.applies_to","provenance":false,"role":"within","slot":null},
+  {"checked_from":"1.2","class":"BelongsTo","owner":"Value","path":"within.counted_from","provenance":false,"role":"reacts_to","slot":null},
+  {"checked_from":null,"class":"BelongsTo","owner":"BelongsTo","path":"via","provenance":false,"role":"routes_to","slot":null},
+  {"checked_from":null,"class":"BelongsTo","owner":"BelongsTo","path":"stated_by","provenance":true,"role":"stated_by","slot":null},
+  {"checked_from":null,"class":"BelongsTo","owner":"BelongsTo","path":"held_by","provenance":true,"role":"held_by","slot":null},
+  {"checked_from":null,"class":"BelongsTo","owner":"BelongsTo","path":"proposed_by","provenance":true,"role":"proposed_by","slot":null},
+  {"checked_from":null,"class":"BelongsTo","owner":"BelongsTo","path":"decided_by","provenance":true,"role":"decided_by","slot":null},
+  {"checked_from":null,"class":"BelongsTo","owner":"BelongsTo","path":"decided_in","provenance":true,"role":"decided_in","slot":null},
+  {"checked_from":null,"class":"BelongsTo","owner":"BelongsTo","path":"ratified_by","provenance":true,"role":"ratified_by","slot":null},
+  {"checked_from":null,"class":"BelongsTo","owner":"BelongsTo","path":"endorsed_by","provenance":true,"role":"endorsed_by","slot":null},
+  {"checked_from":null,"class":"BelongsTo","owner":"BelongsTo","path":"disputed_by","provenance":true,"role":"disputed_by","slot":null},
+  {"checked_from":null,"class":"BelongsTo","owner":"BelongsTo","path":"informed","provenance":true,"role":"informed","slot":null},
+  {"checked_from":null,"class":"BelongsTo","owner":"BelongsTo","path":"supersedes","provenance":false,"role":"supersedes","slot":null},
+  {"checked_from":"1.2","class":"BelongsTo","owner":"BelongsTo","path":"ratified_in","provenance":true,"role":"ratified_in","slot":null},
+  {"checked_from":null,"class":"BelongsTo","owner":"BelongsTo","path":"answers","provenance":false,"role":"answers","slot":null},
+  {"checked_from":null,"class":"BelongsTo","owner":"Period","path":"period.named","provenance":false,"role":"period","slot":null},
+  {"checked_from":null,"class":"BelongsTo","owner":"BelongsTo","path":"acting_for","provenance":false,"role":"acting_for","slot":null},
+  {"checked_from":"1.2","class":"BelongsTo","owner":"Value","path":"share.per","provenance":false,"role":"share","slot":null},
+  {"checked_from":"1.2","class":"BelongsTo","owner":"Value","path":"share.applies_to","provenance":false,"role":"share","slot":null},
+  {"checked_from":"1.2","class":"BelongsTo","owner":"Value","path":"share.counted_from","provenance":false,"role":"reacts_to","slot":null},
   {"checked_from":null,"class":"Caveat","owner":"Caveat","path":"subject","provenance":false,"role":"subject","slot":null},
   {"checked_from":null,"class":"Caveat","owner":"Caveat","path":"object","provenance":false,"role":"object","slot":null},
   {"checked_from":null,"class":"Caveat","owner":"Condition","path":"when.about","provenance":false,"role":"reacts_to","slot":"when"},

@@ -4,7 +4,8 @@
 responsibilities. People, software and AI agents all read it the same way, and every statement points back to the
 exact words it came from.**
 
-Status: version 1.1.0. Licence: Apache 2.0, free for anyone to use and build on.
+Status: version 1.1.0 is the current release. This branch holds the 1.2.0 draft, which adds data operations (see
+`CHANGELOG.md`). Licence: Apache 2.0, free for anyone to use and build on.
 
 ---
 
@@ -59,21 +60,25 @@ rule, step, threshold, owner and exception in a company, and you get the gap tha
 A semantic layer, such as dbt's or OSI, says **how to calculate a number**. BigContext Schema says **everything
 around it**. It includes the metric definitions too, so it can feed the semantic layer rather than replace it.
 
-| What people need to know | Semantic layer | BigContext Schema |
-|---|---|---|
-| How is net revenue calculated? | Yes | Yes, and exports it to the semantic layer |
-| Which definition does the board use, and which does Finance? | No | Yes |
-| When should someone investigate a drop? | No | Yes |
-| What must be done first, and what is never allowed? | No | Yes |
-| Who may share a number, with whom, and who must approve it first? | No | Yes |
-| Who owns this, and who do I escalate to? | No | Yes |
-| What changed, when, and who decided? | No | Yes |
-| What known data problems should I allow for? | No | Yes |
-| Which sentence does each answer come from? | No | Yes, the exact quote |
+A knowledge format, such as Google Cloud's Open Knowledge Format (OKF), stores knowledge as markdown pages. Each page
+records its type, title, tags, who generated it, who verified it, when it last changed and the source documents it
+cites. Links between pages carry no type, and the rest of the page is prose.
 
-**Knowledge formats** such as Google Cloud's OKF package pages of prose together with who wrote and verified them.
-BigContext Schema records what those pages *say*, as statements a program can use. A BigContext Schema document can
-travel inside such a package.
+| What people need to know | Semantic layer (dbt, OSI) | Knowledge format (OKF) | BigContext Schema |
+|---|---|---|---|
+| How is net revenue calculated? | Yes | In prose, or as SQL in an attested computation | Yes, and exports it to the semantic layer |
+| Which definition does the board use, and which does Finance? | No | In prose | Yes |
+| When should someone investigate a drop? | No | In prose | Yes |
+| What must be done first, and what is never allowed? | No | In prose | Yes |
+| Who may share a number, with whom, and who must approve it first? | No | In prose | Yes |
+| Who owns this, and who do I escalate to? | No | In prose | Yes |
+| What changed, when, and who decided? | No | When a page changed and who verified it; not what it replaced | Yes |
+| What known data problems should I allow for? | No | In prose | Yes |
+| Which sentence does each answer come from? | No | The source document, by a footnote | Yes, the exact quote |
+
+"In prose": a person or a model can read it; a program cannot check it, query it, or tell which version holds on a
+date. OKF as of version 0.2 (2026). BigContext Schema can record what an OKF page says, as statements that quote
+the page.
 
 **Ontology languages** such as OWL can express anything once someone designs the vocabulary. BigContext Schema is
 that vocabulary for business context. It is published as OWL, and its building blocks are mapped to the W3C
@@ -123,6 +128,9 @@ original sentence to anyone who asks why.
   and time dimension; data products with their owners and approved uses; data-quality expectations.
 - **Tools:** what a tool is for, who may use it, when it must not be used, and sample calls.
 - **Standing and time:** who proposed, decided, supported or disputed a statement, its dates, and what it replaced.
+- **Data operations (1.2 draft):** jobs and their schedules, the states a load or a check reaches and the
+  conditions for each, quality checks and what follows their failure, incidents and their severities, routing and
+  escalation, what a change or failure affects downstream, and what upstream could cause it.
 - **Links between sources:** the same thing named in two documents, linked once a person confirms it.
 - **Evidence:** every statement quotes the exact source text it came from.
 
@@ -160,6 +168,7 @@ converters to dbt, OSI and ODRL.
 | `conformance.md`, `tests/` | What a conforming document, producer and graph builder must do, and the cases that check it |
 | `CHANGELOG.md`, `GOVERNANCE.md`, `CONTRIBUTING.md`, `CODE_OF_CONDUCT.md` | What changed in each version; who decides changes and how; how to contribute; how everyone taking part behaves |
 | `bigcontext_facts.yaml` | The vocabulary of the graph's facts (reports to, owns, escalates to, same as) |
+| `bigcontext_link_roles.yaml` | What each link role means (1.2 draft), one line per role; the link table and `graph.md`'s roles table carry these |
 | `queries/`, `cypher/` | Ready-made questions, in SPARQL and Cypher; `queries/record/connections.rq` returns every link of the statements in force, from the record graph |
 | `generated/` | Files generated from the schema: JSON Schema, OWL, SHACL shapes, a JSON-LD context, and the link table (`bigcontext_links.json`: which field of which statement type links to which element, by which role, and the fact it gives) |
 | `examples/` | Example documents, each beside the source text it quotes |

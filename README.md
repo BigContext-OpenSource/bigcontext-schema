@@ -4,8 +4,8 @@
 responsibilities. People, software and AI agents all read it the same way, and every statement points back to the
 exact words it came from.**
 
-Status: version 1.1.0 is the current release. This branch holds the 1.2.0 draft, which adds data operations (see
-`CHANGELOG.md`). Licence: Apache 2.0, free for anyone to use and build on.
+Status: version 1.2.0, which adds data operations (see `CHANGELOG.md`). Licence: Apache 2.0, free for anyone to use
+and build on.
 
 ---
 
@@ -128,7 +128,7 @@ original sentence to anyone who asks why.
   and time dimension; data products with their owners and approved uses; data-quality expectations.
 - **Tools:** what a tool is for, who may use it, when it must not be used, and sample calls.
 - **Standing and time:** who proposed, decided, supported or disputed a statement, its dates, and what it replaced.
-- **Data operations (1.2 draft):** jobs and their schedules, the states a load or a check reaches and the
+- **Data operations (added in 1.2):** jobs and their schedules, the states a load or a check reaches and the
   conditions for each, quality checks and what follows their failure, incidents and their severities, routing and
   escalation, what a change or failure affects downstream, and what upstream could cause it.
 - **Links between sources:** the same thing named in two documents, linked once a person confirms it.
@@ -168,7 +168,7 @@ converters to dbt, OSI and ODRL.
 | `conformance.md`, `tests/` | What a conforming document, producer and graph builder must do, and the cases that check it |
 | `CHANGELOG.md`, `GOVERNANCE.md`, `CONTRIBUTING.md`, `CODE_OF_CONDUCT.md` | What changed in each version; who decides changes and how; how to contribute; how everyone taking part behaves |
 | `bigcontext_facts.yaml` | The vocabulary of the graph's facts (reports to, owns, escalates to, same as) |
-| `bigcontext_link_roles.yaml` | What each link role means (1.2 draft), one line per role; the link table and `graph.md`'s roles table carry these |
+| `bigcontext_link_roles.yaml` | What each link role means (added in 1.2), one line per role; the link table and `graph.md`'s roles table carry these |
 | `queries/`, `cypher/` | Ready-made questions, in SPARQL and Cypher; `queries/record/connections.rq` returns every link of the statements in force, from the record graph |
 | `generated/` | Files generated from the schema: JSON Schema, OWL, SHACL shapes, a JSON-LD context, and the link table (`bigcontext_links.json`: which field of which statement type links to which element, by which role, and the fact it gives) |
 | `examples/` | Example documents, each beside the source text it quotes |
@@ -237,7 +237,7 @@ Permanent address: `https://w3id.org/bigcontext-schema` (being registered).
 
 ## Citing
 
-Big Context & Company (2026). *BigContext Schema*, version 1.1.0. https://w3id.org/bigcontext-schema
+Big Context & Company (2026). *BigContext Schema*, version 1.2.0. https://w3id.org/bigcontext-schema
 
 `CITATION.cff` gives the same in a form citation tools read.
 

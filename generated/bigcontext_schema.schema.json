@@ -28745,6 +28745,6 @@
     ],
     "title": "bigcontext_schema",
     "type": "object",
-    "version": "1.2.0-draft"
+    "version": "1.2.0"
 }
 

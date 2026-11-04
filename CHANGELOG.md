@@ -3,7 +3,7 @@
 What changed in each version of BigContext Schema. Versions follow the rules in the README: patch, minor and major,
 with drafts (`0.9.x-draft`) before 1.0.
 
-## 1.2.0 (draft, 1.2.0-draft)
+## 1.2.0 (2026-11-04)
 
 Every 1.0 and 1.1 document is valid under 1.2.0 and keeps its meaning, its graph facts and every message of the
 reference checker. The additions come from data operations runbooks: jobs and schedules, states and checks,

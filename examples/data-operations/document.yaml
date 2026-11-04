@@ -1,4 +1,4 @@
-schema_version: "1.2.0-draft"
+schema_version: "1.2.0"
 source: {id: data-operations-playbook, title: "Data Operations Playbook", as_of: "2026-11-01"}
 
 revisions:

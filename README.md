@@ -66,18 +66,18 @@ cites. Links between pages carry no type, and the rest of the page is prose.
 
 | What people need to know | Semantic layer (dbt, OSI) | Knowledge format (OKF) | BigContext Schema |
 |---|---|---|---|
-| How is net revenue calculated? | Yes | In prose, or as SQL in an attested computation | Yes, and exports it to the semantic layer |
-| Which definition does the board use, and which does Finance? | No | In prose | Yes |
-| When should someone investigate a drop? | No | In prose | Yes |
-| What must be done first, and what is never allowed? | No | In prose | Yes |
-| Who may share a number, with whom, and who must approve it first? | No | In prose | Yes |
-| Who owns this, and who do I escalate to? | No | In prose | Yes |
-| What changed, when, and who decided? | No | When a page changed and who verified it; not what it replaced | Yes |
-| What known data problems should I allow for? | No | In prose | Yes |
-| Which sentence does each answer come from? | No | The source document, by a footnote | Yes, the exact quote |
+| How is net revenue calculated? | Yes | As free text, or as SQL in an attested computation | Yes, and exports it to the semantic layer |
+| Which definition does the board use, and which does Finance? | No | As free text; no field for which definition applies to whom | Yes |
+| When should someone investigate a drop? | No | As free text; no field for a condition or threshold | Yes |
+| What must be done first, and what is never allowed? | No | As free text; no field for steps, duties or prohibitions | Yes |
+| Who may share a number, with whom, and who must approve it first? | No | As free text; no field for permissions or approvals | Yes |
+| Who owns this, and who do I escalate to? | No | As free text; no owner or escalation field (a page records who generated and verified it) | Yes |
+| What changed, when, and who decided? | No | When a page changed and who verified it; not what it replaced or who decided | Yes |
+| What known data problems should I allow for? | No | As free text; no field for a known issue | Yes |
+| Which sentence does each answer come from? | No | The source document, by a footnote; not the sentence | Yes, the exact quote |
 
-"In prose": a person or a model can read it; a program cannot check it, query it, or tell which version holds on a
-date. OKF as of version 0.2 (2026). BigContext Schema can record what an OKF page says, as statements that quote
+"As free text": written in a page's markdown, where a person or an AI model can read it; a program cannot check it,
+query it, or tell which version applies on a date. OKF as of version 0.2 (2026). BigContext Schema can record what an OKF page says, as statements that quote
 the page.
 
 **Ontology languages** such as OWL can express anything once someone designs the vocabulary. BigContext Schema is
@@ -233,7 +233,7 @@ start with a prefix it owns (`acme:priority`); readers keep them and may ignore 
 rest of the document means. A field many people need is proposed as an enhancement and can join the standard in a
 minor version. The versions before 1.0 were drafts (`0.9.x-draft`).
 
-Permanent address: `https://w3id.org/bigcontext-schema` (being registered).
+Permanent address: `https://w3id.org/bigcontext-schema`.
 
 ## Citing
 

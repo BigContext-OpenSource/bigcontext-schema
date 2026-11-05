@@ -4731,7 +4731,7 @@
   "works_with": "The party another coordinates or works closely with.",
   "written_by": "The job that writes a table, view or data container."
  },
- "schema_version": "1.2.0",
+ "schema_version": "1.2.1",
  "links": [
   {"checked_from":null,"class":"Appoints","owner":"Appoints","path":"subject","provenance":false,"role":"subject","slot":null},
   {"checked_from":null,"class":"Appoints","owner":"Appoints","path":"object","provenance":false,"role":"object","slot":null},

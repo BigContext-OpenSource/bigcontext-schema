@@ -50,7 +50,7 @@ Each statement as a sentence, written by tools/scripts/build_conformance.py from
 - `s.DO.44`: must create data incident, unless the orders load is complete by 07:00 ET (07:00 ET) (binding on on-call data engineer)
 - `s.DO.45`: When someone sees a data product that looks wrong: may create data incident
 - `s.DO.46`: When in doubt whether to create a data incident: must create data incident, because a duplicate costs less than a missed incident
-- `s.DO.47`: When any of: a customer-facing number is wrong; or a customer-facing number is missing; or a regulatory report is wrong; or a regulatory report is missing; or a payment is wrong; or a payment is missing: data incident moves to Sev1 incident
+- `s.DO.47`: When any of: a figure shown to customers is wrong; or a figure shown to customers is missing; or a regulatory report is wrong; or a regulatory report is missing; or a payment is wrong; or a payment is missing: data incident moves to Sev1 incident
 - `s.DO.48`: When an internal dashboard is used for a decision today: When any of: the dashboard is wrong; or the dashboard is late by more than 4 hours: data incident moves to Sev2 incident
 - `s.DO.49`: When any of: a data product is late; or a data product is wrong: data incident moves to Sev3 incident, unless someone needs the data product today
 - `s.DO.50`: person who creates the incident decides incident severity

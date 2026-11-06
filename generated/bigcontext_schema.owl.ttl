@@ -2271,7 +2271,7 @@ bcs:within a owl:ObjectProperty ;
 	skos:definition "A time limit ('answer within 4 business hours')." ;
 	skos:inScheme <https://w3id.org/bigcontext-schema> .
 <https://w3id.org/bigcontext-schema> dcterms:title "BigContext Schema" ;
-	pav:version "1.2.1" ;
+	pav:version "1.2.2" ;
 	a owl:Ontology ;
 	rdfs:label "bigcontext_schema" ;
 	skos:definition "A small, closed set of building blocks for expressing business context taken from natural language: simple rules, long procedures, company structure, data and mappings. Tier 1 is the element types, tier 2 the statement types (predicates) whose roles come from one shared dictionary of slots, tier 3 the qualifiers every statement can carry. A document can carry fields of its own under `extensions`. Shared groups of fields any statement can carry (decision, assignment, snapshot, work and time, service and scope, classes and questions, meetings) cover kinds of context that recur across many statement types. A computable core (key pairs, filters, aggregations, metric types, time grains) lets metric and join definitions move to and from semantic-layer formats." .

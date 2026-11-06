@@ -3,6 +3,12 @@
 What changed in each version of BigContext Schema. Versions follow the rules in the README: patch, minor and major,
 with drafts (`0.9.x-draft`) before 1.0.
 
+## 1.2.2 (2026-11-05)
+
+Wording only: in the data operations example, the Sev1 line reads "a figure shown to customers" in place of "a
+customer-facing number", and its two states are `c.customer_figure_wrong` and `c.customer_figure_missing`. Every 1.2
+document stays valid, and no field, value or statement type changed.
+
 ## 1.2.1 (2026-11-04)
 
 Wording only: the README's comparison with knowledge formats says, for each question, what OKF records and what it

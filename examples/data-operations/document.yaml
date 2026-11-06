@@ -94,15 +94,15 @@ concepts:
   - {id: c.blocking_check, label: quality check marked blocking, concept_type: state, evidence: [{quote: "the check is marked blocking"}]}
   # incidents
   - {id: c.data_product_looks_wrong, label: data product looks wrong, concept_type: state, evidence: [{quote: "a data product that looks wrong"}]}
-  - {id: c.sev1_incident, label: Sev1 incident, concept_type: state, evidence: [{quote: "Sev1: a customer-facing number"}]}
+  - {id: c.sev1_incident, label: Sev1 incident, concept_type: state, evidence: [{quote: "Sev1: a figure shown to customers"}]}
   - {id: c.sev2_incident, label: Sev2 incident, concept_type: state, evidence: [{quote: "Sev2: an internal dashboard"}]}
   - {id: c.sev3_incident, label: Sev3 incident, concept_type: state, evidence: [{quote: "Sev3: a data product is late or wrong"}]}
-  - {id: c.customer_facing_number_wrong, label: customer-facing number wrong, concept_type: state, evidence: [{quote: "a customer-facing number, a regulatory report or a payment is wrong or missing"}]}
-  - {id: c.customer_facing_number_missing, label: customer-facing number missing, concept_type: state, evidence: [{quote: "a customer-facing number, a regulatory report or a payment is wrong or missing"}]}
-  - {id: c.regulatory_report_wrong, label: regulatory report wrong, concept_type: state, evidence: [{quote: "a customer-facing number, a regulatory report or a payment is wrong or missing"}]}
-  - {id: c.regulatory_report_missing, label: regulatory report missing, concept_type: state, evidence: [{quote: "a customer-facing number, a regulatory report or a payment is wrong or missing"}]}
-  - {id: c.payment_wrong, label: payment wrong, concept_type: state, evidence: [{quote: "a customer-facing number, a regulatory report or a payment is wrong or missing"}]}
-  - {id: c.payment_missing, label: payment missing, concept_type: state, evidence: [{quote: "a customer-facing number, a regulatory report or a payment is wrong or missing"}]}
+  - {id: c.customer_figure_wrong, label: customer figure wrong, concept_type: state, evidence: [{quote: "a figure shown to customers, a regulatory report or a payment is wrong or missing"}]}
+  - {id: c.customer_figure_missing, label: customer figure missing, concept_type: state, evidence: [{quote: "a figure shown to customers, a regulatory report or a payment is wrong or missing"}]}
+  - {id: c.regulatory_report_wrong, label: regulatory report wrong, concept_type: state, evidence: [{quote: "a figure shown to customers, a regulatory report or a payment is wrong or missing"}]}
+  - {id: c.regulatory_report_missing, label: regulatory report missing, concept_type: state, evidence: [{quote: "a figure shown to customers, a regulatory report or a payment is wrong or missing"}]}
+  - {id: c.payment_wrong, label: payment wrong, concept_type: state, evidence: [{quote: "a figure shown to customers, a regulatory report or a payment is wrong or missing"}]}
+  - {id: c.payment_missing, label: payment missing, concept_type: state, evidence: [{quote: "a figure shown to customers, a regulatory report or a payment is wrong or missing"}]}
   - {id: c.internal_dashboard_used_today, label: internal dashboard used for a decision today, concept_type: state, evidence: [{quote: "an internal dashboard used for a decision today"}]}
   - {id: c.internal_dashboard_wrong, label: internal dashboard wrong, concept_type: state, evidence: [{quote: "an internal dashboard used for a decision today is wrong"}]}
   - {id: c.internal_dashboard_late, label: internal dashboard late, concept_type: state, evidence: [{quote: "or late by more than 4 hours"}]}
@@ -485,13 +485,13 @@ statements:
     subject: c.data_incident
     to_state: c.sev1_incident
     when_any:
-      - {description: "a customer-facing number is wrong", about: [c.customer_facing_number_wrong]}
-      - {description: "a customer-facing number is missing", about: [c.customer_facing_number_missing]}
+      - {description: "a figure shown to customers is wrong", about: [c.customer_figure_wrong]}
+      - {description: "a figure shown to customers is missing", about: [c.customer_figure_missing]}
       - {description: "a regulatory report is wrong", about: [c.regulatory_report_wrong]}
       - {description: "a regulatory report is missing", about: [c.regulatory_report_missing]}
       - {description: "a payment is wrong", about: [c.payment_wrong]}
       - {description: "a payment is missing", about: [c.payment_missing]}
-    evidence: [{quote: "Sev1: a customer-facing number, a regulatory report or a payment is wrong or missing."}]
+    evidence: [{quote: "Sev1: a figure shown to customers, a regulatory report or a payment is wrong or missing."}]
   - id: s.DO.48
     predicate: Transition
     subject: c.data_incident

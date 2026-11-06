@@ -74,7 +74,7 @@ duplicate costs less than a missed incident.
 
 ### Severity
 
-- Sev1: a customer-facing number, a regulatory report or a payment is wrong or missing.
+- Sev1: a figure shown to customers, a regulatory report or a payment is wrong or missing.
 - Sev2: an internal dashboard used for a decision today is wrong, or late by more than 4 hours.
 - Sev3: a data product is late or wrong and nobody needs it today.
 

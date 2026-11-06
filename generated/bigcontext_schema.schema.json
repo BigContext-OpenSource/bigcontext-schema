@@ -2543,6 +2543,7 @@
                 "role",
                 "activity",
                 "area",
+                "event",
                 "calendar",
                 "period",
                 "party_attribute",
@@ -2994,6 +2995,13 @@
                 },
                 "or_more_senior": {
                     "description": "True when the posts or roles the statement names also cover anyone more senior ('a VP or higher').",
+                    "type": [
+                        "boolean",
+                        "null"
+                    ]
+                },
+                "partition": {
+                    "description": "True when this field splits the table into partitions, so a query that filters on it reads less data. Added in 1.3.",
                     "type": [
                         "boolean",
                         "null"
@@ -14816,6 +14824,16 @@
                     ],
                     "description": "Fields of your own, under keys that start with a prefix you own (acme:priority). Readers keep them and may ignore them; they never change what the rest of the document means."
                 },
+                "filters": {
+                    "description": "The rows of the object that are the concept, when the object is a table or view (\"active customers are customers whose status is active\": status is active). Added in 1.3.",
+                    "items": {
+                        "$ref": "#/$defs/Condition"
+                    },
+                    "type": [
+                        "array",
+                        "null"
+                    ]
+                },
                 "frequency": {
                     "anyOf": [
                         {
@@ -15142,7 +15160,8 @@
             "description": "",
             "enum": [
                 "critical",
-                "high"
+                "high",
+                "minor"
             ],
             "title": "ImportanceEnum",
             "type": "string"
@@ -17153,6 +17172,13 @@
                         "null"
                     ]
                 },
+                "recursive": {
+                    "description": "True when the join can be followed again and again, to any depth (a manager's manager). Added in 1.3.",
+                    "type": [
+                        "boolean",
+                        "null"
+                    ]
+                },
                 "role": {
                     "description": "The role the joined element plays through this join (buyer, recipient).",
                     "type": [
@@ -17300,12 +17326,43 @@
             "title": "JoinsTo",
             "type": "object"
         },
+        "KeyComparatorEnum": {
+            "description": "How a key pair compares its two columns (KeyPair comparator). Added in 1.3.",
+            "enum": [
+                "equal",
+                "not_equal",
+                "more_than",
+                "at_least",
+                "less_than",
+                "at_most"
+            ],
+            "title": "KeyComparatorEnum",
+            "type": "string"
+        },
         "KeyPair": {
             "additionalProperties": false,
             "description": "One pair of columns a join or a match compares.",
             "properties": {
+                "comparator": {
+                    "anyOf": [
+                        {
+                            "$ref": "#/$defs/KeyComparatorEnum"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
+                    "description": "How from_field is compared with to_field when not as equal (\"the history row whose valid_from and valid_to include the order date\": order_date at_least valid_from, and order_date at_most valid_to). Added in 1.3."
+                },
                 "from_field": {
                     "type": "string"
+                },
+                "nearest": {
+                    "description": "True on the one pair a join is ordered by: of the rows its comparator lets through, the one whose to_field is nearest from_field (\"the latest rate on or before the order date\": order_date at_least rate_date). The join's other pairs compare as equal. Added in 1.3.",
+                    "type": [
+                        "boolean",
+                        "null"
+                    ]
                 },
                 "normalize": {
                     "description": "What is done to both columns before they are compared, always in this order whichever are given (trim, then ignore case, then cast).",
@@ -19563,15 +19620,100 @@
                     "required": [
                         "named"
                     ]
+                },
+                {
+                    "properties": {
+                        "last": {}
+                    },
+                    "required": [
+                        "last"
+                    ]
+                },
+                {
+                    "properties": {
+                        "previous": {}
+                    },
+                    "required": [
+                        "previous"
+                    ]
                 }
             ],
-            "description": "A stretch of time a statement is about: give its start, its end, or the period the text names, or several.",
+            "description": "A stretch of time a statement is about: give its start, its end or the period the text names (one or more of these), or, from 1.3, last or previous alone, with the time_grain they count.",
+            "not": {
+                "anyOf": [
+                    {
+                        "properties": {
+                            "last": {},
+                            "previous": {}
+                        },
+                        "required": [
+                            "last",
+                            "previous"
+                        ]
+                    },
+                    {
+                        "properties": {
+                            "last": {},
+                            "start": {}
+                        },
+                        "required": [
+                            "last",
+                            "start"
+                        ]
+                    },
+                    {
+                        "properties": {
+                            "end": {},
+                            "last": {}
+                        },
+                        "required": [
+                            "last",
+                            "end"
+                        ]
+                    },
+                    {
+                        "properties": {
+                            "previous": {},
+                            "start": {}
+                        },
+                        "required": [
+                            "previous",
+                            "start"
+                        ]
+                    },
+                    {
+                        "properties": {
+                            "end": {},
+                            "previous": {}
+                        },
+                        "required": [
+                            "previous",
+                            "end"
+                        ]
+                    }
+                ]
+            },
             "properties": {
+                "calendar": {
+                    "description": "The calendar last and previous count in when it is not the ordinary one (a fiscal calendar, a concept of type calendar). Added in 1.3.",
+                    "type": [
+                        "string",
+                        "null"
+                    ]
+                },
                 "end": {
                     "description": "The last day, as an ISO date: 2026-03 for 'March 2026' (a year or month means its last day).",
                     "pattern": "^\\d{4}(-\\d{2}(-\\d{2})?)?$",
                     "type": [
                         "string",
+                        "null"
+                    ]
+                },
+                "last": {
+                    "description": "The most recent this many time grains, the current one included as far as it has gone (the last 3 days: 3 with time_grain day; this month: 1 month; year to date: 1 year). Counted from the statement's as_of, else the source's, else the day the statement is applied; an as_of that is a month or a year counts from its last day. Added in 1.3.",
+                    "minimum": 1,
+                    "type": [
+                        "integer",
                         "null"
                     ]
                 },
@@ -19582,6 +19724,14 @@
                         "null"
                     ]
                 },
+                "previous": {
+                    "description": "The this many whole time grains just before the current one, taken together (last month: 1 with time_grain month; the previous two quarters: 2 quarter), counted as last is. Added in 1.3.",
+                    "minimum": 1,
+                    "type": [
+                        "integer",
+                        "null"
+                    ]
+                },
                 "start": {
                     "description": "The first day, as an ISO date.",
                     "pattern": "^\\d{4}(-\\d{2}(-\\d{2})?)?$",
@@ -19589,6 +19739,17 @@
                         "string",
                         "null"
                     ]
+                },
+                "time_grain": {
+                    "anyOf": [
+                        {
+                            "$ref": "#/$defs/TimeGrainEnum"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
+                    "description": "The grain last and previous count in (day, month). Added in 1.3."
                 }
             },
             "title": "Period",
@@ -24193,6 +24354,14 @@
                     "pattern": "^[a-z0-9][a-z0-9-]*$",
                     "type": "string"
                 },
+                "language": {
+                    "description": "The language of the word or the source, as a BCP 47 tag (de, en, pt-BR). Added in 1.3.",
+                    "pattern": "^[A-Za-z]{2,3}(-[A-Za-z0-9]{1,8})*$",
+                    "type": [
+                        "string",
+                        "null"
+                    ]
+                },
                 "location": {
                     "type": [
                         "string",
@@ -24256,7 +24425,11 @@
                 "headcount",
                 "start",
                 "web_address",
-                "duration"
+                "duration",
+                "year_start",
+                "week_start",
+                "week_pattern",
+                "day_start"
             ],
             "title": "StandardAttributeEnum",
             "type": "string"
@@ -25261,6 +25434,14 @@
                         "null"
                     ]
                 },
+                "language": {
+                    "description": "The language of the word or the source, as a BCP 47 tag (de, en, pt-BR). Added in 1.3.",
+                    "pattern": "^[A-Za-z]{2,3}(-[A-Za-z0-9]{1,8})*$",
+                    "type": [
+                        "string",
+                        "null"
+                    ]
+                },
                 "line": {
                     "anyOf": [
                         {
@@ -26177,6 +26358,7 @@
                 "channel",
                 "job",
                 "report",
+                "ml_model",
                 "place",
                 "product",
                 "other"
@@ -27861,6 +28043,13 @@
                         "null"
                     ]
                 },
+                "unit_from": {
+                    "description": "The column that holds each row's unit or currency, when it differs by row (orders.currency_code); value keeps the amount, or, in a unit property, the kind of unit (currency). Added in 1.3.",
+                    "type": [
+                        "string",
+                        "null"
+                    ]
+                },
                 "value": {
                     "type": "string"
                 },
@@ -28745,6 +28934,6 @@
     ],
     "title": "bigcontext_schema",
     "type": "object",
-    "version": "1.2.2"
+    "version": "1.3.0"
 }
 

@@ -1,4 +1,4 @@
-schema_version: 1.2.2
+schema_version: 1.2.0
 source:
   id: orders-data-operations
   title: Orders data operations notes

@@ -5,7 +5,7 @@
 # subject, or the statement itself for Rule, RuleSet, Procedure and Step), for an element of a condition in a slot
 # marked condition the slot and the condition's description, the condition slots that mark the link (space-separated),
 # whether the document declares the element, and the element. Run on rdf.record_graph(); bind ?element to ask for one.
-# 3885 links in 282 branches.
+# 4480 links in 320 branches.
 PREFIX bcs: <https://w3id.org/bigcontext-schema/>
 PREFIX bcf: <https://w3id.org/bigcontext-schema/facts/>
 SELECT ?statement ?type ?role ?field ?from ?slot ?condition ?conditions ?declared ?element
@@ -390,6 +390,41 @@ WHERE {
   }
   UNION
   {
+    VALUES (?type ?role ?self) { (bcs:Habit "unit_from" false) (bcs:Rule "unit_from" true) (bcs:Triggers "unit_from" false) }
+    ?statement a ?type ; a bcf:InForce .
+    OPTIONAL { ?statement bcs:subject ?w_from }
+    ?statement bcs:action ?a0 .
+    ?a0 (bcs:alternatives|bcs:then)* ?ax .
+    ?ax bcs:alternatives ?act .
+    ?act bcs:values ?n2 .
+    ?n2 bcs:unit_from ?element .
+    BIND("action.alternatives.values.unit_from" AS ?field)
+    BIND(IF(?self, ?statement, COALESCE(?w_from, ?statement)) AS ?from)
+    BIND("" AS ?slot)
+    BIND(COALESCE(STR(?w_description), "") AS ?condition)
+    BIND(REPLACE(CONCAT(IF(EXISTS { ?statement bcs:when [] } || EXISTS { ?a0 (bcs:alternatives|bcs:then)* ?w_a . ?w_a bcs:when [] . ?w_a (bcs:alternatives|bcs:then)* ?act }, "when ", ""), IF(EXISTS { ?statement bcs:when_any [] }, "when_any ", ""), IF(EXISTS { ?statement bcs:unless [] }, "unless ", ""), IF(EXISTS { ?statement bcs:even_if [] }, "even_if ", ""), IF(EXISTS { ?statement bcs:especially_when [] }, "especially_when ", ""), IF(EXISTS { ?statement bcs:valid_while [] }, "valid_while ", ""), IF(EXISTS { ?statement bcs:trigger [] }, "trigger ", "")), " $", "") AS ?conditions)
+    BIND(EXISTS { ?element a ?w_declared . FILTER(?w_declared IN (bcs:Thing, bcs:Concept)) } AS ?declared)
+  }
+  UNION
+  {
+    VALUES (?type ?role ?self) { (bcs:Procedure "unit_from" true) }
+    ?statement a ?type ; a bcf:InForce .
+    ?statement bcs:steps ?step .
+    ?step bcs:order ?order .
+    ?step bcs:action ?a0 .
+    ?a0 (bcs:alternatives|bcs:then)* ?ax .
+    ?ax bcs:alternatives ?act .
+    ?act bcs:values ?n2 .
+    ?n2 bcs:unit_from ?element .
+    BIND(CONCAT("steps.", STR(?order), ".action.alternatives.values.unit_from") AS ?field)
+    BIND(IF(?self, ?statement, COALESCE(?w_from, ?statement)) AS ?from)
+    BIND("" AS ?slot)
+    BIND(COALESCE(STR(?w_description), "") AS ?condition)
+    BIND(REPLACE(CONCAT(IF(EXISTS { ?statement bcs:when [] } || EXISTS { ?step bcs:when [] } || EXISTS { ?a0 (bcs:alternatives|bcs:then)* ?w_a . ?w_a bcs:when [] . ?w_a (bcs:alternatives|bcs:then)* ?act }, "when ", ""), IF(EXISTS { ?statement bcs:when_any [] } || EXISTS { ?step bcs:when_any [] }, "when_any ", ""), IF(EXISTS { ?statement bcs:unless [] } || EXISTS { ?step bcs:unless [] }, "unless ", ""), IF(EXISTS { ?statement bcs:even_if [] } || EXISTS { ?step bcs:even_if [] }, "even_if ", ""), IF(EXISTS { ?statement bcs:especially_when [] } || EXISTS { ?step bcs:especially_when [] }, "especially_when ", ""), IF(EXISTS { ?statement bcs:valid_while [] } || EXISTS { ?step bcs:valid_while [] }, "valid_while ", ""), IF(EXISTS { ?statement bcs:trigger [] } || EXISTS { ?step bcs:trigger [] }, "trigger ", "")), " $", "") AS ?conditions)
+    BIND(EXISTS { ?element a ?w_declared . FILTER(?w_declared IN (bcs:Thing, bcs:Concept)) } AS ?declared)
+  }
+  UNION
+  {
     VALUES (?type ?role ?self) { (bcs:Habit "routes_to" false) (bcs:Rule "routes_to" true) (bcs:Triggers "routes_to" false) }
     ?statement a ?type ; a bcf:InForce .
     OPTIONAL { ?statement bcs:subject ?w_from }
@@ -643,6 +678,45 @@ WHERE {
     ?n3 bcs:per ?element .
     OPTIONAL { ?n2 bcs:description ?w_description }
     BIND(CONCAT("steps.", STR(?order), ".action.alternatives.when.values.per") AS ?field)
+    BIND(IF(?self, ?statement, COALESCE(?w_from, ?statement)) AS ?from)
+    BIND("when" AS ?slot)
+    BIND(COALESCE(STR(?w_description), "") AS ?condition)
+    BIND(REPLACE(CONCAT(IF(EXISTS { ?statement bcs:when [] } || EXISTS { ?step bcs:when [] } || EXISTS { ?a0 (bcs:alternatives|bcs:then)* ?w_a . ?w_a bcs:when [] . ?w_a (bcs:alternatives|bcs:then)* ?act }, "when ", ""), IF(EXISTS { ?statement bcs:when_any [] } || EXISTS { ?step bcs:when_any [] }, "when_any ", ""), IF(EXISTS { ?statement bcs:unless [] } || EXISTS { ?step bcs:unless [] }, "unless ", ""), IF(EXISTS { ?statement bcs:even_if [] } || EXISTS { ?step bcs:even_if [] }, "even_if ", ""), IF(EXISTS { ?statement bcs:especially_when [] } || EXISTS { ?step bcs:especially_when [] }, "especially_when ", ""), IF(EXISTS { ?statement bcs:valid_while [] } || EXISTS { ?step bcs:valid_while [] }, "valid_while ", ""), IF(EXISTS { ?statement bcs:trigger [] } || EXISTS { ?step bcs:trigger [] }, "trigger ", "")), " $", "") AS ?conditions)
+    BIND(EXISTS { ?element a ?w_declared . FILTER(?w_declared IN (bcs:Thing, bcs:Concept)) } AS ?declared)
+  }
+  UNION
+  {
+    VALUES (?type ?role ?self) { (bcs:Habit "unit_from" false) (bcs:Rule "unit_from" true) (bcs:Triggers "unit_from" false) }
+    ?statement a ?type ; a bcf:InForce .
+    OPTIONAL { ?statement bcs:subject ?w_from }
+    ?statement bcs:action ?a0 .
+    ?a0 (bcs:alternatives|bcs:then)* ?ax .
+    ?ax bcs:alternatives ?act .
+    ?act bcs:when ?n2 .
+    ?n2 bcs:values ?n3 .
+    ?n3 bcs:unit_from ?element .
+    OPTIONAL { ?n2 bcs:description ?w_description }
+    BIND("action.alternatives.when.values.unit_from" AS ?field)
+    BIND(IF(?self, ?statement, COALESCE(?w_from, ?statement)) AS ?from)
+    BIND("when" AS ?slot)
+    BIND(COALESCE(STR(?w_description), "") AS ?condition)
+    BIND(REPLACE(CONCAT(IF(EXISTS { ?statement bcs:when [] } || EXISTS { ?a0 (bcs:alternatives|bcs:then)* ?w_a . ?w_a bcs:when [] . ?w_a (bcs:alternatives|bcs:then)* ?act }, "when ", ""), IF(EXISTS { ?statement bcs:when_any [] }, "when_any ", ""), IF(EXISTS { ?statement bcs:unless [] }, "unless ", ""), IF(EXISTS { ?statement bcs:even_if [] }, "even_if ", ""), IF(EXISTS { ?statement bcs:especially_when [] }, "especially_when ", ""), IF(EXISTS { ?statement bcs:valid_while [] }, "valid_while ", ""), IF(EXISTS { ?statement bcs:trigger [] }, "trigger ", "")), " $", "") AS ?conditions)
+    BIND(EXISTS { ?element a ?w_declared . FILTER(?w_declared IN (bcs:Thing, bcs:Concept)) } AS ?declared)
+  }
+  UNION
+  {
+    VALUES (?type ?role ?self) { (bcs:Procedure "unit_from" true) }
+    ?statement a ?type ; a bcf:InForce .
+    ?statement bcs:steps ?step .
+    ?step bcs:order ?order .
+    ?step bcs:action ?a0 .
+    ?a0 (bcs:alternatives|bcs:then)* ?ax .
+    ?ax bcs:alternatives ?act .
+    ?act bcs:when ?n2 .
+    ?n2 bcs:values ?n3 .
+    ?n3 bcs:unit_from ?element .
+    OPTIONAL { ?n2 bcs:description ?w_description }
+    BIND(CONCAT("steps.", STR(?order), ".action.alternatives.when.values.unit_from") AS ?field)
     BIND(IF(?self, ?statement, COALESCE(?w_from, ?statement)) AS ?from)
     BIND("when" AS ?slot)
     BIND(COALESCE(STR(?w_description), "") AS ?condition)
@@ -1182,6 +1256,41 @@ WHERE {
   }
   UNION
   {
+    VALUES (?type ?role ?self) { (bcs:Habit "unit_from" false) (bcs:Rule "unit_from" true) (bcs:Triggers "unit_from" false) }
+    ?statement a ?type ; a bcf:InForce .
+    OPTIONAL { ?statement bcs:subject ?w_from }
+    ?statement bcs:action ?a0 .
+    ?a0 (bcs:alternatives|bcs:then)* ?ax .
+    ?ax bcs:then ?act .
+    ?act bcs:values ?n2 .
+    ?n2 bcs:unit_from ?element .
+    BIND("action.then.values.unit_from" AS ?field)
+    BIND(IF(?self, ?statement, COALESCE(?w_from, ?statement)) AS ?from)
+    BIND("" AS ?slot)
+    BIND(COALESCE(STR(?w_description), "") AS ?condition)
+    BIND(REPLACE(CONCAT(IF(EXISTS { ?statement bcs:when [] } || EXISTS { ?a0 (bcs:alternatives|bcs:then)* ?w_a . ?w_a bcs:when [] . ?w_a (bcs:alternatives|bcs:then)* ?act }, "when ", ""), IF(EXISTS { ?statement bcs:when_any [] }, "when_any ", ""), IF(EXISTS { ?statement bcs:unless [] }, "unless ", ""), IF(EXISTS { ?statement bcs:even_if [] }, "even_if ", ""), IF(EXISTS { ?statement bcs:especially_when [] }, "especially_when ", ""), IF(EXISTS { ?statement bcs:valid_while [] }, "valid_while ", ""), IF(EXISTS { ?statement bcs:trigger [] }, "trigger ", "")), " $", "") AS ?conditions)
+    BIND(EXISTS { ?element a ?w_declared . FILTER(?w_declared IN (bcs:Thing, bcs:Concept)) } AS ?declared)
+  }
+  UNION
+  {
+    VALUES (?type ?role ?self) { (bcs:Procedure "unit_from" true) }
+    ?statement a ?type ; a bcf:InForce .
+    ?statement bcs:steps ?step .
+    ?step bcs:order ?order .
+    ?step bcs:action ?a0 .
+    ?a0 (bcs:alternatives|bcs:then)* ?ax .
+    ?ax bcs:then ?act .
+    ?act bcs:values ?n2 .
+    ?n2 bcs:unit_from ?element .
+    BIND(CONCAT("steps.", STR(?order), ".action.then.values.unit_from") AS ?field)
+    BIND(IF(?self, ?statement, COALESCE(?w_from, ?statement)) AS ?from)
+    BIND("" AS ?slot)
+    BIND(COALESCE(STR(?w_description), "") AS ?condition)
+    BIND(REPLACE(CONCAT(IF(EXISTS { ?statement bcs:when [] } || EXISTS { ?step bcs:when [] } || EXISTS { ?a0 (bcs:alternatives|bcs:then)* ?w_a . ?w_a bcs:when [] . ?w_a (bcs:alternatives|bcs:then)* ?act }, "when ", ""), IF(EXISTS { ?statement bcs:when_any [] } || EXISTS { ?step bcs:when_any [] }, "when_any ", ""), IF(EXISTS { ?statement bcs:unless [] } || EXISTS { ?step bcs:unless [] }, "unless ", ""), IF(EXISTS { ?statement bcs:even_if [] } || EXISTS { ?step bcs:even_if [] }, "even_if ", ""), IF(EXISTS { ?statement bcs:especially_when [] } || EXISTS { ?step bcs:especially_when [] }, "especially_when ", ""), IF(EXISTS { ?statement bcs:valid_while [] } || EXISTS { ?step bcs:valid_while [] }, "valid_while ", ""), IF(EXISTS { ?statement bcs:trigger [] } || EXISTS { ?step bcs:trigger [] }, "trigger ", "")), " $", "") AS ?conditions)
+    BIND(EXISTS { ?element a ?w_declared . FILTER(?w_declared IN (bcs:Thing, bcs:Concept)) } AS ?declared)
+  }
+  UNION
+  {
     VALUES (?type ?role ?self) { (bcs:Habit "routes_to" false) (bcs:Rule "routes_to" true) (bcs:Triggers "routes_to" false) }
     ?statement a ?type ; a bcf:InForce .
     OPTIONAL { ?statement bcs:subject ?w_from }
@@ -1443,6 +1552,45 @@ WHERE {
   }
   UNION
   {
+    VALUES (?type ?role ?self) { (bcs:Habit "unit_from" false) (bcs:Rule "unit_from" true) (bcs:Triggers "unit_from" false) }
+    ?statement a ?type ; a bcf:InForce .
+    OPTIONAL { ?statement bcs:subject ?w_from }
+    ?statement bcs:action ?a0 .
+    ?a0 (bcs:alternatives|bcs:then)* ?ax .
+    ?ax bcs:then ?act .
+    ?act bcs:when ?n2 .
+    ?n2 bcs:values ?n3 .
+    ?n3 bcs:unit_from ?element .
+    OPTIONAL { ?n2 bcs:description ?w_description }
+    BIND("action.then.when.values.unit_from" AS ?field)
+    BIND(IF(?self, ?statement, COALESCE(?w_from, ?statement)) AS ?from)
+    BIND("when" AS ?slot)
+    BIND(COALESCE(STR(?w_description), "") AS ?condition)
+    BIND(REPLACE(CONCAT(IF(EXISTS { ?statement bcs:when [] } || EXISTS { ?a0 (bcs:alternatives|bcs:then)* ?w_a . ?w_a bcs:when [] . ?w_a (bcs:alternatives|bcs:then)* ?act }, "when ", ""), IF(EXISTS { ?statement bcs:when_any [] }, "when_any ", ""), IF(EXISTS { ?statement bcs:unless [] }, "unless ", ""), IF(EXISTS { ?statement bcs:even_if [] }, "even_if ", ""), IF(EXISTS { ?statement bcs:especially_when [] }, "especially_when ", ""), IF(EXISTS { ?statement bcs:valid_while [] }, "valid_while ", ""), IF(EXISTS { ?statement bcs:trigger [] }, "trigger ", "")), " $", "") AS ?conditions)
+    BIND(EXISTS { ?element a ?w_declared . FILTER(?w_declared IN (bcs:Thing, bcs:Concept)) } AS ?declared)
+  }
+  UNION
+  {
+    VALUES (?type ?role ?self) { (bcs:Procedure "unit_from" true) }
+    ?statement a ?type ; a bcf:InForce .
+    ?statement bcs:steps ?step .
+    ?step bcs:order ?order .
+    ?step bcs:action ?a0 .
+    ?a0 (bcs:alternatives|bcs:then)* ?ax .
+    ?ax bcs:then ?act .
+    ?act bcs:when ?n2 .
+    ?n2 bcs:values ?n3 .
+    ?n3 bcs:unit_from ?element .
+    OPTIONAL { ?n2 bcs:description ?w_description }
+    BIND(CONCAT("steps.", STR(?order), ".action.then.when.values.unit_from") AS ?field)
+    BIND(IF(?self, ?statement, COALESCE(?w_from, ?statement)) AS ?from)
+    BIND("when" AS ?slot)
+    BIND(COALESCE(STR(?w_description), "") AS ?condition)
+    BIND(REPLACE(CONCAT(IF(EXISTS { ?statement bcs:when [] } || EXISTS { ?step bcs:when [] } || EXISTS { ?a0 (bcs:alternatives|bcs:then)* ?w_a . ?w_a bcs:when [] . ?w_a (bcs:alternatives|bcs:then)* ?act }, "when ", ""), IF(EXISTS { ?statement bcs:when_any [] } || EXISTS { ?step bcs:when_any [] }, "when_any ", ""), IF(EXISTS { ?statement bcs:unless [] } || EXISTS { ?step bcs:unless [] }, "unless ", ""), IF(EXISTS { ?statement bcs:even_if [] } || EXISTS { ?step bcs:even_if [] }, "even_if ", ""), IF(EXISTS { ?statement bcs:especially_when [] } || EXISTS { ?step bcs:especially_when [] }, "especially_when ", ""), IF(EXISTS { ?statement bcs:valid_while [] } || EXISTS { ?step bcs:valid_while [] }, "valid_while ", ""), IF(EXISTS { ?statement bcs:trigger [] } || EXISTS { ?step bcs:trigger [] }, "trigger ", "")), " $", "") AS ?conditions)
+    BIND(EXISTS { ?element a ?w_declared . FILTER(?w_declared IN (bcs:Thing, bcs:Concept)) } AS ?declared)
+  }
+  UNION
+  {
     VALUES (?type ?role ?self) { (bcs:Habit "written_by" false) (bcs:Rule "written_by" true) (bcs:Triggers "written_by" false) }
     ?statement a ?type ; a bcf:InForce .
     OPTIONAL { ?statement bcs:subject ?w_from }
@@ -1596,6 +1744,37 @@ WHERE {
     ?act bcs:values ?n1 .
     ?n1 bcs:per ?element .
     BIND(CONCAT("steps.", STR(?order), ".action.values.per") AS ?field)
+    BIND(IF(?self, ?statement, COALESCE(?w_from, ?statement)) AS ?from)
+    BIND("" AS ?slot)
+    BIND(COALESCE(STR(?w_description), "") AS ?condition)
+    BIND(REPLACE(CONCAT(IF(EXISTS { ?statement bcs:when [] } || EXISTS { ?step bcs:when [] } || EXISTS { ?act bcs:when [] }, "when ", ""), IF(EXISTS { ?statement bcs:when_any [] } || EXISTS { ?step bcs:when_any [] }, "when_any ", ""), IF(EXISTS { ?statement bcs:unless [] } || EXISTS { ?step bcs:unless [] }, "unless ", ""), IF(EXISTS { ?statement bcs:even_if [] } || EXISTS { ?step bcs:even_if [] }, "even_if ", ""), IF(EXISTS { ?statement bcs:especially_when [] } || EXISTS { ?step bcs:especially_when [] }, "especially_when ", ""), IF(EXISTS { ?statement bcs:valid_while [] } || EXISTS { ?step bcs:valid_while [] }, "valid_while ", ""), IF(EXISTS { ?statement bcs:trigger [] } || EXISTS { ?step bcs:trigger [] }, "trigger ", "")), " $", "") AS ?conditions)
+    BIND(EXISTS { ?element a ?w_declared . FILTER(?w_declared IN (bcs:Thing, bcs:Concept)) } AS ?declared)
+  }
+  UNION
+  {
+    VALUES (?type ?role ?self) { (bcs:Habit "unit_from" false) (bcs:Rule "unit_from" true) (bcs:Triggers "unit_from" false) }
+    ?statement a ?type ; a bcf:InForce .
+    OPTIONAL { ?statement bcs:subject ?w_from }
+    ?statement bcs:action ?act .
+    ?act bcs:values ?n1 .
+    ?n1 bcs:unit_from ?element .
+    BIND("action.values.unit_from" AS ?field)
+    BIND(IF(?self, ?statement, COALESCE(?w_from, ?statement)) AS ?from)
+    BIND("" AS ?slot)
+    BIND(COALESCE(STR(?w_description), "") AS ?condition)
+    BIND(REPLACE(CONCAT(IF(EXISTS { ?statement bcs:when [] } || EXISTS { ?act bcs:when [] }, "when ", ""), IF(EXISTS { ?statement bcs:when_any [] }, "when_any ", ""), IF(EXISTS { ?statement bcs:unless [] }, "unless ", ""), IF(EXISTS { ?statement bcs:even_if [] }, "even_if ", ""), IF(EXISTS { ?statement bcs:especially_when [] }, "especially_when ", ""), IF(EXISTS { ?statement bcs:valid_while [] }, "valid_while ", ""), IF(EXISTS { ?statement bcs:trigger [] }, "trigger ", "")), " $", "") AS ?conditions)
+    BIND(EXISTS { ?element a ?w_declared . FILTER(?w_declared IN (bcs:Thing, bcs:Concept)) } AS ?declared)
+  }
+  UNION
+  {
+    VALUES (?type ?role ?self) { (bcs:Procedure "unit_from" true) }
+    ?statement a ?type ; a bcf:InForce .
+    ?statement bcs:steps ?step .
+    ?step bcs:order ?order .
+    ?step bcs:action ?act .
+    ?act bcs:values ?n1 .
+    ?n1 bcs:unit_from ?element .
+    BIND(CONCAT("steps.", STR(?order), ".action.values.unit_from") AS ?field)
     BIND(IF(?self, ?statement, COALESCE(?w_from, ?statement)) AS ?from)
     BIND("" AS ?slot)
     BIND(COALESCE(STR(?w_description), "") AS ?condition)
@@ -1829,6 +2008,41 @@ WHERE {
     ?n2 bcs:per ?element .
     OPTIONAL { ?n1 bcs:description ?w_description }
     BIND(CONCAT("steps.", STR(?order), ".action.when.values.per") AS ?field)
+    BIND(IF(?self, ?statement, COALESCE(?w_from, ?statement)) AS ?from)
+    BIND("when" AS ?slot)
+    BIND(COALESCE(STR(?w_description), "") AS ?condition)
+    BIND(REPLACE(CONCAT(IF(EXISTS { ?statement bcs:when [] } || EXISTS { ?step bcs:when [] } || EXISTS { ?act bcs:when [] }, "when ", ""), IF(EXISTS { ?statement bcs:when_any [] } || EXISTS { ?step bcs:when_any [] }, "when_any ", ""), IF(EXISTS { ?statement bcs:unless [] } || EXISTS { ?step bcs:unless [] }, "unless ", ""), IF(EXISTS { ?statement bcs:even_if [] } || EXISTS { ?step bcs:even_if [] }, "even_if ", ""), IF(EXISTS { ?statement bcs:especially_when [] } || EXISTS { ?step bcs:especially_when [] }, "especially_when ", ""), IF(EXISTS { ?statement bcs:valid_while [] } || EXISTS { ?step bcs:valid_while [] }, "valid_while ", ""), IF(EXISTS { ?statement bcs:trigger [] } || EXISTS { ?step bcs:trigger [] }, "trigger ", "")), " $", "") AS ?conditions)
+    BIND(EXISTS { ?element a ?w_declared . FILTER(?w_declared IN (bcs:Thing, bcs:Concept)) } AS ?declared)
+  }
+  UNION
+  {
+    VALUES (?type ?role ?self) { (bcs:Habit "unit_from" false) (bcs:Rule "unit_from" true) (bcs:Triggers "unit_from" false) }
+    ?statement a ?type ; a bcf:InForce .
+    OPTIONAL { ?statement bcs:subject ?w_from }
+    ?statement bcs:action ?act .
+    ?act bcs:when ?n1 .
+    ?n1 bcs:values ?n2 .
+    ?n2 bcs:unit_from ?element .
+    OPTIONAL { ?n1 bcs:description ?w_description }
+    BIND("action.when.values.unit_from" AS ?field)
+    BIND(IF(?self, ?statement, COALESCE(?w_from, ?statement)) AS ?from)
+    BIND("when" AS ?slot)
+    BIND(COALESCE(STR(?w_description), "") AS ?condition)
+    BIND(REPLACE(CONCAT(IF(EXISTS { ?statement bcs:when [] } || EXISTS { ?act bcs:when [] }, "when ", ""), IF(EXISTS { ?statement bcs:when_any [] }, "when_any ", ""), IF(EXISTS { ?statement bcs:unless [] }, "unless ", ""), IF(EXISTS { ?statement bcs:even_if [] }, "even_if ", ""), IF(EXISTS { ?statement bcs:especially_when [] }, "especially_when ", ""), IF(EXISTS { ?statement bcs:valid_while [] }, "valid_while ", ""), IF(EXISTS { ?statement bcs:trigger [] }, "trigger ", "")), " $", "") AS ?conditions)
+    BIND(EXISTS { ?element a ?w_declared . FILTER(?w_declared IN (bcs:Thing, bcs:Concept)) } AS ?declared)
+  }
+  UNION
+  {
+    VALUES (?type ?role ?self) { (bcs:Procedure "unit_from" true) }
+    ?statement a ?type ; a bcf:InForce .
+    ?statement bcs:steps ?step .
+    ?step bcs:order ?order .
+    ?step bcs:action ?act .
+    ?act bcs:when ?n1 .
+    ?n1 bcs:values ?n2 .
+    ?n2 bcs:unit_from ?element .
+    OPTIONAL { ?n1 bcs:description ?w_description }
+    BIND(CONCAT("steps.", STR(?order), ".action.when.values.unit_from") AS ?field)
     BIND(IF(?self, ?statement, COALESCE(?w_from, ?statement)) AS ?from)
     BIND("when" AS ?slot)
     BIND(COALESCE(STR(?w_description), "") AS ?condition)
@@ -2095,6 +2309,37 @@ WHERE {
   }
   UNION
   {
+    VALUES (?type ?role ?self) { (bcs:Appoints "unit_from" false) (bcs:BelongsTo "unit_from" false) (bcs:Caveat "unit_from" false) (bcs:ComputedAs "unit_from" false) (bcs:Contains "unit_from" false) (bcs:CorrelatesWith "unit_from" false) (bcs:Covers "unit_from" false) (bcs:CreatedBy "unit_from" false) (bcs:Definition "unit_from" false) (bcs:DerivedFrom "unit_from" false) (bcs:DescribedIn "unit_from" false) (bcs:EscalatesTo "unit_from" false) (bcs:Example "unit_from" false) (bcs:Gap "unit_from" false) (bcs:GovernedBy "unit_from" false) (bcs:Groups "unit_from" false) (bcs:Habit "unit_from" false) (bcs:Has "unit_from" false) (bcs:HasAccess "unit_from" false) (bcs:HasGrain "unit_from" false) (bcs:HasProperty "unit_from" false) (bcs:HasStatus "unit_from" false) (bcs:HasValues "unit_from" false) (bcs:Heads "unit_from" false) (bcs:HoldsRole "unit_from" false) (bcs:IdentifiedBy "unit_from" false) (bcs:ImplementedBy "unit_from" false) (bcs:Indicates "unit_from" false) (bcs:Influences "unit_from" false) (bcs:IsA "unit_from" false) (bcs:JoinsTo "unit_from" false) (bcs:Mapping "unit_from" false) (bcs:MemberOf "unit_from" false) (bcs:Overlaps "unit_from" false) (bcs:PartOf "unit_from" false) (bcs:Procedure "unit_from" true) (bcs:RecordMatch "unit_from" false) (bcs:ReportsTo "unit_from" false) (bcs:Represents "unit_from" false) (bcs:ResponsibleFor "unit_from" false) (bcs:Rule "unit_from" true) (bcs:RuleSet "unit_from" true) (bcs:Sequence "unit_from" false) (bcs:Serves "unit_from" false) (bcs:SynonymOf "unit_from" false) (bcs:Template "unit_from" false) (bcs:Transition "unit_from" false) (bcs:Triggers "unit_from" false) (bcs:UsedFor "unit_from" false) (bcs:WorksWith "unit_from" false) }
+    ?statement a ?type ; a bcf:InForce .
+    OPTIONAL { ?statement bcs:subject ?w_from }
+    ?statement bcs:because ?n0 .
+    ?n0 bcs:values ?n1 .
+    ?n1 bcs:unit_from ?element .
+    BIND("because.values.unit_from" AS ?field)
+    BIND(IF(?self, ?statement, COALESCE(?w_from, ?statement)) AS ?from)
+    BIND("" AS ?slot)
+    BIND(COALESCE(STR(?w_description), "") AS ?condition)
+    BIND(REPLACE(CONCAT(IF(EXISTS { ?statement bcs:when [] }, "when ", ""), IF(EXISTS { ?statement bcs:when_any [] }, "when_any ", ""), IF(EXISTS { ?statement bcs:unless [] }, "unless ", ""), IF(EXISTS { ?statement bcs:even_if [] }, "even_if ", ""), IF(EXISTS { ?statement bcs:especially_when [] }, "especially_when ", ""), IF(EXISTS { ?statement bcs:valid_while [] }, "valid_while ", ""), IF(EXISTS { ?statement bcs:trigger [] }, "trigger ", "")), " $", "") AS ?conditions)
+    BIND(EXISTS { ?element a ?w_declared . FILTER(?w_declared IN (bcs:Thing, bcs:Concept)) } AS ?declared)
+  }
+  UNION
+  {
+    VALUES (?type ?role ?self) { (bcs:Procedure "unit_from" true) }
+    ?statement a ?type ; a bcf:InForce .
+    ?statement bcs:steps ?step .
+    ?step bcs:order ?order .
+    ?step bcs:because ?n0 .
+    ?n0 bcs:values ?n1 .
+    ?n1 bcs:unit_from ?element .
+    BIND(CONCAT("steps.", STR(?order), ".because.values.unit_from") AS ?field)
+    BIND(IF(?self, ?statement, COALESCE(?w_from, ?statement)) AS ?from)
+    BIND("" AS ?slot)
+    BIND(COALESCE(STR(?w_description), "") AS ?condition)
+    BIND(REPLACE(CONCAT(IF(EXISTS { ?statement bcs:when [] } || EXISTS { ?step bcs:when [] }, "when ", ""), IF(EXISTS { ?statement bcs:when_any [] } || EXISTS { ?step bcs:when_any [] }, "when_any ", ""), IF(EXISTS { ?statement bcs:unless [] } || EXISTS { ?step bcs:unless [] }, "unless ", ""), IF(EXISTS { ?statement bcs:even_if [] } || EXISTS { ?step bcs:even_if [] }, "even_if ", ""), IF(EXISTS { ?statement bcs:especially_when [] } || EXISTS { ?step bcs:especially_when [] }, "especially_when ", ""), IF(EXISTS { ?statement bcs:valid_while [] } || EXISTS { ?step bcs:valid_while [] }, "valid_while ", ""), IF(EXISTS { ?statement bcs:trigger [] } || EXISTS { ?step bcs:trigger [] }, "trigger ", "")), " $", "") AS ?conditions)
+    BIND(EXISTS { ?element a ?w_declared . FILTER(?w_declared IN (bcs:Thing, bcs:Concept)) } AS ?declared)
+  }
+  UNION
+  {
     VALUES (?type ?role ?self) { (bcs:Rule "binds" true) }
     ?statement a ?type ; a bcf:InForce .
     ?statement bcs:binds ?element .
@@ -2212,6 +2457,24 @@ WHERE {
   }
   UNION
   {
+    VALUES (?type ?role ?self) { (bcs:Procedure "unit_from" true) }
+    ?statement a ?type ; a bcf:InForce .
+    ?statement bcs:steps ?step .
+    ?step bcs:order ?order .
+    ?step bcs:branches ?n0 .
+    ?n0 bcs:when ?n1 .
+    ?n1 bcs:values ?n2 .
+    ?n2 bcs:unit_from ?element .
+    OPTIONAL { ?n1 bcs:description ?w_description }
+    BIND(CONCAT("steps.", STR(?order), ".branches.when.values.unit_from") AS ?field)
+    BIND(IF(?self, ?statement, COALESCE(?w_from, ?statement)) AS ?from)
+    BIND("when" AS ?slot)
+    BIND(COALESCE(STR(?w_description), "") AS ?condition)
+    BIND(REPLACE(CONCAT(IF(EXISTS { ?statement bcs:when [] } || EXISTS { ?step bcs:when [] } || EXISTS { ?n0 bcs:when [] }, "when ", ""), IF(EXISTS { ?statement bcs:when_any [] } || EXISTS { ?step bcs:when_any [] }, "when_any ", ""), IF(EXISTS { ?statement bcs:unless [] } || EXISTS { ?step bcs:unless [] }, "unless ", ""), IF(EXISTS { ?statement bcs:even_if [] } || EXISTS { ?step bcs:even_if [] }, "even_if ", ""), IF(EXISTS { ?statement bcs:especially_when [] } || EXISTS { ?step bcs:especially_when [] }, "especially_when ", ""), IF(EXISTS { ?statement bcs:valid_while [] } || EXISTS { ?step bcs:valid_while [] }, "valid_while ", ""), IF(EXISTS { ?statement bcs:trigger [] } || EXISTS { ?step bcs:trigger [] }, "trigger ", "")), " $", "") AS ?conditions)
+    BIND(EXISTS { ?element a ?w_declared . FILTER(?w_declared IN (bcs:Thing, bcs:Concept)) } AS ?declared)
+  }
+  UNION
+  {
     VALUES (?type ?role ?self) { (bcs:ComputedAs "calendar" false) }
     ?statement a ?type ; a bcf:InForce .
     OPTIONAL { ?statement bcs:subject ?w_from }
@@ -2276,6 +2539,21 @@ WHERE {
     ?n0 bcs:result ?n1 .
     ?n1 bcs:per ?element .
     BIND("cases.result.per" AS ?field)
+    BIND(IF(?self, ?statement, COALESCE(?w_from, ?statement)) AS ?from)
+    BIND("" AS ?slot)
+    BIND(COALESCE(STR(?w_description), "") AS ?condition)
+    BIND(REPLACE(CONCAT(IF(EXISTS { ?statement bcs:when [] }, "when ", ""), IF(EXISTS { ?statement bcs:when_any [] }, "when_any ", ""), IF(EXISTS { ?statement bcs:unless [] }, "unless ", ""), IF(EXISTS { ?statement bcs:even_if [] }, "even_if ", ""), IF(EXISTS { ?statement bcs:especially_when [] }, "especially_when ", ""), IF(EXISTS { ?statement bcs:valid_while [] }, "valid_while ", ""), IF(EXISTS { ?statement bcs:trigger [] }, "trigger ", "")), " $", "") AS ?conditions)
+    BIND(EXISTS { ?element a ?w_declared . FILTER(?w_declared IN (bcs:Thing, bcs:Concept)) } AS ?declared)
+  }
+  UNION
+  {
+    VALUES (?type ?role ?self) { (bcs:ComputedAs "unit_from" false) (bcs:RecordMatch "unit_from" false) }
+    ?statement a ?type ; a bcf:InForce .
+    OPTIONAL { ?statement bcs:subject ?w_from }
+    ?statement bcs:cases ?n0 .
+    ?n0 bcs:result ?n1 .
+    ?n1 bcs:unit_from ?element .
+    BIND("cases.result.unit_from" AS ?field)
     BIND(IF(?self, ?statement, COALESCE(?w_from, ?statement)) AS ?from)
     BIND("" AS ?slot)
     BIND(COALESCE(STR(?w_description), "") AS ?condition)
@@ -2369,6 +2647,22 @@ WHERE {
     ?n1 bcs:values ?n2 .
     ?n2 bcs:per ?element .
     BIND("cases.when.values.per" AS ?field)
+    BIND(IF(?self, ?statement, COALESCE(?w_from, ?statement)) AS ?from)
+    BIND("" AS ?slot)
+    BIND(COALESCE(STR(?w_description), "") AS ?condition)
+    BIND(REPLACE(CONCAT(IF(EXISTS { ?statement bcs:when [] }, "when ", ""), IF(EXISTS { ?statement bcs:when_any [] }, "when_any ", ""), IF(EXISTS { ?statement bcs:unless [] }, "unless ", ""), IF(EXISTS { ?statement bcs:even_if [] }, "even_if ", ""), IF(EXISTS { ?statement bcs:especially_when [] }, "especially_when ", ""), IF(EXISTS { ?statement bcs:valid_while [] }, "valid_while ", ""), IF(EXISTS { ?statement bcs:trigger [] }, "trigger ", "")), " $", "") AS ?conditions)
+    BIND(EXISTS { ?element a ?w_declared . FILTER(?w_declared IN (bcs:Thing, bcs:Concept)) } AS ?declared)
+  }
+  UNION
+  {
+    VALUES (?type ?role ?self) { (bcs:ComputedAs "unit_from" false) (bcs:RecordMatch "unit_from" false) }
+    ?statement a ?type ; a bcf:InForce .
+    OPTIONAL { ?statement bcs:subject ?w_from }
+    ?statement bcs:cases ?n0 .
+    ?n0 bcs:when ?n1 .
+    ?n1 bcs:values ?n2 .
+    ?n2 bcs:unit_from ?element .
+    BIND("cases.when.values.unit_from" AS ?field)
     BIND(IF(?self, ?statement, COALESCE(?w_from, ?statement)) AS ?from)
     BIND("" AS ?slot)
     BIND(COALESCE(STR(?w_description), "") AS ?condition)
@@ -2674,6 +2968,39 @@ WHERE {
   }
   UNION
   {
+    VALUES (?type ?role ?self) { (bcs:Appoints "unit_from" false) (bcs:BelongsTo "unit_from" false) (bcs:Caveat "unit_from" false) (bcs:ComputedAs "unit_from" false) (bcs:Contains "unit_from" false) (bcs:CorrelatesWith "unit_from" false) (bcs:Covers "unit_from" false) (bcs:CreatedBy "unit_from" false) (bcs:Definition "unit_from" false) (bcs:DerivedFrom "unit_from" false) (bcs:DescribedIn "unit_from" false) (bcs:EscalatesTo "unit_from" false) (bcs:Example "unit_from" false) (bcs:Gap "unit_from" false) (bcs:GovernedBy "unit_from" false) (bcs:Groups "unit_from" false) (bcs:Habit "unit_from" false) (bcs:Has "unit_from" false) (bcs:HasAccess "unit_from" false) (bcs:HasGrain "unit_from" false) (bcs:HasProperty "unit_from" false) (bcs:HasStatus "unit_from" false) (bcs:HasValues "unit_from" false) (bcs:Heads "unit_from" false) (bcs:HoldsRole "unit_from" false) (bcs:IdentifiedBy "unit_from" false) (bcs:ImplementedBy "unit_from" false) (bcs:Indicates "unit_from" false) (bcs:Influences "unit_from" false) (bcs:IsA "unit_from" false) (bcs:JoinsTo "unit_from" false) (bcs:Mapping "unit_from" false) (bcs:MemberOf "unit_from" false) (bcs:Overlaps "unit_from" false) (bcs:PartOf "unit_from" false) (bcs:RecordMatch "unit_from" false) (bcs:ReportsTo "unit_from" false) (bcs:Represents "unit_from" false) (bcs:ResponsibleFor "unit_from" false) (bcs:Rule "unit_from" true) (bcs:RuleSet "unit_from" true) (bcs:Sequence "unit_from" false) (bcs:Serves "unit_from" false) (bcs:SynonymOf "unit_from" false) (bcs:Template "unit_from" false) (bcs:Transition "unit_from" false) (bcs:Triggers "unit_from" false) (bcs:UsedFor "unit_from" false) (bcs:WorksWith "unit_from" false) }
+    ?statement a ?type ; a bcf:InForce .
+    OPTIONAL { ?statement bcs:subject ?w_from }
+    ?statement bcs:especially_when ?n0 .
+    ?n0 bcs:values ?n1 .
+    ?n1 bcs:unit_from ?element .
+    OPTIONAL { ?n0 bcs:description ?w_description }
+    BIND("especially_when.values.unit_from" AS ?field)
+    BIND(IF(?self, ?statement, COALESCE(?w_from, ?statement)) AS ?from)
+    BIND("especially_when" AS ?slot)
+    BIND(COALESCE(STR(?w_description), "") AS ?condition)
+    BIND(REPLACE(CONCAT(IF(EXISTS { ?statement bcs:when [] }, "when ", ""), IF(EXISTS { ?statement bcs:when_any [] }, "when_any ", ""), IF(EXISTS { ?statement bcs:unless [] }, "unless ", ""), IF(EXISTS { ?statement bcs:even_if [] }, "even_if ", ""), IF(EXISTS { ?statement bcs:especially_when [] }, "especially_when ", ""), IF(EXISTS { ?statement bcs:valid_while [] }, "valid_while ", ""), IF(EXISTS { ?statement bcs:trigger [] }, "trigger ", "")), " $", "") AS ?conditions)
+    BIND(EXISTS { ?element a ?w_declared . FILTER(?w_declared IN (bcs:Thing, bcs:Concept)) } AS ?declared)
+  }
+  UNION
+  {
+    VALUES (?type ?role ?self) { (bcs:Procedure "unit_from" true) }
+    ?statement a ?type ; a bcf:InForce .
+    ?statement bcs:steps ?step .
+    ?step bcs:order ?order .
+    ?step bcs:especially_when ?n0 .
+    ?n0 bcs:values ?n1 .
+    ?n1 bcs:unit_from ?element .
+    OPTIONAL { ?n0 bcs:description ?w_description }
+    BIND(CONCAT("steps.", STR(?order), ".especially_when.values.unit_from") AS ?field)
+    BIND(IF(?self, ?statement, COALESCE(?w_from, ?statement)) AS ?from)
+    BIND("especially_when" AS ?slot)
+    BIND(COALESCE(STR(?w_description), "") AS ?condition)
+    BIND(REPLACE(CONCAT(IF(EXISTS { ?statement bcs:when [] } || EXISTS { ?step bcs:when [] }, "when ", ""), IF(EXISTS { ?statement bcs:when_any [] } || EXISTS { ?step bcs:when_any [] }, "when_any ", ""), IF(EXISTS { ?statement bcs:unless [] } || EXISTS { ?step bcs:unless [] }, "unless ", ""), IF(EXISTS { ?statement bcs:even_if [] } || EXISTS { ?step bcs:even_if [] }, "even_if ", ""), IF(EXISTS { ?statement bcs:especially_when [] } || EXISTS { ?step bcs:especially_when [] }, "especially_when ", ""), IF(EXISTS { ?statement bcs:valid_while [] } || EXISTS { ?step bcs:valid_while [] }, "valid_while ", ""), IF(EXISTS { ?statement bcs:trigger [] } || EXISTS { ?step bcs:trigger [] }, "trigger ", "")), " $", "") AS ?conditions)
+    BIND(EXISTS { ?element a ?w_declared . FILTER(?w_declared IN (bcs:Thing, bcs:Concept)) } AS ?declared)
+  }
+  UNION
+  {
     VALUES (?type ?role ?self) { (bcs:Appoints "reacts_to" false) (bcs:BelongsTo "reacts_to" false) (bcs:Caveat "reacts_to" false) (bcs:ComputedAs "reacts_to" false) (bcs:Contains "reacts_to" false) (bcs:CorrelatesWith "reacts_to" false) (bcs:Covers "reacts_to" false) (bcs:CreatedBy "reacts_to" false) (bcs:Definition "reacts_to" false) (bcs:DerivedFrom "reacts_to" false) (bcs:DescribedIn "reacts_to" false) (bcs:EscalatesTo "reacts_to" false) (bcs:Example "reacts_to" false) (bcs:Gap "reacts_to" false) (bcs:GovernedBy "reacts_to" false) (bcs:Groups "reacts_to" false) (bcs:Habit "reacts_to" false) (bcs:Has "reacts_to" false) (bcs:HasAccess "reacts_to" false) (bcs:HasGrain "reacts_to" false) (bcs:HasProperty "reacts_to" false) (bcs:HasStatus "reacts_to" false) (bcs:HasValues "reacts_to" false) (bcs:Heads "reacts_to" false) (bcs:HoldsRole "reacts_to" false) (bcs:IdentifiedBy "reacts_to" false) (bcs:ImplementedBy "reacts_to" false) (bcs:Indicates "causes" false) (bcs:Influences "reacts_to" false) (bcs:IsA "reacts_to" false) (bcs:JoinsTo "reacts_to" false) (bcs:Mapping "reacts_to" false) (bcs:MemberOf "reacts_to" false) (bcs:Overlaps "reacts_to" false) (bcs:PartOf "reacts_to" false) (bcs:RecordMatch "reacts_to" false) (bcs:ReportsTo "reacts_to" false) (bcs:Represents "reacts_to" false) (bcs:ResponsibleFor "reacts_to" false) (bcs:Rule "reacts_to" true) (bcs:RuleSet "reacts_to" true) (bcs:Sequence "reacts_to" false) (bcs:Serves "reacts_to" false) (bcs:SynonymOf "reacts_to" false) (bcs:Template "reacts_to" false) (bcs:Transition "state_input" false) (bcs:Triggers "reacts_to" false) (bcs:UsedFor "reacts_to" false) (bcs:WorksWith "reacts_to" false) }
     ?statement a ?type ; a bcf:InForce .
     OPTIONAL { ?statement bcs:subject ?w_from }
@@ -2866,7 +3193,40 @@ WHERE {
   }
   UNION
   {
-    VALUES (?type ?role ?self) { (bcs:ComputedAs "filters_on" false) (bcs:HasAccess "filters_on" false) }
+    VALUES (?type ?role ?self) { (bcs:Appoints "unit_from" false) (bcs:BelongsTo "unit_from" false) (bcs:Caveat "unit_from" false) (bcs:ComputedAs "unit_from" false) (bcs:Contains "unit_from" false) (bcs:CorrelatesWith "unit_from" false) (bcs:Covers "unit_from" false) (bcs:CreatedBy "unit_from" false) (bcs:Definition "unit_from" false) (bcs:DerivedFrom "unit_from" false) (bcs:DescribedIn "unit_from" false) (bcs:EscalatesTo "unit_from" false) (bcs:Example "unit_from" false) (bcs:Gap "unit_from" false) (bcs:GovernedBy "unit_from" false) (bcs:Groups "unit_from" false) (bcs:Habit "unit_from" false) (bcs:Has "unit_from" false) (bcs:HasAccess "unit_from" false) (bcs:HasGrain "unit_from" false) (bcs:HasProperty "unit_from" false) (bcs:HasStatus "unit_from" false) (bcs:HasValues "unit_from" false) (bcs:Heads "unit_from" false) (bcs:HoldsRole "unit_from" false) (bcs:IdentifiedBy "unit_from" false) (bcs:ImplementedBy "unit_from" false) (bcs:Indicates "unit_from" false) (bcs:Influences "unit_from" false) (bcs:IsA "unit_from" false) (bcs:JoinsTo "unit_from" false) (bcs:Mapping "unit_from" false) (bcs:MemberOf "unit_from" false) (bcs:Overlaps "unit_from" false) (bcs:PartOf "unit_from" false) (bcs:RecordMatch "unit_from" false) (bcs:ReportsTo "unit_from" false) (bcs:Represents "unit_from" false) (bcs:ResponsibleFor "unit_from" false) (bcs:Rule "unit_from" true) (bcs:RuleSet "unit_from" true) (bcs:Sequence "unit_from" false) (bcs:Serves "unit_from" false) (bcs:SynonymOf "unit_from" false) (bcs:Template "unit_from" false) (bcs:Transition "unit_from" false) (bcs:Triggers "unit_from" false) (bcs:UsedFor "unit_from" false) (bcs:WorksWith "unit_from" false) }
+    ?statement a ?type ; a bcf:InForce .
+    OPTIONAL { ?statement bcs:subject ?w_from }
+    ?statement bcs:even_if ?n0 .
+    ?n0 bcs:values ?n1 .
+    ?n1 bcs:unit_from ?element .
+    OPTIONAL { ?n0 bcs:description ?w_description }
+    BIND("even_if.values.unit_from" AS ?field)
+    BIND(IF(?self, ?statement, COALESCE(?w_from, ?statement)) AS ?from)
+    BIND("even_if" AS ?slot)
+    BIND(COALESCE(STR(?w_description), "") AS ?condition)
+    BIND(REPLACE(CONCAT(IF(EXISTS { ?statement bcs:when [] }, "when ", ""), IF(EXISTS { ?statement bcs:when_any [] }, "when_any ", ""), IF(EXISTS { ?statement bcs:unless [] }, "unless ", ""), IF(EXISTS { ?statement bcs:even_if [] }, "even_if ", ""), IF(EXISTS { ?statement bcs:especially_when [] }, "especially_when ", ""), IF(EXISTS { ?statement bcs:valid_while [] }, "valid_while ", ""), IF(EXISTS { ?statement bcs:trigger [] }, "trigger ", "")), " $", "") AS ?conditions)
+    BIND(EXISTS { ?element a ?w_declared . FILTER(?w_declared IN (bcs:Thing, bcs:Concept)) } AS ?declared)
+  }
+  UNION
+  {
+    VALUES (?type ?role ?self) { (bcs:Procedure "unit_from" true) }
+    ?statement a ?type ; a bcf:InForce .
+    ?statement bcs:steps ?step .
+    ?step bcs:order ?order .
+    ?step bcs:even_if ?n0 .
+    ?n0 bcs:values ?n1 .
+    ?n1 bcs:unit_from ?element .
+    OPTIONAL { ?n0 bcs:description ?w_description }
+    BIND(CONCAT("steps.", STR(?order), ".even_if.values.unit_from") AS ?field)
+    BIND(IF(?self, ?statement, COALESCE(?w_from, ?statement)) AS ?from)
+    BIND("even_if" AS ?slot)
+    BIND(COALESCE(STR(?w_description), "") AS ?condition)
+    BIND(REPLACE(CONCAT(IF(EXISTS { ?statement bcs:when [] } || EXISTS { ?step bcs:when [] }, "when ", ""), IF(EXISTS { ?statement bcs:when_any [] } || EXISTS { ?step bcs:when_any [] }, "when_any ", ""), IF(EXISTS { ?statement bcs:unless [] } || EXISTS { ?step bcs:unless [] }, "unless ", ""), IF(EXISTS { ?statement bcs:even_if [] } || EXISTS { ?step bcs:even_if [] }, "even_if ", ""), IF(EXISTS { ?statement bcs:especially_when [] } || EXISTS { ?step bcs:especially_when [] }, "especially_when ", ""), IF(EXISTS { ?statement bcs:valid_while [] } || EXISTS { ?step bcs:valid_while [] }, "valid_while ", ""), IF(EXISTS { ?statement bcs:trigger [] } || EXISTS { ?step bcs:trigger [] }, "trigger ", "")), " $", "") AS ?conditions)
+    BIND(EXISTS { ?element a ?w_declared . FILTER(?w_declared IN (bcs:Thing, bcs:Concept)) } AS ?declared)
+  }
+  UNION
+  {
+    VALUES (?type ?role ?self) { (bcs:ComputedAs "filters_on" false) (bcs:HasAccess "filters_on" false) (bcs:ImplementedBy "filters_on" false) }
     ?statement a ?type ; a bcf:InForce .
     OPTIONAL { ?statement bcs:subject ?w_from }
     ?statement bcs:filters ?n0 .
@@ -2880,7 +3240,7 @@ WHERE {
   }
   UNION
   {
-    VALUES (?type ?role ?self) { (bcs:ComputedAs "filters_on" false) (bcs:HasAccess "filters_on" false) }
+    VALUES (?type ?role ?self) { (bcs:ComputedAs "filters_on" false) (bcs:HasAccess "filters_on" false) (bcs:ImplementedBy "filters_on" false) }
     ?statement a ?type ; a bcf:InForce .
     OPTIONAL { ?statement bcs:subject ?w_from }
     ?statement bcs:filters ?n0 .
@@ -2894,7 +3254,7 @@ WHERE {
   }
   UNION
   {
-    VALUES (?type ?role ?self) { (bcs:ComputedAs "filters_on" false) (bcs:HasAccess "filters_on" false) }
+    VALUES (?type ?role ?self) { (bcs:ComputedAs "filters_on" false) (bcs:HasAccess "filters_on" false) (bcs:ImplementedBy "filters_on" false) }
     ?statement a ?type ; a bcf:InForce .
     OPTIONAL { ?statement bcs:subject ?w_from }
     ?statement bcs:filters ?n0 .
@@ -2908,7 +3268,7 @@ WHERE {
   }
   UNION
   {
-    VALUES (?type ?role ?self) { (bcs:ComputedAs "filters_on" false) (bcs:HasAccess "filters_on" false) }
+    VALUES (?type ?role ?self) { (bcs:ComputedAs "filters_on" false) (bcs:HasAccess "filters_on" false) (bcs:ImplementedBy "filters_on" false) }
     ?statement a ?type ; a bcf:InForce .
     OPTIONAL { ?statement bcs:subject ?w_from }
     ?statement bcs:filters ?n0 .
@@ -2923,7 +3283,7 @@ WHERE {
   }
   UNION
   {
-    VALUES (?type ?role ?self) { (bcs:ComputedAs "filters_on" false) (bcs:HasAccess "filters_on" false) }
+    VALUES (?type ?role ?self) { (bcs:ComputedAs "filters_on" false) (bcs:HasAccess "filters_on" false) (bcs:ImplementedBy "filters_on" false) }
     ?statement a ?type ; a bcf:InForce .
     OPTIONAL { ?statement bcs:subject ?w_from }
     ?statement bcs:filters ?n0 .
@@ -2938,13 +3298,28 @@ WHERE {
   }
   UNION
   {
-    VALUES (?type ?role ?self) { (bcs:ComputedAs "filters_on" false) (bcs:HasAccess "filters_on" false) }
+    VALUES (?type ?role ?self) { (bcs:ComputedAs "filters_on" false) (bcs:HasAccess "filters_on" false) (bcs:ImplementedBy "filters_on" false) }
     ?statement a ?type ; a bcf:InForce .
     OPTIONAL { ?statement bcs:subject ?w_from }
     ?statement bcs:filters ?n0 .
     ?n0 bcs:values ?n1 .
     ?n1 bcs:per ?element .
     BIND("filters.values.per" AS ?field)
+    BIND(IF(?self, ?statement, COALESCE(?w_from, ?statement)) AS ?from)
+    BIND("" AS ?slot)
+    BIND(COALESCE(STR(?w_description), "") AS ?condition)
+    BIND(REPLACE(CONCAT(IF(EXISTS { ?statement bcs:when [] }, "when ", ""), IF(EXISTS { ?statement bcs:when_any [] }, "when_any ", ""), IF(EXISTS { ?statement bcs:unless [] }, "unless ", ""), IF(EXISTS { ?statement bcs:even_if [] }, "even_if ", ""), IF(EXISTS { ?statement bcs:especially_when [] }, "especially_when ", ""), IF(EXISTS { ?statement bcs:valid_while [] }, "valid_while ", ""), IF(EXISTS { ?statement bcs:trigger [] }, "trigger ", "")), " $", "") AS ?conditions)
+    BIND(EXISTS { ?element a ?w_declared . FILTER(?w_declared IN (bcs:Thing, bcs:Concept)) } AS ?declared)
+  }
+  UNION
+  {
+    VALUES (?type ?role ?self) { (bcs:ComputedAs "unit_from" false) (bcs:HasAccess "unit_from" false) (bcs:ImplementedBy "unit_from" false) }
+    ?statement a ?type ; a bcf:InForce .
+    OPTIONAL { ?statement bcs:subject ?w_from }
+    ?statement bcs:filters ?n0 .
+    ?n0 bcs:values ?n1 .
+    ?n1 bcs:unit_from ?element .
+    BIND("filters.values.unit_from" AS ?field)
     BIND(IF(?self, ?statement, COALESCE(?w_from, ?statement)) AS ?from)
     BIND("" AS ?slot)
     BIND(COALESCE(STR(?w_description), "") AS ?condition)
@@ -3165,6 +3540,20 @@ WHERE {
   }
   UNION
   {
+    VALUES (?type ?role ?self) { (bcs:Appoints "calendar" false) (bcs:BelongsTo "calendar" false) (bcs:Caveat "calendar" false) (bcs:ComputedAs "calendar" false) (bcs:Contains "calendar" false) (bcs:CorrelatesWith "calendar" false) (bcs:Covers "calendar" false) (bcs:CreatedBy "calendar" false) (bcs:Definition "calendar" false) (bcs:DerivedFrom "calendar" false) (bcs:DescribedIn "calendar" false) (bcs:EscalatesTo "calendar" false) (bcs:Example "calendar" false) (bcs:Gap "calendar" false) (bcs:GovernedBy "calendar" false) (bcs:Groups "calendar" false) (bcs:Habit "calendar" false) (bcs:Has "calendar" false) (bcs:HasAccess "calendar" false) (bcs:HasGrain "calendar" false) (bcs:HasProperty "calendar" false) (bcs:HasStatus "calendar" false) (bcs:HasValues "calendar" false) (bcs:Heads "calendar" false) (bcs:HoldsRole "calendar" false) (bcs:IdentifiedBy "calendar" false) (bcs:ImplementedBy "calendar" false) (bcs:Indicates "calendar" false) (bcs:Influences "calendar" false) (bcs:IsA "calendar" false) (bcs:JoinsTo "calendar" false) (bcs:Mapping "calendar" false) (bcs:MemberOf "calendar" false) (bcs:Overlaps "calendar" false) (bcs:PartOf "calendar" false) (bcs:RecordMatch "calendar" false) (bcs:ReportsTo "calendar" false) (bcs:Represents "calendar" false) (bcs:ResponsibleFor "calendar" false) (bcs:Rule "calendar" true) (bcs:RuleSet "calendar" true) (bcs:Sequence "calendar" false) (bcs:Serves "calendar" false) (bcs:SynonymOf "calendar" false) (bcs:Template "calendar" false) (bcs:Transition "calendar" false) (bcs:Triggers "calendar" false) (bcs:UsedFor "calendar" false) (bcs:WorksWith "calendar" false) }
+    ?statement a ?type ; a bcf:InForce .
+    OPTIONAL { ?statement bcs:subject ?w_from }
+    ?statement bcs:period ?n0 .
+    ?n0 bcs:calendar ?element .
+    BIND("period.calendar" AS ?field)
+    BIND(IF(?self, ?statement, COALESCE(?w_from, ?statement)) AS ?from)
+    BIND("" AS ?slot)
+    BIND(COALESCE(STR(?w_description), "") AS ?condition)
+    BIND(REPLACE(CONCAT(IF(EXISTS { ?statement bcs:when [] }, "when ", ""), IF(EXISTS { ?statement bcs:when_any [] }, "when_any ", ""), IF(EXISTS { ?statement bcs:unless [] }, "unless ", ""), IF(EXISTS { ?statement bcs:even_if [] }, "even_if ", ""), IF(EXISTS { ?statement bcs:especially_when [] }, "especially_when ", ""), IF(EXISTS { ?statement bcs:valid_while [] }, "valid_while ", ""), IF(EXISTS { ?statement bcs:trigger [] }, "trigger ", "")), " $", "") AS ?conditions)
+    BIND(EXISTS { ?element a ?w_declared . FILTER(?w_declared IN (bcs:Thing, bcs:Concept)) } AS ?declared)
+  }
+  UNION
+  {
     VALUES (?type ?role ?self) { (bcs:Appoints "period" false) (bcs:BelongsTo "period" false) (bcs:Caveat "period" false) (bcs:ComputedAs "period" false) (bcs:Contains "period" false) (bcs:CorrelatesWith "period" false) (bcs:Covers "period" false) (bcs:CreatedBy "period" false) (bcs:Definition "period" false) (bcs:DerivedFrom "period" false) (bcs:DescribedIn "period" false) (bcs:EscalatesTo "period" false) (bcs:Example "period" false) (bcs:Gap "period" false) (bcs:GovernedBy "period" false) (bcs:Groups "period" false) (bcs:Habit "period" false) (bcs:Has "period" false) (bcs:HasAccess "period" false) (bcs:HasGrain "period" false) (bcs:HasProperty "period" false) (bcs:HasStatus "period" false) (bcs:HasValues "period" false) (bcs:Heads "period" false) (bcs:HoldsRole "period" false) (bcs:IdentifiedBy "period" false) (bcs:ImplementedBy "period" false) (bcs:Indicates "period" false) (bcs:Influences "period" false) (bcs:IsA "period" false) (bcs:JoinsTo "period" false) (bcs:Mapping "period" false) (bcs:MemberOf "period" false) (bcs:Overlaps "period" false) (bcs:PartOf "period" false) (bcs:RecordMatch "period" false) (bcs:ReportsTo "period" false) (bcs:Represents "period" false) (bcs:ResponsibleFor "period" false) (bcs:Rule "period" true) (bcs:RuleSet "period" true) (bcs:Sequence "period" false) (bcs:Serves "period" false) (bcs:SynonymOf "period" false) (bcs:Template "period" false) (bcs:Transition "period" false) (bcs:Triggers "period" false) (bcs:UsedFor "period" false) (bcs:WorksWith "period" false) }
     ?statement a ?type ; a bcf:InForce .
     OPTIONAL { ?statement bcs:subject ?w_from }
@@ -3227,6 +3616,20 @@ WHERE {
     ?statement bcs:property_value ?n0 .
     ?n0 bcs:per ?element .
     BIND("property_value.per" AS ?field)
+    BIND(IF(?self, ?statement, COALESCE(?w_from, ?statement)) AS ?from)
+    BIND("" AS ?slot)
+    BIND(COALESCE(STR(?w_description), "") AS ?condition)
+    BIND(REPLACE(CONCAT(IF(EXISTS { ?statement bcs:when [] }, "when ", ""), IF(EXISTS { ?statement bcs:when_any [] }, "when_any ", ""), IF(EXISTS { ?statement bcs:unless [] }, "unless ", ""), IF(EXISTS { ?statement bcs:even_if [] }, "even_if ", ""), IF(EXISTS { ?statement bcs:especially_when [] }, "especially_when ", ""), IF(EXISTS { ?statement bcs:valid_while [] }, "valid_while ", ""), IF(EXISTS { ?statement bcs:trigger [] }, "trigger ", "")), " $", "") AS ?conditions)
+    BIND(EXISTS { ?element a ?w_declared . FILTER(?w_declared IN (bcs:Thing, bcs:Concept)) } AS ?declared)
+  }
+  UNION
+  {
+    VALUES (?type ?role ?self) { (bcs:HasProperty "unit_from" false) }
+    ?statement a ?type ; a bcf:InForce .
+    OPTIONAL { ?statement bcs:subject ?w_from }
+    ?statement bcs:property_value ?n0 .
+    ?n0 bcs:unit_from ?element .
+    BIND("property_value.unit_from" AS ?field)
     BIND(IF(?self, ?statement, COALESCE(?w_from, ?statement)) AS ?from)
     BIND("" AS ?slot)
     BIND(COALESCE(STR(?w_description), "") AS ?condition)
@@ -3334,6 +3737,20 @@ WHERE {
     ?statement bcs:share ?n0 .
     ?n0 bcs:per ?element .
     BIND("share.per" AS ?field)
+    BIND(IF(?self, ?statement, COALESCE(?w_from, ?statement)) AS ?from)
+    BIND("" AS ?slot)
+    BIND(COALESCE(STR(?w_description), "") AS ?condition)
+    BIND(REPLACE(CONCAT(IF(EXISTS { ?statement bcs:when [] }, "when ", ""), IF(EXISTS { ?statement bcs:when_any [] }, "when_any ", ""), IF(EXISTS { ?statement bcs:unless [] }, "unless ", ""), IF(EXISTS { ?statement bcs:even_if [] }, "even_if ", ""), IF(EXISTS { ?statement bcs:especially_when [] }, "especially_when ", ""), IF(EXISTS { ?statement bcs:valid_while [] }, "valid_while ", ""), IF(EXISTS { ?statement bcs:trigger [] }, "trigger ", "")), " $", "") AS ?conditions)
+    BIND(EXISTS { ?element a ?w_declared . FILTER(?w_declared IN (bcs:Thing, bcs:Concept)) } AS ?declared)
+  }
+  UNION
+  {
+    VALUES (?type ?role ?self) { (bcs:Appoints "unit_from" false) (bcs:BelongsTo "unit_from" false) (bcs:Caveat "unit_from" false) (bcs:ComputedAs "unit_from" false) (bcs:Contains "unit_from" false) (bcs:CorrelatesWith "unit_from" false) (bcs:Covers "unit_from" false) (bcs:CreatedBy "unit_from" false) (bcs:Definition "unit_from" false) (bcs:DerivedFrom "unit_from" false) (bcs:DescribedIn "unit_from" false) (bcs:EscalatesTo "unit_from" false) (bcs:Example "unit_from" false) (bcs:Gap "unit_from" false) (bcs:GovernedBy "unit_from" false) (bcs:Groups "unit_from" false) (bcs:Habit "unit_from" false) (bcs:Has "unit_from" false) (bcs:HasAccess "unit_from" false) (bcs:HasGrain "unit_from" false) (bcs:HasProperty "unit_from" false) (bcs:HasStatus "unit_from" false) (bcs:HasValues "unit_from" false) (bcs:Heads "unit_from" false) (bcs:HoldsRole "unit_from" false) (bcs:IdentifiedBy "unit_from" false) (bcs:ImplementedBy "unit_from" false) (bcs:Indicates "unit_from" false) (bcs:Influences "unit_from" false) (bcs:IsA "unit_from" false) (bcs:JoinsTo "unit_from" false) (bcs:Mapping "unit_from" false) (bcs:MemberOf "unit_from" false) (bcs:Overlaps "unit_from" false) (bcs:PartOf "unit_from" false) (bcs:RecordMatch "unit_from" false) (bcs:ReportsTo "unit_from" false) (bcs:Represents "unit_from" false) (bcs:ResponsibleFor "unit_from" false) (bcs:Rule "unit_from" true) (bcs:RuleSet "unit_from" true) (bcs:Sequence "unit_from" false) (bcs:Serves "unit_from" false) (bcs:SynonymOf "unit_from" false) (bcs:Template "unit_from" false) (bcs:Transition "unit_from" false) (bcs:Triggers "unit_from" false) (bcs:UsedFor "unit_from" false) (bcs:WorksWith "unit_from" false) }
+    ?statement a ?type ; a bcf:InForce .
+    OPTIONAL { ?statement bcs:subject ?w_from }
+    ?statement bcs:share ?n0 .
+    ?n0 bcs:unit_from ?element .
+    BIND("share.unit_from" AS ?field)
     BIND(IF(?self, ?statement, COALESCE(?w_from, ?statement)) AS ?from)
     BIND("" AS ?slot)
     BIND(COALESCE(STR(?w_description), "") AS ?condition)
@@ -3522,6 +3939,37 @@ WHERE {
   }
   UNION
   {
+    VALUES (?type ?role ?self) { (bcs:Appoints "unit_from" false) (bcs:BelongsTo "unit_from" false) (bcs:Caveat "unit_from" false) (bcs:ComputedAs "unit_from" false) (bcs:Contains "unit_from" false) (bcs:CorrelatesWith "unit_from" false) (bcs:Covers "unit_from" false) (bcs:CreatedBy "unit_from" false) (bcs:Definition "unit_from" false) (bcs:DerivedFrom "unit_from" false) (bcs:DescribedIn "unit_from" false) (bcs:EscalatesTo "unit_from" false) (bcs:Example "unit_from" false) (bcs:Gap "unit_from" false) (bcs:GovernedBy "unit_from" false) (bcs:Groups "unit_from" false) (bcs:Habit "unit_from" false) (bcs:Has "unit_from" false) (bcs:HasAccess "unit_from" false) (bcs:HasGrain "unit_from" false) (bcs:HasProperty "unit_from" false) (bcs:HasStatus "unit_from" false) (bcs:HasValues "unit_from" false) (bcs:Heads "unit_from" false) (bcs:HoldsRole "unit_from" false) (bcs:IdentifiedBy "unit_from" false) (bcs:ImplementedBy "unit_from" false) (bcs:Indicates "unit_from" false) (bcs:Influences "unit_from" false) (bcs:IsA "unit_from" false) (bcs:JoinsTo "unit_from" false) (bcs:Mapping "unit_from" false) (bcs:MemberOf "unit_from" false) (bcs:Overlaps "unit_from" false) (bcs:PartOf "unit_from" false) (bcs:Procedure "unit_from" true) (bcs:RecordMatch "unit_from" false) (bcs:ReportsTo "unit_from" false) (bcs:Represents "unit_from" false) (bcs:ResponsibleFor "unit_from" false) (bcs:Rule "unit_from" true) (bcs:RuleSet "unit_from" true) (bcs:Sequence "unit_from" false) (bcs:Serves "unit_from" false) (bcs:SynonymOf "unit_from" false) (bcs:Template "unit_from" false) (bcs:Transition "unit_from" false) (bcs:Triggers "unit_from" false) (bcs:UsedFor "unit_from" false) (bcs:WorksWith "unit_from" false) }
+    ?statement a ?type ; a bcf:InForce .
+    OPTIONAL { ?statement bcs:subject ?w_from }
+    ?statement bcs:so_that ?n0 .
+    ?n0 bcs:values ?n1 .
+    ?n1 bcs:unit_from ?element .
+    BIND("so_that.values.unit_from" AS ?field)
+    BIND(IF(?self, ?statement, COALESCE(?w_from, ?statement)) AS ?from)
+    BIND("" AS ?slot)
+    BIND(COALESCE(STR(?w_description), "") AS ?condition)
+    BIND(REPLACE(CONCAT(IF(EXISTS { ?statement bcs:when [] }, "when ", ""), IF(EXISTS { ?statement bcs:when_any [] }, "when_any ", ""), IF(EXISTS { ?statement bcs:unless [] }, "unless ", ""), IF(EXISTS { ?statement bcs:even_if [] }, "even_if ", ""), IF(EXISTS { ?statement bcs:especially_when [] }, "especially_when ", ""), IF(EXISTS { ?statement bcs:valid_while [] }, "valid_while ", ""), IF(EXISTS { ?statement bcs:trigger [] }, "trigger ", "")), " $", "") AS ?conditions)
+    BIND(EXISTS { ?element a ?w_declared . FILTER(?w_declared IN (bcs:Thing, bcs:Concept)) } AS ?declared)
+  }
+  UNION
+  {
+    VALUES (?type ?role ?self) { (bcs:Procedure "unit_from" true) }
+    ?statement a ?type ; a bcf:InForce .
+    ?statement bcs:steps ?step .
+    ?step bcs:order ?order .
+    ?step bcs:so_that ?n0 .
+    ?n0 bcs:values ?n1 .
+    ?n1 bcs:unit_from ?element .
+    BIND(CONCAT("steps.", STR(?order), ".so_that.values.unit_from") AS ?field)
+    BIND(IF(?self, ?statement, COALESCE(?w_from, ?statement)) AS ?from)
+    BIND("" AS ?slot)
+    BIND(COALESCE(STR(?w_description), "") AS ?condition)
+    BIND(REPLACE(CONCAT(IF(EXISTS { ?statement bcs:when [] } || EXISTS { ?step bcs:when [] }, "when ", ""), IF(EXISTS { ?statement bcs:when_any [] } || EXISTS { ?step bcs:when_any [] }, "when_any ", ""), IF(EXISTS { ?statement bcs:unless [] } || EXISTS { ?step bcs:unless [] }, "unless ", ""), IF(EXISTS { ?statement bcs:even_if [] } || EXISTS { ?step bcs:even_if [] }, "even_if ", ""), IF(EXISTS { ?statement bcs:especially_when [] } || EXISTS { ?step bcs:especially_when [] }, "especially_when ", ""), IF(EXISTS { ?statement bcs:valid_while [] } || EXISTS { ?step bcs:valid_while [] }, "valid_while ", ""), IF(EXISTS { ?statement bcs:trigger [] } || EXISTS { ?step bcs:trigger [] }, "trigger ", "")), " $", "") AS ?conditions)
+    BIND(EXISTS { ?element a ?w_declared . FILTER(?w_declared IN (bcs:Thing, bcs:Concept)) } AS ?declared)
+  }
+  UNION
+  {
     VALUES (?type ?role ?self) { (bcs:Appoints "stated_by" false) (bcs:BelongsTo "stated_by" false) (bcs:Caveat "stated_by" false) (bcs:ComputedAs "stated_by" false) (bcs:Contains "stated_by" false) (bcs:CorrelatesWith "stated_by" false) (bcs:Covers "stated_by" false) (bcs:CreatedBy "stated_by" false) (bcs:Definition "stated_by" false) (bcs:DerivedFrom "stated_by" false) (bcs:DescribedIn "stated_by" false) (bcs:EscalatesTo "stated_by" false) (bcs:Example "stated_by" false) (bcs:Gap "stated_by" false) (bcs:GovernedBy "stated_by" false) (bcs:Groups "stated_by" false) (bcs:Habit "stated_by" false) (bcs:Has "stated_by" false) (bcs:HasAccess "stated_by" false) (bcs:HasGrain "stated_by" false) (bcs:HasProperty "stated_by" false) (bcs:HasStatus "stated_by" false) (bcs:HasValues "stated_by" false) (bcs:Heads "stated_by" false) (bcs:HoldsRole "stated_by" false) (bcs:IdentifiedBy "stated_by" false) (bcs:ImplementedBy "stated_by" false) (bcs:Indicates "stated_by" false) (bcs:Influences "stated_by" false) (bcs:IsA "stated_by" false) (bcs:JoinsTo "stated_by" false) (bcs:Mapping "stated_by" false) (bcs:MemberOf "stated_by" false) (bcs:Overlaps "stated_by" false) (bcs:PartOf "stated_by" false) (bcs:Procedure "stated_by" true) (bcs:RecordMatch "stated_by" false) (bcs:ReportsTo "stated_by" false) (bcs:Represents "stated_by" false) (bcs:ResponsibleFor "stated_by" false) (bcs:Rule "stated_by" true) (bcs:RuleSet "stated_by" true) (bcs:Sequence "stated_by" false) (bcs:Serves "stated_by" false) (bcs:SynonymOf "stated_by" false) (bcs:Template "stated_by" false) (bcs:Transition "stated_by" false) (bcs:Triggers "stated_by" false) (bcs:UsedFor "stated_by" false) (bcs:WorksWith "stated_by" false) }
     ?statement a ?type ; a bcf:InForce .
     OPTIONAL { ?statement bcs:subject ?w_from }
@@ -3666,6 +4114,21 @@ WHERE {
     ?n1 bcs:per ?element .
     OPTIONAL { ?n0 bcs:description ?w_description }
     BIND("trigger.values.per" AS ?field)
+    BIND(IF(?self, ?statement, COALESCE(?w_from, ?statement)) AS ?from)
+    BIND("trigger" AS ?slot)
+    BIND(COALESCE(STR(?w_description), "") AS ?condition)
+    BIND(REPLACE(CONCAT(IF(EXISTS { ?statement bcs:when [] }, "when ", ""), IF(EXISTS { ?statement bcs:when_any [] }, "when_any ", ""), IF(EXISTS { ?statement bcs:unless [] }, "unless ", ""), IF(EXISTS { ?statement bcs:even_if [] }, "even_if ", ""), IF(EXISTS { ?statement bcs:especially_when [] }, "especially_when ", ""), IF(EXISTS { ?statement bcs:valid_while [] }, "valid_while ", ""), IF(EXISTS { ?statement bcs:trigger [] }, "trigger ", "")), " $", "") AS ?conditions)
+    BIND(EXISTS { ?element a ?w_declared . FILTER(?w_declared IN (bcs:Thing, bcs:Concept)) } AS ?declared)
+  }
+  UNION
+  {
+    VALUES (?type ?role ?self) { (bcs:Procedure "unit_from" true) }
+    ?statement a ?type ; a bcf:InForce .
+    ?statement bcs:trigger ?n0 .
+    ?n0 bcs:values ?n1 .
+    ?n1 bcs:unit_from ?element .
+    OPTIONAL { ?n0 bcs:description ?w_description }
+    BIND("trigger.values.unit_from" AS ?field)
     BIND(IF(?self, ?statement, COALESCE(?w_from, ?statement)) AS ?from)
     BIND("trigger" AS ?slot)
     BIND(COALESCE(STR(?w_description), "") AS ?condition)
@@ -3866,6 +4329,39 @@ WHERE {
   }
   UNION
   {
+    VALUES (?type ?role ?self) { (bcs:Appoints "unit_from" false) (bcs:BelongsTo "unit_from" false) (bcs:Caveat "unit_from" false) (bcs:ComputedAs "unit_from" false) (bcs:Contains "unit_from" false) (bcs:CorrelatesWith "unit_from" false) (bcs:Covers "unit_from" false) (bcs:CreatedBy "unit_from" false) (bcs:Definition "unit_from" false) (bcs:DerivedFrom "unit_from" false) (bcs:DescribedIn "unit_from" false) (bcs:EscalatesTo "unit_from" false) (bcs:Example "unit_from" false) (bcs:Gap "unit_from" false) (bcs:GovernedBy "unit_from" false) (bcs:Groups "unit_from" false) (bcs:Habit "unit_from" false) (bcs:Has "unit_from" false) (bcs:HasAccess "unit_from" false) (bcs:HasGrain "unit_from" false) (bcs:HasProperty "unit_from" false) (bcs:HasStatus "unit_from" false) (bcs:HasValues "unit_from" false) (bcs:Heads "unit_from" false) (bcs:HoldsRole "unit_from" false) (bcs:IdentifiedBy "unit_from" false) (bcs:ImplementedBy "unit_from" false) (bcs:Indicates "unit_from" false) (bcs:Influences "unit_from" false) (bcs:IsA "unit_from" false) (bcs:JoinsTo "unit_from" false) (bcs:Mapping "unit_from" false) (bcs:MemberOf "unit_from" false) (bcs:Overlaps "unit_from" false) (bcs:PartOf "unit_from" false) (bcs:Procedure "unit_from" true) (bcs:RecordMatch "unit_from" false) (bcs:ReportsTo "unit_from" false) (bcs:Represents "unit_from" false) (bcs:ResponsibleFor "unit_from" false) (bcs:Rule "unit_from" true) (bcs:RuleSet "unit_from" true) (bcs:Sequence "unit_from" false) (bcs:Serves "unit_from" false) (bcs:SynonymOf "unit_from" false) (bcs:Template "unit_from" false) (bcs:Transition "unit_from" false) (bcs:Triggers "unit_from" false) (bcs:UsedFor "unit_from" false) (bcs:WorksWith "unit_from" false) }
+    ?statement a ?type ; a bcf:InForce .
+    OPTIONAL { ?statement bcs:subject ?w_from }
+    ?statement bcs:unless ?n0 .
+    ?n0 bcs:values ?n1 .
+    ?n1 bcs:unit_from ?element .
+    OPTIONAL { ?n0 bcs:description ?w_description }
+    BIND("unless.values.unit_from" AS ?field)
+    BIND(IF(?self, ?statement, COALESCE(?w_from, ?statement)) AS ?from)
+    BIND("unless" AS ?slot)
+    BIND(COALESCE(STR(?w_description), "") AS ?condition)
+    BIND(REPLACE(CONCAT(IF(EXISTS { ?statement bcs:when [] }, "when ", ""), IF(EXISTS { ?statement bcs:when_any [] }, "when_any ", ""), IF(EXISTS { ?statement bcs:unless [] }, "unless ", ""), IF(EXISTS { ?statement bcs:even_if [] }, "even_if ", ""), IF(EXISTS { ?statement bcs:especially_when [] }, "especially_when ", ""), IF(EXISTS { ?statement bcs:valid_while [] }, "valid_while ", ""), IF(EXISTS { ?statement bcs:trigger [] }, "trigger ", "")), " $", "") AS ?conditions)
+    BIND(EXISTS { ?element a ?w_declared . FILTER(?w_declared IN (bcs:Thing, bcs:Concept)) } AS ?declared)
+  }
+  UNION
+  {
+    VALUES (?type ?role ?self) { (bcs:Procedure "unit_from" true) }
+    ?statement a ?type ; a bcf:InForce .
+    ?statement bcs:steps ?step .
+    ?step bcs:order ?order .
+    ?step bcs:unless ?n0 .
+    ?n0 bcs:values ?n1 .
+    ?n1 bcs:unit_from ?element .
+    OPTIONAL { ?n0 bcs:description ?w_description }
+    BIND(CONCAT("steps.", STR(?order), ".unless.values.unit_from") AS ?field)
+    BIND(IF(?self, ?statement, COALESCE(?w_from, ?statement)) AS ?from)
+    BIND("unless" AS ?slot)
+    BIND(COALESCE(STR(?w_description), "") AS ?condition)
+    BIND(REPLACE(CONCAT(IF(EXISTS { ?statement bcs:when [] } || EXISTS { ?step bcs:when [] }, "when ", ""), IF(EXISTS { ?statement bcs:when_any [] } || EXISTS { ?step bcs:when_any [] }, "when_any ", ""), IF(EXISTS { ?statement bcs:unless [] } || EXISTS { ?step bcs:unless [] }, "unless ", ""), IF(EXISTS { ?statement bcs:even_if [] } || EXISTS { ?step bcs:even_if [] }, "even_if ", ""), IF(EXISTS { ?statement bcs:especially_when [] } || EXISTS { ?step bcs:especially_when [] }, "especially_when ", ""), IF(EXISTS { ?statement bcs:valid_while [] } || EXISTS { ?step bcs:valid_while [] }, "valid_while ", ""), IF(EXISTS { ?statement bcs:trigger [] } || EXISTS { ?step bcs:trigger [] }, "trigger ", "")), " $", "") AS ?conditions)
+    BIND(EXISTS { ?element a ?w_declared . FILTER(?w_declared IN (bcs:Thing, bcs:Concept)) } AS ?declared)
+  }
+  UNION
+  {
     VALUES (?type ?role ?self) { (bcs:Appoints "reacts_to" false) (bcs:BelongsTo "reacts_to" false) (bcs:Caveat "reacts_to" false) (bcs:ComputedAs "reacts_to" false) (bcs:Contains "reacts_to" false) (bcs:CorrelatesWith "reacts_to" false) (bcs:Covers "reacts_to" false) (bcs:CreatedBy "reacts_to" false) (bcs:Definition "reacts_to" false) (bcs:DerivedFrom "reacts_to" false) (bcs:DescribedIn "reacts_to" false) (bcs:EscalatesTo "reacts_to" false) (bcs:Example "reacts_to" false) (bcs:Gap "reacts_to" false) (bcs:GovernedBy "reacts_to" false) (bcs:Groups "reacts_to" false) (bcs:Habit "reacts_to" false) (bcs:Has "reacts_to" false) (bcs:HasAccess "reacts_to" false) (bcs:HasGrain "reacts_to" false) (bcs:HasProperty "reacts_to" false) (bcs:HasStatus "reacts_to" false) (bcs:HasValues "reacts_to" false) (bcs:Heads "reacts_to" false) (bcs:HoldsRole "reacts_to" false) (bcs:IdentifiedBy "reacts_to" false) (bcs:ImplementedBy "reacts_to" false) (bcs:Indicates "causes" false) (bcs:Influences "reacts_to" false) (bcs:IsA "reacts_to" false) (bcs:JoinsTo "reacts_to" false) (bcs:Mapping "reacts_to" false) (bcs:MemberOf "reacts_to" false) (bcs:Overlaps "reacts_to" false) (bcs:PartOf "reacts_to" false) (bcs:RecordMatch "reacts_to" false) (bcs:ReportsTo "reacts_to" false) (bcs:Represents "reacts_to" false) (bcs:ResponsibleFor "reacts_to" false) (bcs:Rule "reacts_to" true) (bcs:RuleSet "reacts_to" true) (bcs:Sequence "reacts_to" false) (bcs:Serves "reacts_to" false) (bcs:SynonymOf "reacts_to" false) (bcs:Template "reacts_to" false) (bcs:Transition "state_input" false) (bcs:Triggers "reacts_to" false) (bcs:UsedFor "reacts_to" false) (bcs:WorksWith "reacts_to" false) }
     ?statement a ?type ; a bcf:InForce .
     OPTIONAL { ?statement bcs:subject ?w_from }
@@ -3959,6 +4455,22 @@ WHERE {
   }
   UNION
   {
+    VALUES (?type ?role ?self) { (bcs:Appoints "unit_from" false) (bcs:BelongsTo "unit_from" false) (bcs:Caveat "unit_from" false) (bcs:ComputedAs "unit_from" false) (bcs:Contains "unit_from" false) (bcs:CorrelatesWith "unit_from" false) (bcs:Covers "unit_from" false) (bcs:CreatedBy "unit_from" false) (bcs:Definition "unit_from" false) (bcs:DerivedFrom "unit_from" false) (bcs:DescribedIn "unit_from" false) (bcs:EscalatesTo "unit_from" false) (bcs:Example "unit_from" false) (bcs:Gap "unit_from" false) (bcs:GovernedBy "unit_from" false) (bcs:Groups "unit_from" false) (bcs:Habit "unit_from" false) (bcs:Has "unit_from" false) (bcs:HasAccess "unit_from" false) (bcs:HasGrain "unit_from" false) (bcs:HasProperty "unit_from" false) (bcs:HasStatus "unit_from" false) (bcs:HasValues "unit_from" false) (bcs:Heads "unit_from" false) (bcs:HoldsRole "unit_from" false) (bcs:IdentifiedBy "unit_from" false) (bcs:ImplementedBy "unit_from" false) (bcs:Indicates "unit_from" false) (bcs:Influences "unit_from" false) (bcs:IsA "unit_from" false) (bcs:JoinsTo "unit_from" false) (bcs:Mapping "unit_from" false) (bcs:MemberOf "unit_from" false) (bcs:Overlaps "unit_from" false) (bcs:PartOf "unit_from" false) (bcs:RecordMatch "unit_from" false) (bcs:ReportsTo "unit_from" false) (bcs:Represents "unit_from" false) (bcs:ResponsibleFor "unit_from" false) (bcs:Rule "unit_from" true) (bcs:RuleSet "unit_from" true) (bcs:Sequence "unit_from" false) (bcs:Serves "unit_from" false) (bcs:SynonymOf "unit_from" false) (bcs:Template "unit_from" false) (bcs:Transition "unit_from" false) (bcs:Triggers "unit_from" false) (bcs:UsedFor "unit_from" false) (bcs:WorksWith "unit_from" false) }
+    ?statement a ?type ; a bcf:InForce .
+    OPTIONAL { ?statement bcs:subject ?w_from }
+    ?statement bcs:valid_while ?n0 .
+    ?n0 bcs:values ?n1 .
+    ?n1 bcs:unit_from ?element .
+    OPTIONAL { ?n0 bcs:description ?w_description }
+    BIND("valid_while.values.unit_from" AS ?field)
+    BIND(IF(?self, ?statement, COALESCE(?w_from, ?statement)) AS ?from)
+    BIND("valid_while" AS ?slot)
+    BIND(COALESCE(STR(?w_description), "") AS ?condition)
+    BIND(REPLACE(CONCAT(IF(EXISTS { ?statement bcs:when [] }, "when ", ""), IF(EXISTS { ?statement bcs:when_any [] }, "when_any ", ""), IF(EXISTS { ?statement bcs:unless [] }, "unless ", ""), IF(EXISTS { ?statement bcs:even_if [] }, "even_if ", ""), IF(EXISTS { ?statement bcs:especially_when [] }, "especially_when ", ""), IF(EXISTS { ?statement bcs:valid_while [] }, "valid_while ", ""), IF(EXISTS { ?statement bcs:trigger [] }, "trigger ", "")), " $", "") AS ?conditions)
+    BIND(EXISTS { ?element a ?w_declared . FILTER(?w_declared IN (bcs:Thing, bcs:Concept)) } AS ?declared)
+  }
+  UNION
+  {
     VALUES (?type ?role ?self) { (bcs:ComputedAs "values" false) (bcs:HasValues "values" false) (bcs:Indicates "values" false) (bcs:Template "values" false) }
     ?statement a ?type ; a bcf:InForce .
     OPTIONAL { ?statement bcs:subject ?w_from }
@@ -3993,6 +4505,20 @@ WHERE {
     ?statement bcs:values ?n0 .
     ?n0 bcs:per ?element .
     BIND("values.per" AS ?field)
+    BIND(IF(?self, ?statement, COALESCE(?w_from, ?statement)) AS ?from)
+    BIND("" AS ?slot)
+    BIND(COALESCE(STR(?w_description), "") AS ?condition)
+    BIND(REPLACE(CONCAT(IF(EXISTS { ?statement bcs:when [] }, "when ", ""), IF(EXISTS { ?statement bcs:when_any [] }, "when_any ", ""), IF(EXISTS { ?statement bcs:unless [] }, "unless ", ""), IF(EXISTS { ?statement bcs:even_if [] }, "even_if ", ""), IF(EXISTS { ?statement bcs:especially_when [] }, "especially_when ", ""), IF(EXISTS { ?statement bcs:valid_while [] }, "valid_while ", ""), IF(EXISTS { ?statement bcs:trigger [] }, "trigger ", "")), " $", "") AS ?conditions)
+    BIND(EXISTS { ?element a ?w_declared . FILTER(?w_declared IN (bcs:Thing, bcs:Concept)) } AS ?declared)
+  }
+  UNION
+  {
+    VALUES (?type ?role ?self) { (bcs:ComputedAs "unit_from" false) (bcs:HasValues "unit_from" false) (bcs:Indicates "unit_from" false) (bcs:Template "unit_from" false) }
+    ?statement a ?type ; a bcf:InForce .
+    OPTIONAL { ?statement bcs:subject ?w_from }
+    ?statement bcs:values ?n0 .
+    ?n0 bcs:unit_from ?element .
+    BIND("values.unit_from" AS ?field)
     BIND(IF(?self, ?statement, COALESCE(?w_from, ?statement)) AS ?from)
     BIND("" AS ?slot)
     BIND(COALESCE(STR(?w_description), "") AS ?condition)
@@ -4206,6 +4732,39 @@ WHERE {
   }
   UNION
   {
+    VALUES (?type ?role ?self) { (bcs:Appoints "unit_from" false) (bcs:BelongsTo "unit_from" false) (bcs:Caveat "unit_from" false) (bcs:ComputedAs "unit_from" false) (bcs:Contains "unit_from" false) (bcs:CorrelatesWith "unit_from" false) (bcs:Covers "unit_from" false) (bcs:CreatedBy "unit_from" false) (bcs:Definition "unit_from" false) (bcs:DerivedFrom "unit_from" false) (bcs:DescribedIn "unit_from" false) (bcs:EscalatesTo "unit_from" false) (bcs:Example "unit_from" false) (bcs:Gap "unit_from" false) (bcs:GovernedBy "unit_from" false) (bcs:Groups "unit_from" false) (bcs:Habit "unit_from" false) (bcs:Has "unit_from" false) (bcs:HasAccess "unit_from" false) (bcs:HasGrain "unit_from" false) (bcs:HasProperty "unit_from" false) (bcs:HasStatus "unit_from" false) (bcs:HasValues "unit_from" false) (bcs:Heads "unit_from" false) (bcs:HoldsRole "unit_from" false) (bcs:IdentifiedBy "unit_from" false) (bcs:ImplementedBy "unit_from" false) (bcs:Indicates "unit_from" false) (bcs:Influences "unit_from" false) (bcs:IsA "unit_from" false) (bcs:JoinsTo "unit_from" false) (bcs:Mapping "unit_from" false) (bcs:MemberOf "unit_from" false) (bcs:Overlaps "unit_from" false) (bcs:PartOf "unit_from" false) (bcs:Procedure "unit_from" true) (bcs:RecordMatch "unit_from" false) (bcs:ReportsTo "unit_from" false) (bcs:Represents "unit_from" false) (bcs:ResponsibleFor "unit_from" false) (bcs:Rule "unit_from" true) (bcs:RuleSet "unit_from" true) (bcs:Sequence "unit_from" false) (bcs:Serves "unit_from" false) (bcs:SynonymOf "unit_from" false) (bcs:Template "unit_from" false) (bcs:Transition "unit_from" false) (bcs:Triggers "unit_from" false) (bcs:UsedFor "unit_from" false) (bcs:WorksWith "unit_from" false) }
+    ?statement a ?type ; a bcf:InForce .
+    OPTIONAL { ?statement bcs:subject ?w_from }
+    ?statement bcs:when ?n0 .
+    ?n0 bcs:values ?n1 .
+    ?n1 bcs:unit_from ?element .
+    OPTIONAL { ?n0 bcs:description ?w_description }
+    BIND("when.values.unit_from" AS ?field)
+    BIND(IF(?self, ?statement, COALESCE(?w_from, ?statement)) AS ?from)
+    BIND("when" AS ?slot)
+    BIND(COALESCE(STR(?w_description), "") AS ?condition)
+    BIND(REPLACE(CONCAT(IF(EXISTS { ?statement bcs:when [] }, "when ", ""), IF(EXISTS { ?statement bcs:when_any [] }, "when_any ", ""), IF(EXISTS { ?statement bcs:unless [] }, "unless ", ""), IF(EXISTS { ?statement bcs:even_if [] }, "even_if ", ""), IF(EXISTS { ?statement bcs:especially_when [] }, "especially_when ", ""), IF(EXISTS { ?statement bcs:valid_while [] }, "valid_while ", ""), IF(EXISTS { ?statement bcs:trigger [] }, "trigger ", "")), " $", "") AS ?conditions)
+    BIND(EXISTS { ?element a ?w_declared . FILTER(?w_declared IN (bcs:Thing, bcs:Concept)) } AS ?declared)
+  }
+  UNION
+  {
+    VALUES (?type ?role ?self) { (bcs:Procedure "unit_from" true) }
+    ?statement a ?type ; a bcf:InForce .
+    ?statement bcs:steps ?step .
+    ?step bcs:order ?order .
+    ?step bcs:when ?n0 .
+    ?n0 bcs:values ?n1 .
+    ?n1 bcs:unit_from ?element .
+    OPTIONAL { ?n0 bcs:description ?w_description }
+    BIND(CONCAT("steps.", STR(?order), ".when.values.unit_from") AS ?field)
+    BIND(IF(?self, ?statement, COALESCE(?w_from, ?statement)) AS ?from)
+    BIND("when" AS ?slot)
+    BIND(COALESCE(STR(?w_description), "") AS ?condition)
+    BIND(REPLACE(CONCAT(IF(EXISTS { ?statement bcs:when [] } || EXISTS { ?step bcs:when [] }, "when ", ""), IF(EXISTS { ?statement bcs:when_any [] } || EXISTS { ?step bcs:when_any [] }, "when_any ", ""), IF(EXISTS { ?statement bcs:unless [] } || EXISTS { ?step bcs:unless [] }, "unless ", ""), IF(EXISTS { ?statement bcs:even_if [] } || EXISTS { ?step bcs:even_if [] }, "even_if ", ""), IF(EXISTS { ?statement bcs:especially_when [] } || EXISTS { ?step bcs:especially_when [] }, "especially_when ", ""), IF(EXISTS { ?statement bcs:valid_while [] } || EXISTS { ?step bcs:valid_while [] }, "valid_while ", ""), IF(EXISTS { ?statement bcs:trigger [] } || EXISTS { ?step bcs:trigger [] }, "trigger ", "")), " $", "") AS ?conditions)
+    BIND(EXISTS { ?element a ?w_declared . FILTER(?w_declared IN (bcs:Thing, bcs:Concept)) } AS ?declared)
+  }
+  UNION
+  {
     VALUES (?type ?role ?self) { (bcs:Appoints "reacts_to" false) (bcs:BelongsTo "reacts_to" false) (bcs:Caveat "reacts_to" false) (bcs:ComputedAs "reacts_to" false) (bcs:Contains "reacts_to" false) (bcs:CorrelatesWith "reacts_to" false) (bcs:Covers "reacts_to" false) (bcs:CreatedBy "reacts_to" false) (bcs:Definition "reacts_to" false) (bcs:DerivedFrom "reacts_to" false) (bcs:DescribedIn "reacts_to" false) (bcs:EscalatesTo "reacts_to" false) (bcs:Example "reacts_to" false) (bcs:Gap "reacts_to" false) (bcs:GovernedBy "reacts_to" false) (bcs:Groups "reacts_to" false) (bcs:Habit "reacts_to" false) (bcs:Has "reacts_to" false) (bcs:HasAccess "reacts_to" false) (bcs:HasGrain "reacts_to" false) (bcs:HasProperty "reacts_to" false) (bcs:HasStatus "reacts_to" false) (bcs:HasValues "reacts_to" false) (bcs:Heads "reacts_to" false) (bcs:HoldsRole "reacts_to" false) (bcs:IdentifiedBy "reacts_to" false) (bcs:ImplementedBy "reacts_to" false) (bcs:Indicates "causes" false) (bcs:Influences "reacts_to" false) (bcs:IsA "reacts_to" false) (bcs:JoinsTo "reacts_to" false) (bcs:Mapping "reacts_to" false) (bcs:MemberOf "reacts_to" false) (bcs:Overlaps "reacts_to" false) (bcs:PartOf "reacts_to" false) (bcs:RecordMatch "reacts_to" false) (bcs:ReportsTo "reacts_to" false) (bcs:Represents "reacts_to" false) (bcs:ResponsibleFor "reacts_to" false) (bcs:Rule "reacts_to" true) (bcs:RuleSet "reacts_to" true) (bcs:Sequence "reacts_to" false) (bcs:Serves "reacts_to" false) (bcs:SynonymOf "reacts_to" false) (bcs:Template "reacts_to" false) (bcs:Transition "state_input" false) (bcs:Triggers "reacts_to" false) (bcs:UsedFor "reacts_to" false) (bcs:WorksWith "reacts_to" false) }
     ?statement a ?type ; a bcf:InForce .
     OPTIONAL { ?statement bcs:subject ?w_from }
@@ -4398,6 +4957,39 @@ WHERE {
   }
   UNION
   {
+    VALUES (?type ?role ?self) { (bcs:Appoints "unit_from" false) (bcs:BelongsTo "unit_from" false) (bcs:Caveat "unit_from" false) (bcs:ComputedAs "unit_from" false) (bcs:Contains "unit_from" false) (bcs:CorrelatesWith "unit_from" false) (bcs:Covers "unit_from" false) (bcs:CreatedBy "unit_from" false) (bcs:Definition "unit_from" false) (bcs:DerivedFrom "unit_from" false) (bcs:DescribedIn "unit_from" false) (bcs:EscalatesTo "unit_from" false) (bcs:Example "unit_from" false) (bcs:Gap "unit_from" false) (bcs:GovernedBy "unit_from" false) (bcs:Groups "unit_from" false) (bcs:Habit "unit_from" false) (bcs:Has "unit_from" false) (bcs:HasAccess "unit_from" false) (bcs:HasGrain "unit_from" false) (bcs:HasProperty "unit_from" false) (bcs:HasStatus "unit_from" false) (bcs:HasValues "unit_from" false) (bcs:Heads "unit_from" false) (bcs:HoldsRole "unit_from" false) (bcs:IdentifiedBy "unit_from" false) (bcs:ImplementedBy "unit_from" false) (bcs:Indicates "unit_from" false) (bcs:Influences "unit_from" false) (bcs:IsA "unit_from" false) (bcs:JoinsTo "unit_from" false) (bcs:Mapping "unit_from" false) (bcs:MemberOf "unit_from" false) (bcs:Overlaps "unit_from" false) (bcs:PartOf "unit_from" false) (bcs:RecordMatch "unit_from" false) (bcs:ReportsTo "unit_from" false) (bcs:Represents "unit_from" false) (bcs:ResponsibleFor "unit_from" false) (bcs:Rule "unit_from" true) (bcs:RuleSet "unit_from" true) (bcs:Sequence "unit_from" false) (bcs:Serves "unit_from" false) (bcs:SynonymOf "unit_from" false) (bcs:Template "unit_from" false) (bcs:Transition "unit_from" false) (bcs:Triggers "unit_from" false) (bcs:UsedFor "unit_from" false) (bcs:WorksWith "unit_from" false) }
+    ?statement a ?type ; a bcf:InForce .
+    OPTIONAL { ?statement bcs:subject ?w_from }
+    ?statement bcs:when_any ?n0 .
+    ?n0 bcs:values ?n1 .
+    ?n1 bcs:unit_from ?element .
+    OPTIONAL { ?n0 bcs:description ?w_description }
+    BIND("when_any.values.unit_from" AS ?field)
+    BIND(IF(?self, ?statement, COALESCE(?w_from, ?statement)) AS ?from)
+    BIND("when_any" AS ?slot)
+    BIND(COALESCE(STR(?w_description), "") AS ?condition)
+    BIND(REPLACE(CONCAT(IF(EXISTS { ?statement bcs:when [] }, "when ", ""), IF(EXISTS { ?statement bcs:when_any [] }, "when_any ", ""), IF(EXISTS { ?statement bcs:unless [] }, "unless ", ""), IF(EXISTS { ?statement bcs:even_if [] }, "even_if ", ""), IF(EXISTS { ?statement bcs:especially_when [] }, "especially_when ", ""), IF(EXISTS { ?statement bcs:valid_while [] }, "valid_while ", ""), IF(EXISTS { ?statement bcs:trigger [] }, "trigger ", "")), " $", "") AS ?conditions)
+    BIND(EXISTS { ?element a ?w_declared . FILTER(?w_declared IN (bcs:Thing, bcs:Concept)) } AS ?declared)
+  }
+  UNION
+  {
+    VALUES (?type ?role ?self) { (bcs:Procedure "unit_from" true) }
+    ?statement a ?type ; a bcf:InForce .
+    ?statement bcs:steps ?step .
+    ?step bcs:order ?order .
+    ?step bcs:when_any ?n0 .
+    ?n0 bcs:values ?n1 .
+    ?n1 bcs:unit_from ?element .
+    OPTIONAL { ?n0 bcs:description ?w_description }
+    BIND(CONCAT("steps.", STR(?order), ".when_any.values.unit_from") AS ?field)
+    BIND(IF(?self, ?statement, COALESCE(?w_from, ?statement)) AS ?from)
+    BIND("when_any" AS ?slot)
+    BIND(COALESCE(STR(?w_description), "") AS ?condition)
+    BIND(REPLACE(CONCAT(IF(EXISTS { ?statement bcs:when [] } || EXISTS { ?step bcs:when [] }, "when ", ""), IF(EXISTS { ?statement bcs:when_any [] } || EXISTS { ?step bcs:when_any [] }, "when_any ", ""), IF(EXISTS { ?statement bcs:unless [] } || EXISTS { ?step bcs:unless [] }, "unless ", ""), IF(EXISTS { ?statement bcs:even_if [] } || EXISTS { ?step bcs:even_if [] }, "even_if ", ""), IF(EXISTS { ?statement bcs:especially_when [] } || EXISTS { ?step bcs:especially_when [] }, "especially_when ", ""), IF(EXISTS { ?statement bcs:valid_while [] } || EXISTS { ?step bcs:valid_while [] }, "valid_while ", ""), IF(EXISTS { ?statement bcs:trigger [] } || EXISTS { ?step bcs:trigger [] }, "trigger ", "")), " $", "") AS ?conditions)
+    BIND(EXISTS { ?element a ?w_declared . FILTER(?w_declared IN (bcs:Thing, bcs:Concept)) } AS ?declared)
+  }
+  UNION
+  {
     VALUES (?type ?role ?self) { (bcs:Appoints "with_consent_of" false) }
     ?statement a ?type ; a bcf:InForce .
     OPTIONAL { ?statement bcs:subject ?w_from }
@@ -4490,6 +5082,35 @@ WHERE {
     ?step bcs:within ?n0 .
     ?n0 bcs:per ?element .
     BIND(CONCAT("steps.", STR(?order), ".within.per") AS ?field)
+    BIND(IF(?self, ?statement, COALESCE(?w_from, ?statement)) AS ?from)
+    BIND("" AS ?slot)
+    BIND(COALESCE(STR(?w_description), "") AS ?condition)
+    BIND(REPLACE(CONCAT(IF(EXISTS { ?statement bcs:when [] } || EXISTS { ?step bcs:when [] }, "when ", ""), IF(EXISTS { ?statement bcs:when_any [] } || EXISTS { ?step bcs:when_any [] }, "when_any ", ""), IF(EXISTS { ?statement bcs:unless [] } || EXISTS { ?step bcs:unless [] }, "unless ", ""), IF(EXISTS { ?statement bcs:even_if [] } || EXISTS { ?step bcs:even_if [] }, "even_if ", ""), IF(EXISTS { ?statement bcs:especially_when [] } || EXISTS { ?step bcs:especially_when [] }, "especially_when ", ""), IF(EXISTS { ?statement bcs:valid_while [] } || EXISTS { ?step bcs:valid_while [] }, "valid_while ", ""), IF(EXISTS { ?statement bcs:trigger [] } || EXISTS { ?step bcs:trigger [] }, "trigger ", "")), " $", "") AS ?conditions)
+    BIND(EXISTS { ?element a ?w_declared . FILTER(?w_declared IN (bcs:Thing, bcs:Concept)) } AS ?declared)
+  }
+  UNION
+  {
+    VALUES (?type ?role ?self) { (bcs:Appoints "unit_from" false) (bcs:BelongsTo "unit_from" false) (bcs:Caveat "unit_from" false) (bcs:ComputedAs "unit_from" false) (bcs:Contains "unit_from" false) (bcs:CorrelatesWith "unit_from" false) (bcs:Covers "unit_from" false) (bcs:CreatedBy "unit_from" false) (bcs:Definition "unit_from" false) (bcs:DerivedFrom "unit_from" false) (bcs:DescribedIn "unit_from" false) (bcs:EscalatesTo "unit_from" false) (bcs:Example "unit_from" false) (bcs:Gap "unit_from" false) (bcs:GovernedBy "unit_from" false) (bcs:Groups "unit_from" false) (bcs:Habit "unit_from" false) (bcs:Has "unit_from" false) (bcs:HasAccess "unit_from" false) (bcs:HasGrain "unit_from" false) (bcs:HasProperty "unit_from" false) (bcs:HasStatus "unit_from" false) (bcs:HasValues "unit_from" false) (bcs:Heads "unit_from" false) (bcs:HoldsRole "unit_from" false) (bcs:IdentifiedBy "unit_from" false) (bcs:ImplementedBy "unit_from" false) (bcs:Indicates "unit_from" false) (bcs:Influences "unit_from" false) (bcs:IsA "unit_from" false) (bcs:JoinsTo "unit_from" false) (bcs:Mapping "unit_from" false) (bcs:MemberOf "unit_from" false) (bcs:Overlaps "unit_from" false) (bcs:PartOf "unit_from" false) (bcs:RecordMatch "unit_from" false) (bcs:ReportsTo "unit_from" false) (bcs:Represents "unit_from" false) (bcs:ResponsibleFor "unit_from" false) (bcs:Rule "unit_from" true) (bcs:RuleSet "unit_from" true) (bcs:Sequence "unit_from" false) (bcs:Serves "unit_from" false) (bcs:SynonymOf "unit_from" false) (bcs:Template "unit_from" false) (bcs:Transition "unit_from" false) (bcs:Triggers "unit_from" false) (bcs:UsedFor "unit_from" false) (bcs:WorksWith "unit_from" false) }
+    ?statement a ?type ; a bcf:InForce .
+    OPTIONAL { ?statement bcs:subject ?w_from }
+    ?statement bcs:within ?n0 .
+    ?n0 bcs:unit_from ?element .
+    BIND("within.unit_from" AS ?field)
+    BIND(IF(?self, ?statement, COALESCE(?w_from, ?statement)) AS ?from)
+    BIND("" AS ?slot)
+    BIND(COALESCE(STR(?w_description), "") AS ?condition)
+    BIND(REPLACE(CONCAT(IF(EXISTS { ?statement bcs:when [] }, "when ", ""), IF(EXISTS { ?statement bcs:when_any [] }, "when_any ", ""), IF(EXISTS { ?statement bcs:unless [] }, "unless ", ""), IF(EXISTS { ?statement bcs:even_if [] }, "even_if ", ""), IF(EXISTS { ?statement bcs:especially_when [] }, "especially_when ", ""), IF(EXISTS { ?statement bcs:valid_while [] }, "valid_while ", ""), IF(EXISTS { ?statement bcs:trigger [] }, "trigger ", "")), " $", "") AS ?conditions)
+    BIND(EXISTS { ?element a ?w_declared . FILTER(?w_declared IN (bcs:Thing, bcs:Concept)) } AS ?declared)
+  }
+  UNION
+  {
+    VALUES (?type ?role ?self) { (bcs:Procedure "unit_from" true) }
+    ?statement a ?type ; a bcf:InForce .
+    ?statement bcs:steps ?step .
+    ?step bcs:order ?order .
+    ?step bcs:within ?n0 .
+    ?n0 bcs:unit_from ?element .
+    BIND(CONCAT("steps.", STR(?order), ".within.unit_from") AS ?field)
     BIND(IF(?self, ?statement, COALESCE(?w_from, ?statement)) AS ?from)
     BIND("" AS ?slot)
     BIND(COALESCE(STR(?w_description), "") AS ?condition)

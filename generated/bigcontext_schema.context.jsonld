@@ -447,6 +447,10 @@
          "@type": "@id",
          "@id": "from_field"
       },
+      "nearest": {
+         "@type": "xsd:boolean",
+         "@id": "nearest"
+      },
       "normalize": {
          "@context": {
             "text": "skos:notation",
@@ -464,6 +468,9 @@
       },
       "label": {
          "@id": "label"
+      },
+      "language": {
+         "@id": "language"
       },
       "line": {
          "@context": {
@@ -575,6 +582,10 @@
          "@type": "@id",
          "@id": "overrides"
       },
+      "partition": {
+         "@type": "xsd:boolean",
+         "@id": "partition"
+      },
       "per": {
          "@type": "@id",
          "@id": "per"
@@ -590,9 +601,17 @@
       "end": {
          "@id": "end"
       },
+      "last": {
+         "@type": "xsd:integer",
+         "@id": "last"
+      },
       "named": {
          "@type": "@id",
          "@id": "named"
+      },
+      "previous": {
+         "@type": "xsd:integer",
+         "@id": "previous"
       },
       "start": {
          "@id": "start"
@@ -653,6 +672,10 @@
       },
       "recurrence": {
          "@id": "recurrence"
+      },
+      "recursive": {
+         "@type": "xsd:boolean",
+         "@id": "recursive"
       },
       "reporting_grain": {
          "@context": {
@@ -861,6 +884,10 @@
       },
       "unit": {
          "@id": "unit"
+      },
+      "unit_from": {
+         "@type": "@id",
+         "@id": "unit_from"
       },
       "value": {
          "@id": "value"

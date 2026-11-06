@@ -72,7 +72,9 @@ party (person, team, unit, post, organization, agent or access_group); other ele
 a section) stay in the record. A dotted line becomes `dotted_line_to` and a backup or delegate becomes
 `backs_up`; reasoning follows neither. Fields under `extensions` stay in the record and never become facts. A
 RecordMatch is never a fact and never `same_as`: records matching is not two elements meaning the same. Access
-limited to some rows (HasAccess with `filters`) is still the access fact; the rows stay in the record.
+limited to some rows (HasAccess with `filters`) is still the access fact; the rows stay in the record. So is a
+concept that is some rows of a table (ImplementedBy with `filters`, from 1.3): the `implemented_by` fact, its filters in
+the record.
 
 | Statement | Facts (`bcf:`) |
 |---|---|
@@ -142,7 +144,7 @@ in 1.2.
 | `belongs_to` | The thing a state or event concept is of. | `object` (BelongsTo) |
 | `binds` | Who must comply with a rule. | `binds` |
 | `by` | The party, tool or system that carries out an action. | `action.by`; `step action.by` |
-| `calendar` | The calendar a metric's grains, windows and offsets follow. | `calendar` |
+| `calendar` | The calendar a metric's grains, windows and offsets follow. | `calendar`; `period` |
 | `calls` | The procedure a step runs. | `step calls` |
 | `cases` | An element a calculation's cases name. | `cases` |
 | `causes` | The effect an influence has; in an Indicates, an element its conditions name. | `especially_when` (Indicates); `even_if` (Indicates); `object` (Influences); `unless` (Indicates); `valid_while` (Indicates); `when` (Indicates); `when_any` (Indicates) |
@@ -204,6 +206,7 @@ in 1.2.
 | `subject` | What the statement is about, the party that acts, the job that runs, the cause. | `subject` |
 | `supersedes` | A statement this one replaces. | `supersedes` |
 | `time_dimension` | The time column a measure is counted by. | `time_dimension` |
+| `unit_from` | The column that holds the unit or currency of a value, row by row (added in 1.3). | `action.values`; `action.when`; `because`; `cases`; `especially_when`; `even_if`; `filters`; `property_value`; `share`; `so_that`; `step action.values`; `step action.when`; `step because`; `step branches`; `step especially_when`; `step even_if`; `step so_that`; `step unless`; `step when`; `step when_any`; `step within`; `trigger`; `unless`; `valid_while`; `values`; `when`; `when_any`; `within` |
 | `used_for` | The activity or question type an element serves. | `object` (UsedFor) |
 | `values` | An element a statement's values name (a unit, the event a duration is counted from). | `action.values`; `step action.values`; `values` |
 | `via` | The channel, tool or intermediary something goes through. | `via` (DerivedFrom) |

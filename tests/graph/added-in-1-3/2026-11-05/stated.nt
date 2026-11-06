@@ -1,0 +1,7 @@
+<urn:bigcontext-schema:sales-data-notes/c.active_customers> <https://w3id.org/bigcontext-schema/facts/implemented_by> <urn:bigcontext-schema:sales-data-notes/t.customers> .
+<urn:bigcontext-schema:sales-data-notes/c.returns> <https://w3id.org/bigcontext-schema/facts/influences> <urn:bigcontext-schema:sales-data-notes/c.forecast> .
+<urn:bigcontext-schema:sales-data-notes/s.15> <https://w3id.org/bigcontext-schema/facts/about> <urn:bigcontext-schema:sales-data-notes/t.churn_model> .
+<urn:bigcontext-schema:sales-data-notes/t.events> <https://w3id.org/bigcontext-schema/facts/time_column> <urn:bigcontext-schema:sales-data-notes/t.events.event_date> .
+<urn:bigcontext-schema:sales-data-notes/t.orders> <https://w3id.org/bigcontext-schema/facts/joins_to> <urn:bigcontext-schema:sales-data-notes/t.customer_history> .
+<urn:bigcontext-schema:sales-data-notes/t.orders> <https://w3id.org/bigcontext-schema/facts/joins_to> <urn:bigcontext-schema:sales-data-notes/t.fx_rates> .
+<urn:bigcontext-schema:sales-data-notes/t.orders> <https://w3id.org/bigcontext-schema/facts/joins_to> <urn:bigcontext-schema:sales-data-notes/t.prices> .

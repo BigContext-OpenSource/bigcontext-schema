@@ -1,0 +1,368 @@
+schema_version: 1.3.0
+source:
+  id: sales-data-notes
+  title: Sales data notes
+  as_of: '2026-11-05'
+  language: en
+things:
+- id: t.orders
+  label: orders
+  thing_type: table
+  evidence:
+  - quote: Each order joins
+- id: t.orders.customer_id
+  label: customer_id
+  thing_type: field
+  evidence:
+  - quote: with its customer_id
+- id: t.orders.order_date
+  label: order date
+  thing_type: field
+  evidence:
+  - quote: include the order date
+- id: t.orders.amount
+  label: amount
+  thing_type: field
+  evidence:
+  - quote: orders.amount
+- id: t.orders.currency_code
+  label: currency_code
+  thing_type: field
+  evidence:
+  - quote: orders.currency_code
+- id: t.customer_history
+  label: customer_history
+  thing_type: table
+  evidence:
+  - quote: the customer_history row
+- id: t.customer_history.customer_id
+  label: customer_id
+  thing_type: field
+  evidence:
+  - quote: with its customer_id
+- id: t.customer_history.valid_from
+  label: valid_from
+  thing_type: field
+  evidence:
+  - quote: whose valid_from and valid_to
+- id: t.customer_history.valid_to
+  label: valid_to
+  thing_type: field
+  evidence:
+  - quote: whose valid_from and valid_to
+- id: t.fx_rates
+  label: fx_rates
+  thing_type: table
+  evidence:
+  - quote: the latest fx_rates row
+- id: t.fx_rates.currency_code
+  label: currency_code
+  thing_type: field
+  evidence:
+  - quote: for its currency_code
+- id: t.fx_rates.rate_date
+  label: rate date
+  thing_type: field
+  evidence:
+  - quote: on or before its order date
+- id: t.employees
+  label: employees
+  thing_type: table
+  evidence:
+  - quote: employees.manager_id
+- id: t.employees.manager_id
+  label: manager_id
+  thing_type: field
+  evidence:
+  - quote: employees.manager_id
+- id: t.employees.employee_id
+  label: employee
+  thing_type: field
+  evidence:
+  - quote: the employee's manager
+- id: t.events
+  label: events
+  thing_type: table
+  evidence:
+  - quote: events is partitioned
+- id: t.events.event_date
+  label: event_date
+  thing_type: field
+  evidence:
+  - quote: by event_date
+- id: t.customers
+  label: customers
+  thing_type: table
+  evidence:
+  - quote: are customers whose status is active
+- id: t.customers.status
+  label: status
+  thing_type: field
+  evidence:
+  - quote: whose status is active
+- id: t.churn_model
+  label: churn model
+  thing_type: ml_model
+  evidence:
+  - quote: The churn model
+- id: t.prices
+  label: prices
+  thing_type: table
+  evidence:
+  - quote: A price applies
+- id: t.prices.valid_from
+  label: valid_from
+  thing_type: field
+  evidence:
+  - quote: on or after its valid_from
+- id: t.prices.valid_until
+  label: valid_until
+  thing_type: field
+  evidence:
+  - quote: before its valid_until
+- id: t.customers.email
+  label: email
+  thing_type: field
+  evidence:
+  - quote: on the same email
+- id: t.customers.customer_id
+  label: customer_id
+  thing_type: field
+  evidence:
+  - quote: a different customer_id
+concepts:
+- id: c.revenue
+  label: revenue
+  concept_type: metric
+  evidence:
+  - quote: the German word for revenue
+- id: c.manager
+  label: manager
+  concept_type: role
+  evidence:
+  - quote: the employee's manager
+- id: c.active_customers
+  label: Active customers
+  concept_type: segment
+  evidence:
+  - quote: Active customers
+- id: c.sales
+  label: sales
+  concept_type: metric
+  evidence:
+  - quote: The last 3 days of sales
+- id: c.refunds
+  label: refund data
+  concept_type: metric
+  evidence:
+  - quote: The refund data
+- id: c.fiscal_calendar
+  label: fiscal year
+  concept_type: calendar
+  evidence:
+  - quote: Our fiscal year
+- id: c.order_completed
+  label: Order Completed event
+  concept_type: event
+  evidence:
+  - quote: The Order Completed event
+- id: c.returns
+  label: Returns
+  concept_type: metric
+  evidence:
+  - quote: Returns have a minor effect
+- id: c.forecast
+  label: forecast
+  concept_type: metric
+  evidence:
+  - quote: on the forecast
+statements:
+- id: s.1
+  predicate: JoinsTo
+  subject: t.orders
+  object: t.customer_history
+  cardinality: many_to_one
+  key_pairs:
+  - from_field: t.orders.customer_id
+    to_field: t.customer_history.customer_id
+  - from_field: t.orders.order_date
+    to_field: t.customer_history.valid_from
+    comparator: in
+  - from_field: t.orders.order_date
+    to_field: t.customer_history.valid_to
+    comparator: at_most
+  evidence:
+  - quote: Each order joins the customer_history row with its customer_id whose valid_from and valid_to include the order date.
+- id: s.2
+  predicate: JoinsTo
+  subject: t.orders
+  object: t.fx_rates
+  cardinality: many_to_one
+  key_pairs:
+  - from_field: t.orders.currency_code
+    to_field: t.fx_rates.currency_code
+  - from_field: t.orders.order_date
+    to_field: t.fx_rates.rate_date
+    comparator: at_least
+    nearest: true
+  evidence:
+  - quote: Each order joins the latest fx_rates row on or before its order date, for its currency_code.
+- id: s.3
+  predicate: HasProperty
+  subject: t.orders.amount
+  standard_attribute: unit
+  property_value:
+    value: currency
+    unit_from: t.orders.currency_code
+  evidence:
+  - quote: orders.amount is in the currency given by orders.currency_code.
+- id: s.4
+  predicate: SynonymOf
+  term: Umsatz
+  subject: c.revenue
+  usage: always
+  language: de
+  evidence:
+  - quote: Umsatz is the German word for revenue.
+- id: s.5
+  predicate: JoinsTo
+  subject: t.employees
+  object: t.employees
+  role: c.manager
+  cardinality: many_to_one
+  recursive: true
+  key_pairs:
+  - from_field: t.employees.manager_id
+    to_field: t.employees.employee_id
+  evidence:
+  - quote: employees.manager_id points to the employee's manager, to any depth.
+- id: s.6
+  predicate: Contains
+  subject: t.events
+  object: t.events.event_date
+  data_role: time_dimension
+  partition: true
+  evidence:
+  - quote: events is partitioned by event_date.
+- id: s.7
+  predicate: ImplementedBy
+  subject: c.active_customers
+  object: t.customers
+  filters:
+  - description: status is active
+    field: t.customers.status
+    comparator: equal
+    values:
+    - value: active
+  evidence:
+  - quote: Active customers are customers whose status is active.
+- id: s.17
+  predicate: JoinsTo
+  subject: t.orders
+  object: t.prices
+  cardinality: many_to_one
+  key_pairs:
+  - from_field: t.orders.order_date
+    to_field: t.prices.valid_from
+    comparator: at_least
+  - from_field: t.orders.order_date
+    to_field: t.prices.valid_until
+    comparator: less_than
+  evidence:
+  - quote: A price applies to an order placed on or after its valid_from and before its valid_until.
+- id: s.18
+  predicate: JoinsTo
+  subject: t.customers
+  object: t.customers
+  cardinality: many_to_many
+  key_pairs:
+  - from_field: t.customers.email
+    to_field: t.customers.email
+  - from_field: t.customers.customer_id
+    to_field: t.customers.customer_id
+    comparator: not_equal
+  evidence:
+  - quote: Duplicate customers are found by joining customers to itself on the same email and a different customer_id.
+- id: s.8
+  predicate: Caveat
+  subject: c.sales
+  text: may still change
+  because:
+  - description: orders can arrive late
+    about:
+    - t.orders
+  period:
+    last: 3
+    time_grain: day
+  evidence:
+  - quote: The last 3 days of sales may still change, because orders can arrive late.
+- id: s.9
+  predicate: Caveat
+  subject: c.refunds
+  text: incomplete
+  period:
+    previous: 1
+    time_grain: quarter
+    calendar: c.fiscal_calendar
+  evidence:
+  - quote: The refund data for the previous fiscal quarter is incomplete.
+- id: s.10
+  predicate: HasProperty
+  subject: c.fiscal_calendar
+  standard_attribute: year_start
+  property_value:
+    value: the Sunday nearest 1 February
+  evidence:
+  - quote: Our fiscal year starts on the Sunday nearest 1 February and follows a 4-4-5 pattern.
+- id: s.11
+  predicate: HasProperty
+  subject: c.fiscal_calendar
+  standard_attribute: week_pattern
+  property_value:
+    value: 4-4-5
+  evidence:
+  - quote: Our fiscal year starts on the Sunday nearest 1 February and follows a 4-4-5 pattern.
+- id: s.12
+  predicate: HasProperty
+  subject: c.fiscal_calendar
+  standard_attribute: week_start
+  property_value:
+    value: Monday
+  evidence:
+  - quote: Each fiscal week begins on a Monday, and a sales day begins at 04:00.
+- id: s.13
+  predicate: HasProperty
+  subject: c.fiscal_calendar
+  standard_attribute: day_start
+  property_value:
+    value: 04:00
+  evidence:
+  - quote: Each fiscal week begins on a Monday, and a sales day begins at 04:00.
+- id: s.14
+  predicate: Definition
+  subject: c.order_completed
+  text: recorded when a payment is captured
+  evidence:
+  - quote: The Order Completed event is recorded when a payment is captured.
+- id: s.15
+  predicate: Rule
+  modality: must
+  recurrence: every month
+  action:
+    verb: update
+    specific_verb: retrain
+    objects:
+    - t.churn_model
+  evidence:
+  - quote: The churn model is retrained every month.
+- id: s.16
+  predicate: Influences
+  subject: c.returns
+  object: c.forecast
+  importance: minor
+  evidence:
+  - quote: Returns have a minor effect on the forecast.
+skipped:
+- reason: heading
+  evidence:
+  - quote: Sales data notes

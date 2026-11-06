@@ -79,11 +79,15 @@ hold or rotate through: "Director, Office of Federal Activities", "Engineer On C
 system, data_container (database, project, schema, dataset), data_product (a curated, owned set of data assets
 offered for named uses), table, view, field, access_group (a group,
 database role, IAM role or policy tag that grants access), meeting (a meeting or other dated event), document,
-tool, channel (a Slack channel, a mailing list), place, product, other. A generic post ("a Director") is one post per office it
+tool, channel (a Slack channel, a mailing list), job (a pipeline, a dbt job, a load), report (a report or dashboard people
+read), `ml_model` (a statistical or machine-learning model: a churn model, a demand forecast; a dbt model is a table or
+view), place, product, other. An environment (dev, staging, prod) is a data_container; a table kept in several is one
+thing per copy, each `PartOf` its environment, with its own `physical_name`. A generic post ("a Director") is one post per office it
 heads, with `HoldsRole` from the post to the role concept.
 
 Concepts: entity_type, metric, dimension, segment, category_value, state, role, activity (a kind of work,
-analysis or question: the use case a pattern or procedure serves), area, calendar, period, party_attribute
+analysis or question: the use case a pattern or procedure serves), `event` (a kind of event that happens or is
+recorded: "Order Completed", "a payment is captured"; a status or stage is a state), area, calendar, period, party_attribute
 (something about whoever is acting, filled in when a rule is checked: see conditions), term, other.
 
 ## Statement types (the predicate) and when to use each
@@ -97,7 +101,8 @@ Meaning
 - `IsA`: X is a Y. Putting something in a level or category the source names ("customer emails are Restricted",
   "this is a P2 issue") is `IsA` that category; `HasProperty` is only for literal values. `SynonymOf`: another
   word for an element (`term`, `subject`, `usage` always | sometimes | abbreviation | former; use `frequency` for
-  "usually" or "often").
+  "usually" or "often"; `language`, a BCP 47 tag, for a word in another language: "Umsatz is the German word for
+  revenue", `language: de`). A source written in one language gives it on `source.language`.
 - `Groups`: a named group made of members (a data product's tables, a region's countries, or several values that
   together match another: see `Mapping`). `HasValues`: the values a field or dimension takes ("segments are Enterprise,
   Mid-market and SMB"; `values` literals and/or `members` concepts). The people, teams or posts that make up a team or
@@ -114,6 +119,13 @@ Meaning
   unit, time_zone, freshness, retention, aggregation (how a stored column is combined; a metric's aggregation is
   its ComputedAs), sensitivity, response_time, location, address, headcount,
   start, duration (of an element that is itself a period or phase: "the freeze starts on 1 December"), web_address.
+  A calendar concept's settings are `year_start` (in the text's words: "the Sunday nearest 1 February"),
+  `week_start` (the day, in English: Monday), `week_pattern` (4-4-5, 4-5-4 or 5-4-4) and `day_start` (when a business day starts, HH:MM:
+  "a sales day runs from 04:00", with its zone a time_zone property; in YAML write the time in quotes, `value: "10:00"`, since
+  YAML reads 10:00 without quotes as the number 600). A unit that differs by row is the value's
+  `unit_from`, the column that holds it ("amount is in the currency given by currency_code": `standard_attribute: unit`,
+  `property_value: {value: currency, unit_from: t.shop.orders.currency_code}`); in a threshold the value keeps its
+  amount. A currency the text names is its ISO 4217 code (US dollars: USD); a unit the text leaves vague stays its words.
   Only otherwise name an `attribute` concept. Grain, coverage and status have their own types below.
 - `UsedFor`: what something is for (`negated: true` for "not for").
 
@@ -213,13 +225,16 @@ Mapping and data
 - `Mapping` (`match` exact | close | broad | narrow | related, read as in SKOS: broad when the object is the broader
   term, narrow when it is the narrower one; `justification`), `ImplementedBy` (`expression`,
   `primary`; also code or a model that computes it: "the SQL lives in the dbt model churn_monthly"; a document that
-  describes it is `DescribedIn`), `JoinsTo` (`keys`, `cardinality`, `dedup`, `join_type`).
+  describes it is `DescribedIn`; `filters` when the concept is the rows of a table or view that pass them: "active
+  customers are customers whose status is active"), `JoinsTo` (`keys`, `cardinality`, `dedup`, `join_type`,
+  `recursive`).
 - Several elements that together correspond to one ("the Silver and Gold plans together roughly match the CRM's
   Premium tier"): name the group as a concept, list its members with `Groups` (`complete: true` for "together"), and
   map the group once (`match: close` for "roughly"). One mapping per member loses "together". When each maps on its
   own ("Bronze is Basic and Platinum is Elite"), write one mapping each.
 - `Contains`: a table holds a field, concept or entity, as a key | attribute | label | dimension | time_dimension
   | measure, with `time_grain` for a time dimension. Use it for "the table includes X, Y, Z". Do not add a statement just because a field id names its table.
+  `partition: true` on the column that splits a table into partitions ("events is partitioned by event_date").
 - `HasGrain`: what one row stands for (`text`, `members` when named). `IdentifiedBy`: a unique key; `primary: false`
   for another key that also identifies it (email beside customer_id), and `stable: false` when the key can change.
 - `Covers`: which platforms, populations or places a table or system covers (`members`, `complete` for "only"),
@@ -242,6 +257,15 @@ Mapping and data
   another as unmapped. Its `cardinality` takes the pair values (one_to_one, one_to_many, many_to_one, many_to_many)
   and is what the data has; `expected_cardinality` is what it should be when the text says the data breaks it
   ("should be one to one, but split payments create duplicates": one_to_many, expected one_to_one).
+- A key pair that is not equal gives its `comparator` (`equal`, `not_equal`, `more_than`, `at_least`, `less_than`,
+  `at_most`): a
+  validity range is two pairs ("the customer_history row whose valid_from and valid_to include the order date": order_date
+  at_least valid_from, and order_date at_most valid_to). The latest row on or before a date is the pair with
+  `nearest: true` and its comparator ("the latest rate on or before the order date": order_date at_least rate_date), the
+  join's other pairs equal; only a JoinsTo takes `nearest`, and a RecordMatch's pairs are equal. `recursive: true` when
+  the join can be followed again and again ("manager_id points to the employee's manager, to any depth"). A measure
+  split across a join ("split_pct gives each rep's share of a deal's amount") is a `ComputedAs` of the measure times
+  the share column, both in `inputs`.
   A key pair's `normalize` says what is done to both columns before they are compared (`trim`, `ignore_case`,
   `cast_to_text` or `cast_to_number`, always in that order); `keys` is for plain equalities written as text, never for
   what `normalize` says. `role` names the
@@ -419,8 +443,10 @@ is a thing of type `job`, a report or dashboard one of type `report`.
   that finishes on time is not an issue") takes the statement's own `negated`.
 - A time of day inside a condition is the condition's `time_of_day` (HH:MM, 24-hour) and `time_zone` (the text's
   zone).
-- These have no field, and are each a part recorded as `unmapped` beside the statement: a date relative to the day
-  checked ("this morning's invoice count", "for the same day last month"); an order relative to a deadline ("before
+- A stretch of time counted back from when the statement is applied is its `period` with `last` or `previous` (see
+  Qualifiers): "the last 3 days of sales are provisional". These have no field, and are each a part recorded as
+  `unmapped` beside the statement: a date relative to the day checked inside a condition ("this morning's invoice
+  count", "for the same day last month"); an order relative to a deadline ("before
   the cut-off"); a party named through another element ("the analyst who owns the broken report"); a count of runs in
   a row ("misses two loads in a row"); a window counted back from the end of a period ("the last 5 working days of a
   year").
@@ -490,7 +516,8 @@ and also without it), `because`, `so_that` (lists of `{description, about}`), `s
 members of a class it holds for, when not every one: "some customers", "most shoppers"; every one is `each`; a named
 kind of a class, "wholesale buyers are customers", is `IsA` from the kind to the class), `certainty` stated |
 likely | possible | estimated, `importance` critical | high ("above all", "the most important
-check", "pay close attention to"), `negated`, `currently` ("right now", "currently"), `valid_from`,
+check", "pay close attention to") | minor ("a minor point", "low priority"), `negated`, `currently` ("right now",
+"currently"), `valid_from`,
 `valid_to`, `valid_while` ("for the duration of the incident": a named period or state the statement holds through,
 such as "during the freeze" or "while Jo is on leave"; a recurring window, "during business hours", is a `when`;
 a list, like the other conditions), `stated_by` (a list), `period` and `recorded_on` (below).
@@ -499,7 +526,14 @@ Five dates say different things. `valid_from` and `valid_to` say when the statem
 stretch of data or business time it is about: the days data is missing ("order data is missing from 1 to 3 June":
 `period: {start: 2026-06-01, end: 2026-06-03}`), the quarter a target is for, the years a table covers; give
 `start`, `end` (its last day) or `named`, a concept of type period for one the text names without dates ("Q3",
-"the holiday season"). A caveat about early June still holds in July. `as_of` says when what it describes was
+"the holiday season"). A stretch counted back from when the statement is applied gives `time_grain` and one of
+`last` (the most recent that many grains, the current one included as far as it has gone: "the last 3 days" is
+`{last: 3, time_grain: day}`, "this month" `{last: 1, time_grain: month}`, "year to date" `{last: 1, time_grain:
+year}`) or `previous` (that many whole grains just before the current one: "last month" is `{previous: 1,
+time_grain: month}`), with `calendar` for a fiscal one; they count from the statement's `as_of`, else the source's,
+else the day the statement is applied, and a rolling window is days ("the last 90 days"). A metric's own trailing
+window stays a value with `value_role: window`. Figures that may still change are a `Caveat` with the `period` they
+cover. A caveat about early June still holds in July. `as_of` says when what it describes was
 observed (a snapshot; a statement true as of a different date than the source's carries its own). `recorded_on` says when the fact or figure was recorded or restated ("Q1 sales were restated on 10 May":
 the new figure with `recorded_on` and `supersedes` the old). `decided_on` says when a decision was made.
 

@@ -1,0 +1,11 @@
+Orders data operations notes
+The orders pipeline loads fct_orders every day at 02:00 UTC.
+The Daily Sales Report is built from fct_orders.
+The orders load is complete when load_audit shows status success for today.
+If the orders load is not complete by 07:00 ET, a data incident is created.
+A Sev1 incident pages the on-call engineer within 15 minutes of the incident being opened.
+The Data Platform lead is paged when a Sev1 incident is not acknowledged or is reopened.
+Sev1 incidents escalate from the on-call engineer to the Data Platform lead.
+From 2026-11-15, Sev1 incidents escalate from the on-call engineer to the Head of Data instead.
+It is proposed that Sev2 incidents escalate from the on-call engineer to the Data Platform lead.
+Late arrival of the orders file delays the orders load.

@@ -1,0 +1,6 @@
+<urn:bigcontext-schema:sales-data-notes/c.returns> <https://w3id.org/bigcontext-schema/facts/drives> <urn:bigcontext-schema:sales-data-notes/c.forecast> .
+<urn:bigcontext-schema:sales-data-notes/t.customer_history> <https://w3id.org/bigcontext-schema/facts/joins_to> <urn:bigcontext-schema:sales-data-notes/t.orders> .
+<urn:bigcontext-schema:sales-data-notes/t.events.event_date> <https://w3id.org/bigcontext-schema/facts/column_of> <urn:bigcontext-schema:sales-data-notes/t.events> .
+<urn:bigcontext-schema:sales-data-notes/t.events> <https://w3id.org/bigcontext-schema/facts/has_column> <urn:bigcontext-schema:sales-data-notes/t.events.event_date> .
+<urn:bigcontext-schema:sales-data-notes/t.fx_rates> <https://w3id.org/bigcontext-schema/facts/joins_to> <urn:bigcontext-schema:sales-data-notes/t.orders> .
+<urn:bigcontext-schema:sales-data-notes/t.prices> <https://w3id.org/bigcontext-schema/facts/joins_to> <urn:bigcontext-schema:sales-data-notes/t.orders> .

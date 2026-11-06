@@ -1,0 +1,4 @@
+conforms: false
+breaks: D1
+reference_checker_says:
+- The document's source uses 'language', a field from 1.3; this document follows 1.2.0.

@@ -1,0 +1,4 @@
+conforms: false
+breaks: D1
+reference_checker_says:
+- Statement s.8 (Caveat) has a period that gives last or previous together with start, end or the other (at period); a period counted back from today gives last or previous alone, with its time_grain.

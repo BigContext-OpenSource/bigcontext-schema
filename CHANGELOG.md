@@ -3,6 +3,54 @@
 What changed in each version of BigContext Schema. Versions follow the rules in the README: patch, minor and major,
 with drafts (`0.9.x-draft`) before 1.0.
 
+## 1.3.0 (2026-11-06)
+
+Every 1.0, 1.1 and 1.2 document is valid under 1.3.0 and keeps its meaning and its graph facts. The additions come
+from enterprise data context that 1.2 held only in words. Each has a line in the guide and is used in the conformance
+case `tests/documents/valid/added-in-1-3/`.
+
+Joins
+- `comparator` on a key pair (equal, not_equal, more_than, at_least, less_than, at_most): a join on a range, such as
+  a validity range (order_date at_least valid_from, and at_most valid_to).
+- `nearest` on a key pair: of the rows its comparator lets through, the one whose column is nearest ("the latest rate
+  on or before the order date"); the join's other pairs are equal. Only in a JoinsTo.
+- `recursive` on a JoinsTo: the join can be followed to any depth (a manager's manager).
+
+Data
+- `unit_from` on a value: the column that holds each row's unit or currency (link role `unit_from`).
+- `partition` on a Contains: this column splits the table into partitions.
+- `filters` on an ImplementedBy: the concept is the rows of a table or view that pass them ("active customers are
+  customers whose status is active"). It still gives the `implemented_by` fact.
+
+Time
+- `last` and `previous` on a period, with `time_grain` and `calendar`: a stretch counted back from the statement's
+  `as_of`, else the source's, else the day it is applied ("the last 3 days", "last month").
+- Standard attributes `year_start`, `week_start`, `week_pattern` and `day_start` for a calendar's settings.
+
+Names and types
+- `language` on a SynonymOf and on the source, as a BCP 47 tag.
+- Concept type `event`; thing type `ml_model`; importance `minor`, which the `importance` description already named.
+
+Versions
+- Each 1.3 addition carries an `added_in` annotation, as `BelongsTo` (1.2) now does. The reference check refuses a 1.3
+  field or value in a document that follows an earlier version, saying where it is, as it refuses `BelongsTo` in a 1.0
+  or 1.1 document; it does not judge such a field by the 1.3 rules, and lists the allowed values of the document's own
+  version. The 1.1 and 1.2 field and value additions carry no `added_in`, so the reference check does not refuse them
+  in an earlier document; D1 already said a document is valid against its own version's files. The link table carries
+  the annotations (`added_in`).
+
+The guide gives a form, with no new field, for a measure split across a join (a ComputedAs of the measure times the
+share column), an environment such as dev or prod (a data_container, one thing per copy of a table) and figures that
+may still change (a Caveat with its period).
+
+The reference check
+- It no longer stops on a malformed document: where a part of the wrong form made a rule raise an error, the rule
+  reads the document's well-formed parts, whose shape problems it reports. A document 1.2 checked without an error
+  gets the same messages, apart from two: `statements` given as a mapping or as empty text is now reported as not a
+  list, and a period that gives a start, an end or a name in the wrong form (not an ISO date, not text, or beside a
+  field a period does not have) is reported as that, not as a period with no start, end or named period.
+- From 1.3, the message for an empty period names `last` and `previous`.
+
 ## 1.2.2 (2026-11-05)
 
 Wording only: in the data operations example, the Sev1 line reads "a figure shown to customers" in place of "a

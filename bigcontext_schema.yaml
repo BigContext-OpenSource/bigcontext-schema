@@ -2,7 +2,7 @@
 id: https://w3id.org/bigcontext-schema
 name: bigcontext_schema
 title: BigContext Schema
-version: 1.2.2
+version: 1.3.0
 description: >-
   A small, closed set of building blocks for expressing business context taken from natural language:
   simple rules, long procedures, company structure, data and mappings. Tier 1 is the element types, tier 2 the
@@ -41,7 +41,7 @@ classes:
       conflicts, unmapped, skipped, extensions]
 
   Source:
-    slots: [id, title, version, created, modified, reviewed, as_of, location, base_iri]
+    slots: [id, title, version, created, modified, reviewed, as_of, location, base_iri, language]
     slot_usage:
       id:
         pattern: "^[a-z0-9][a-z0-9-]*$"
@@ -114,6 +114,12 @@ classes:
         description: >-
           The event or element a duration is counted from ("within 24 hours of the source update": the source
           update). Added in 1.2.
+      unit_from:
+        range: Element
+        description: >-
+          The column that holds each row's unit or currency, when it differs by row (orders.currency_code); value keeps
+          the amount, or, in a unit property, the kind of unit (currency). Added in 1.3.
+        annotations: {links: [{role: unit_from}], added_in: "1.3"}
 
   Condition:
     close_mappings: ["odrl:Constraint"]
@@ -168,15 +174,48 @@ classes:
   Period:
     exact_mappings: ["dcterms:PeriodOfTime"]
     description: >-
-      A stretch of time a statement is about: give its start, its end, or the period the text names, or several.
+      A stretch of time a statement is about: give its start, its end or the period the text names (one or more of
+      these), or, from 1.3, last or previous alone, with the time_grain they count.
+    slots: [time_grain, calendar]
+    slot_usage:
+      time_grain:
+        description: The grain last and previous count in (day, month). Added in 1.3.
+        annotations: {added_in: "1.3"}
+      calendar:
+        description: The calendar last and previous count in when it is not the ordinary one (a fiscal calendar, a concept of type calendar). Added in 1.3.
+        annotations: {links: [{role: calendar}], added_in: "1.3"}
     attributes:
       start: {exact_mappings: ["dcat:startDate"], pattern: "^\\d{4}(-\\d{2}(-\\d{2})?)?$", description: "The first day, as an ISO date."}
       end: {exact_mappings: ["dcat:endDate"], pattern: "^\\d{4}(-\\d{2}(-\\d{2})?)?$", description: "The last day, as an ISO date: 2026-03 for 'March 2026' (a year or month means its last day)."}
       named: {range: Concept, description: "The period as the text names it, a concept of type period ('Q3 2026', 'the holiday season')."}
+      last:
+        range: integer
+        minimum_value: 1
+        description: >-
+          The most recent this many time grains, the current one included as far as it has gone (the last 3 days: 3
+          with time_grain day; this month: 1 month; year to date: 1 year). Counted from the statement's as_of, else the
+          source's, else the day the statement is applied; an as_of that is a month or a year counts from its last
+          day. Added in 1.3.
+        annotations: {added_in: "1.3"}
+      previous:
+        range: integer
+        minimum_value: 1
+        description: >-
+          The this many whole time grains just before the current one, taken together (last month: 1 with time_grain
+          month; the previous two quarters: 2 quarter), counted as last is. Added in 1.3.
+        annotations: {added_in: "1.3"}
     any_of:
       - slot_conditions: {start: {required: true}}
       - slot_conditions: {end: {required: true}}
       - slot_conditions: {named: {required: true}}
+      - slot_conditions: {last: {required: true}}
+      - slot_conditions: {previous: {required: true}}
+    none_of:
+      - slot_conditions: {last: {required: true}, previous: {required: true}}
+      - slot_conditions: {last: {required: true}, start: {required: true}}
+      - slot_conditions: {last: {required: true}, end: {required: true}}
+      - slot_conditions: {previous: {required: true}, start: {required: true}}
+      - slot_conditions: {previous: {required: true}, end: {required: true}}
 
   NonAdditive:
     slots: [per]
@@ -198,6 +237,19 @@ classes:
         range: NormalizeEnum
         multivalued: true
         description: What is done to both columns before they are compared, always in this order whichever are given (trim, then ignore case, then cast).
+      comparator:
+        range: KeyComparatorEnum
+        description: >-
+          How from_field is compared with to_field when not as equal ("the history row whose valid_from and valid_to
+          include the order date": order_date at_least valid_from, and order_date at_most valid_to). Added in 1.3.
+        annotations: {added_in: "1.3"}
+      nearest:
+        range: boolean
+        description: >-
+          True on the one pair a join is ordered by: of the rows its comparator lets through, the one whose to_field is
+          nearest from_field ("the latest rate on or before the order date": order_date at_least rate_date). The join's
+          other pairs compare as equal. Added in 1.3.
+        annotations: {added_in: "1.3"}
 
   Action:
     close_mappings: ["odrl:Action"]
@@ -312,7 +364,7 @@ classes:
     close_mappings: ["skos:altLabel"]
     is_a: Statement
     description: A word or abbreviation that refers to an element.
-    slots: [term, subject, usage]
+    slots: [term, subject, usage, language]
     slot_usage:
       term: {required: true, description: "The other word exactly as used."}
       subject: {required: true, description: "What the word refers to."}
@@ -565,16 +617,21 @@ classes:
   ImplementedBy:
     is_a: Statement
     description: A business concept is represented in data by a field, table or filter.
-    slots: [subject, object, expression, primary]
+    slots: [subject, object, expression, primary, filters]
     slot_usage:
       subject: {required: true, description: "The concept."}
       object: {required: true, description: "The field, table or other data element.", annotations: {links: [{role: implemented_by, fact: implemented_by}]}}
       expression: {description: "The filter or expression, if any."}
+      filters:
+        description: >-
+          The rows of the object that are the concept, when the object is a table or view ("active customers are
+          customers whose status is active": status is active). Added in 1.3.
+        annotations: {links: [{role: filters_on}], added_in: "1.3"}
     annotations: {fact_link: true, fact_backup: true, fact_dotted: true}
   JoinsTo:
     is_a: Statement
     description: How two data elements join.
-    slots: [subject, object, keys, key_pairs, cardinality, expected_cardinality, dedup, join_type, role]
+    slots: [subject, object, keys, key_pairs, cardinality, expected_cardinality, dedup, join_type, role, recursive]
     slot_usage:
       subject: {required: true}
       object: {required: true, annotations: {links: [{role: joins_to, fact: joins_to}]}}
@@ -597,7 +654,7 @@ classes:
   Contains:
     is_a: Statement
     description: A table or dataset holds information about something, in a given role (a measure, a dimension, a key).
-    slots: [subject, object, data_role, time_grain]
+    slots: [subject, object, data_role, time_grain, partition]
     slot_usage:
       subject: {required: true, description: "The table or dataset."}
       object: {required: true, description: "The field, concept or entity it holds information about.", annotations: {links: [{role: contains, fact: {by: data_role, values: {time_dimension: time_column, key: key_column}, default: has_column}, fact_where: {element: [field]}}]}}
@@ -666,7 +723,7 @@ classes:
     slot_usage:
       subject: {required: true, description: "The state or event concept."}
       object: {required: true, description: "The thing it is of.", annotations: {links: [{role: belongs_to, fact: belongs_to}]}}
-    annotations: {fact_link: true, checked_from: "1.2"}
+    annotations: {fact_link: true, checked_from: "1.2", added_in: "1.2"}
   Caveat:
     close_mappings: ["dqv:QualityAnnotation"]
     is_a: Statement
@@ -885,6 +942,18 @@ slots:
   recorded_on: {pattern: "^\\d{4}(-\\d{2}(-\\d{2})?)?$", description: "When the source says the fact or figure was recorded or restated, as an ISO date."}
   dialect: {description: "The SQL dialect of the expression (ANSI_SQL, Snowflake, BigQuery)."}
   time_grain: {range: TimeGrainEnum}
+  language:
+    pattern: "^[A-Za-z]{2,3}(-[A-Za-z0-9]{1,8})*$"
+    description: "The language of the word or the source, as a BCP 47 tag (de, en, pt-BR). Added in 1.3."
+    annotations: {added_in: "1.3"}
+  recursive:
+    range: boolean
+    description: "True when the join can be followed again and again, to any depth (a manager's manager). Added in 1.3."
+    annotations: {added_in: "1.3"}
+  partition:
+    range: boolean
+    description: "True when this field splits the table into partitions, so a query that filters on it reads less data. Added in 1.3."
+    annotations: {added_in: "1.3"}
   external:
     multivalued: true
     description: Ids this file refers to that another section of the same source declares.
@@ -1006,6 +1075,7 @@ enums:
       channel: {description: "A communication channel (a Slack channel, a mailing list)."}
       job: {description: "A piece of data work that runs on a schedule or a trigger (a pipeline, a dbt job, a load). Added in 1.2.", close_mappings: ["prov:Plan"]}
       report: {description: "A report or dashboard that people read, built from data (the Weekly Collections Report). Added in 1.2."}
+      ml_model: {description: "A statistical or machine-learning model (a churn model, a demand forecast); a dbt model is a table or view. Added in 1.3.", annotations: {added_in: "1.3"}}
       place: {}
       product: {}
       other: {}
@@ -1020,6 +1090,7 @@ enums:
       role: {exact_mappings: ["org:Role"]}
       activity: {description: "A kind of work, analysis or question; the use case a pattern or procedure serves."}
       area: {description: "A part of the business."}
+      event: {description: "A kind of event that happens or is recorded (Order Completed, a payment captured); a status or stage is a state. Added in 1.3.", annotations: {added_in: "1.3"}}
       calendar: {}
       period: {}
       party_attribute: {description: "Something about whoever is acting when a rule is checked (who they are, their region, their tenant), filled in when it is checked."}
@@ -1128,7 +1199,10 @@ enums:
   CertaintyEnum:
     permissible_values: {stated: {}, likely: {}, possible: {}, estimated: {}}
   ImportanceEnum:
-    permissible_values: {critical: {}, high: {}}
+    permissible_values:
+      critical: {}
+      high: {}
+      minor: {description: "Matters little ('minor', 'low priority'). Added in 1.3.", annotations: {added_in: "1.3"}}
   StandardAttributeEnum:
     permissible_values:
       row_count: {}
@@ -1151,6 +1225,10 @@ enums:
       start: {description: "When a period or phase starts ('week 12')."}
       web_address: {description: "Where something is on the web (a URL)."}
       duration: {description: "How long a period or phase lasts ('about two weeks')."}
+      year_start: {description: "When a calendar's year starts, in the text's words (1 February, the Sunday nearest 1 February). Added in 1.3.", annotations: {added_in: "1.3"}}
+      week_start: {description: "The day a calendar's week starts on, in English (Monday, Sunday). Added in 1.3.", annotations: {added_in: "1.3"}}
+      week_pattern: {description: "How each quarter of a calendar divides into weeks: 4-4-5, 4-5-4 or 5-4-4. Added in 1.3.", annotations: {added_in: "1.3"}}
+      day_start: {description: "When a business day starts, as HH:MM on a 24-hour clock, when not at midnight (04:00); its time zone is a time_zone property. Added in 1.3.", annotations: {added_in: "1.3"}}
   ProgressEnum:
     permissible_values: {pending: {}, in_progress: {}, nearly_done: {}, done: {}, overdue: {}, blocked: {}, dropped: {}}
   DecisionStatusEnum:
@@ -1165,6 +1243,9 @@ enums:
     permissible_values: {sum: {}, count: {}, count_distinct: {}, average: {}, min: {}, max: {}, median: {}, percentile: {description: "A percentile, continuous (interpolated); its level is a value with role percentile."}, percentile_discrete: {description: "A percentile that is always one of the values (PERCENTILE_DISC)."}, sum_boolean: {}, first: {description: "The earliest value in time order (first-touch attribution)."}, last: {description: "The latest value in time order (last-touch attribution)."}}
   ComparatorEnum:
     permissible_values: {equal: {}, not_equal: {}, more_than: {}, at_least: {}, less_than: {}, at_most: {}, in: {}, not_in: {}, is_null: {}, is_not_null: {}}
+  KeyComparatorEnum:
+    description: How a key pair compares its two columns (KeyPair comparator). Added in 1.3.
+    permissible_values: {equal: {}, not_equal: {}, more_than: {}, at_least: {}, less_than: {}, at_most: {}}
   TimeGrainEnum:
     permissible_values: {second: {}, minute: {}, hour: {}, day: {}, week: {}, month: {}, quarter: {}, year: {}}
   ProcedureModeEnum:

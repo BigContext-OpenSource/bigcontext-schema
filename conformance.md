@@ -15,7 +15,11 @@ A document conforms to a version of BigContext Schema, the one its `schema_versi
 - **D1** It is valid against that version's `generated/bigcontext_schema.schema.json` (JSON Schema 2019-09): its
   fields, required fields, allowed values and statement types, and the shape of its ids, dates and addresses; from
   1.1, also that a condition gives at most one of `values`, `compare_to` and `party_responsibility`, and that a
-  period gives at least one of `start`, `end` and `named`. (The SHACL shapes check the fields and values but not these two.)
+  period gives at least one of `start`, `end` and `named`. From 1.3, a period may give `last` or `previous` in place of
+  those, never both and never with `start` or `end`; a key pair's `comparator` is equal, not_equal, more_than,
+  at_least, less_than or at_most; and a document gives no field, value or statement type added in a later version
+  than its own (the reference check reads the schema's `added_in` annotations). (The SHACL shapes check the fields
+  and values but not these.)
 - **D2** Each HasValues statement gives `values` or `members`; each HasProperty gives `standard_attribute` or
   `attribute`; each CreatedBy gives `object`, `members` or `text`. From 1.1: a condition with `compare_to` gives
   `field` and `comparator`; a ComputedAs gives at most one of a value with `value_role: window` and `grain_to_date`;
@@ -23,7 +27,12 @@ A document conforms to a version of BigContext Schema, the one its `schema_versi
   derived metric with exactly one input, and one with `value_role: percentile` on a percentile aggregation; a
   conversion metric gives `numerator` and `denominator`; a condition with `party_responsibility` is in a Rule's
   `when` or `unless`; a key pair's `normalize` gives at most one of `cast_to_text` and `cast_to_number`; a RuleSet
-  gives `subject` or `members`.
+  gives `subject` or `members`. From 1.3: a key pair marked `nearest` is in a JoinsTo, is the only one there, has a
+  comparator that orders (more_than, at_least, less_than, at_most), and the join's other pairs are equal; a
+  RecordMatch's key pairs are equal; a period with `last` or `previous` gives `time_grain`, and one with `time_grain`
+  or `calendar` gives `last` or `previous`; a HasProperty with `week_pattern` gives 4-4-5, 4-5-4 or 5-4-4, with
+  `day_start` an HH:MM time, with `week_start` a day of the week in English; an ImplementedBy with `filters` names a
+  table or view as its object, when the document declares it.
 - **D3** Every id of a thing, concept, statement, procedure and step is used once in the document.
 - **D4** Every reference names something the document declares, an id listed in `external` (declared by another
   section of the same source), or `prefix:id` with a prefix declared in `linked_sources`. A reference in

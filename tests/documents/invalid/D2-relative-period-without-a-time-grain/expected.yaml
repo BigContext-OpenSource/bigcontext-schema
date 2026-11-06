@@ -1,0 +1,4 @@
+conforms: false
+breaks: D2
+reference_checker_says:
+- 'Statement s.8 (Caveat) has a period with last or previous but no time_grain: say what they count (day, month).'

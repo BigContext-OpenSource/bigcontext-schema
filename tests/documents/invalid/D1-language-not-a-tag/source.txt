@@ -1,0 +1,17 @@
+Sales data notes
+Each order joins the customer_history row with its customer_id whose valid_from and valid_to include the order date.
+Each order joins the latest fx_rates row on or before its order date, for its currency_code.
+orders.amount is in the currency given by orders.currency_code.
+Umsatz is the German word for revenue.
+employees.manager_id points to the employee's manager, to any depth.
+events is partitioned by event_date.
+Active customers are customers whose status is active.
+A price applies to an order placed on or after its valid_from and before its valid_until.
+Duplicate customers are found by joining customers to itself on the same email and a different customer_id.
+The last 3 days of sales may still change, because orders can arrive late.
+The refund data for the previous fiscal quarter is incomplete.
+Our fiscal year starts on the Sunday nearest 1 February and follows a 4-4-5 pattern.
+Each fiscal week begins on a Monday, and a sales day begins at 04:00.
+The Order Completed event is recorded when a payment is captured.
+The churn model is retrained every month.
+Returns have a minor effect on the forecast.

@@ -1,0 +1,5 @@
+profile: compilable
+conforms: false
+breaks: C13
+reference_checker_says:
+- 'Statement s.30 (Rule): the segment c.damaged_return is rows of t.shop.returns, several of which join to one row of t.shop.orders, the table c.sales is counted over; a rule leaves out rows the metric counts. If the text leaves an amount out of c.sales, leave it out of c.sales''s formula and write no rule; if it leaves out rows of t.shop.orders, name those rows as the segment.'

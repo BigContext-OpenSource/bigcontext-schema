@@ -1,0 +1,6 @@
+profile: compilable
+conforms: false
+breaks: C8
+read_with: earlier.yaml
+reference_checker_says:
+- 'Statement s.1 (ComputedAs): c.sales already has a definition (s.E.1) and changed state for an earlier period (s.20); a new definition without valid_from would replace the one that period was computed with. If the text is an owner''s choice of definition for comparing periods, write it as a Rule about comparisons (must use, c.sales in scope, when about a comparison with an earlier period); if the definition itself changes, give valid_from (the day it starts) and no period.'

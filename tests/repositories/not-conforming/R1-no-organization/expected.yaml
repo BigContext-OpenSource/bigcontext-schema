@@ -1,0 +1,6 @@
+based_on: ../../../../examples/context-repository
+conforms: false
+breaks: R1
+why: The manifest does not name the organization.
+reference_checker_says:
+- 'bigcontext.yaml: it does not name the organization.'

@@ -1,0 +1,5 @@
+profile: compilable
+conforms: false
+breaks: C10
+reference_checker_says:
+- 'Statement s.16 (ComputedAs): it takes c.sales back by an offset, so its expression is that input''s name, sales; the offset stays in values and the grain in reporting_grain. A formula over the earlier value is a second derived metric over it.'

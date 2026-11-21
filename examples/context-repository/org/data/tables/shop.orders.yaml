@@ -1,0 +1,45 @@
+schema_version: 1.3.0
+source:
+  id: acme-store
+things:
+- id: t.shop.orders
+  label: orders
+  thing_type: table
+  physical_name: shop.orders
+- id: t.shop.orders.order_id
+  label: ORDER_ID
+  thing_type: field
+  physical_name: ORDER_ID
+- id: t.shop.orders.order_date
+  label: ORDER_DATE
+  thing_type: field
+  physical_name: ORDER_DATE
+- id: t.shop.orders.status
+  label: STATUS
+  thing_type: field
+  physical_name: STATUS
+statements:
+- id: s.shop.orders.has_grain
+  predicate: HasGrain
+  subject: t.shop.orders
+  text: one row per order
+  evidence:
+  - quote: The orders table has one row per order.
+- id: s.shop.orders.contains.shop.orders.order_id
+  predicate: Contains
+  subject: t.shop.orders
+  object: t.shop.orders.order_id
+  evidence:
+  - quote: Its columns are ORDER_ID, ORDER_DATE and STATUS.
+- id: s.shop.orders.contains.shop.orders.order_date
+  predicate: Contains
+  subject: t.shop.orders
+  object: t.shop.orders.order_date
+  evidence:
+  - quote: Its columns are ORDER_ID, ORDER_DATE and STATUS.
+- id: s.shop.orders.contains.shop.orders.status
+  predicate: Contains
+  subject: t.shop.orders
+  object: t.shop.orders.status
+  evidence:
+  - quote: Its columns are ORDER_ID, ORDER_DATE and STATUS.

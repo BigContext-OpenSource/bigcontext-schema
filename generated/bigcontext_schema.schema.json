@@ -24429,7 +24429,20 @@
                 "year_start",
                 "week_start",
                 "week_pattern",
-                "day_start"
+                "day_start",
+                "environment",
+                "platform",
+                "external_id",
+                "nullable",
+                "version",
+                "side_effect",
+                "null_handling",
+                "schedule",
+                "timeout",
+                "idempotent",
+                "digest",
+                "language",
+                "credential_ref"
             ],
             "title": "StandardAttributeEnum",
             "type": "string"
@@ -28934,6 +28947,6 @@
     ],
     "title": "bigcontext_schema",
     "type": "object",
-    "version": "1.3.0"
+    "version": "1.4.0"
 }
 

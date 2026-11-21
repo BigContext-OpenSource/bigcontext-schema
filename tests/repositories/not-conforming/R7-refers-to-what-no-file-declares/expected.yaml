@@ -1,0 +1,7 @@
+based_on: ../../../../examples/context-repository
+conforms: false
+breaks: R7
+why: The file lists the id in external, and no file of the view declares it.
+reference_checker_says:
+- 'The org view: Statement s.shop.shipments__shop.orders.joins_to refers to ''t.shop.orders.order_number'' in ''key_pairs'', but nothing has that id.'
+- 'The team support view: Statement s.shop.shipments__shop.orders.joins_to refers to ''t.shop.orders.order_number'' in ''key_pairs'', but nothing has that id.'

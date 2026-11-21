@@ -1,0 +1,5 @@
+profile: compilable
+conforms: false
+breaks: C3
+reference_checker_says:
+- 'Statement s.5 (Definition): its text names the column AMOUNT, and the segment c.large_order has no ImplementedBy with filters; write the rows it defines as an ImplementedBy from c.large_order to its table, with filters (field, comparator, and values or compare_to).'

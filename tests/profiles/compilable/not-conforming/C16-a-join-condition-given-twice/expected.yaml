@@ -1,0 +1,5 @@
+profile: compilable
+conforms: false
+breaks: C16
+reference_checker_says:
+- 'Statement s.23 (JoinsTo): it gives its condition in keys (returns.ORDER_ID = orders.ORDER_ID) and in key_pairs; give each condition once: a comparison of two columns is a key pair (with comparator or normalize when it is not a plain equality) and is not repeated in keys; a condition key pairs cannot say (a function on a column) stays in keys alone, with no key pair that leaves the function out.'

@@ -1,0 +1,6 @@
+based_on: ../../../../examples/context-repository
+conforms: false
+breaks: R6
+why: A team's statement id does not start s.team-<team>.
+reference_checker_says:
+- 'teams/support/meaning/metrics/orders.yaml: s.support.orders.computed_as.shop.orders is a statement of the team support, so its id starts s.team-support.'

@@ -1,0 +1,119 @@
+about: Rules C14 and C15 of the compilable profile, on one table. Each case is the expression of a definition with aggregation sum (count for *) whose base is the table, with its dialect when it gives one. `in_the_profile` is whether C14 and C15 both hold; `breaks` names the rule that does not.
+table:
+  id: t.shop.orders
+  physical_name: shop.orders
+  label: orders
+columns:
+- id: t.shop.orders.amount
+  physical_name: AMOUNT
+- id: t.shop.orders.discount_amount
+  physical_name: DISCOUNT_AMOUNT
+- id: t.shop.orders.status
+  physical_name: STATUS
+- id: t.shop.orders.shipped_on
+  physical_name: '"Shipped On"'
+  label: Shipped On
+cases:
+- expression: AMOUNT
+  in_the_profile: true
+- expression: AMOUNT - DISCOUNT_AMOUNT
+  in_the_profile: true
+- expression: (AMOUNT - DISCOUNT_AMOUNT) * 100 / AMOUNT
+  in_the_profile: true
+- expression: -AMOUNT
+  in_the_profile: true
+- expression: CASE WHEN STATUS = 'sent back' THEN 0 ELSE AMOUNT END
+  in_the_profile: true
+- expression: CASE WHEN STATUS <> 'sent back' AND AMOUNT >= 100 THEN AMOUNT END
+  in_the_profile: true
+- expression: COALESCE(DISCOUNT_AMOUNT, 0)
+  in_the_profile: true
+- expression: CAST(AMOUNT AS DOUBLE)
+  in_the_profile: true
+- expression: CASE WHEN "Shipped On" IS NOT NULL THEN AMOUNT ELSE 0 END
+  in_the_profile: true
+- expression: orders.AMOUNT
+  in_the_profile: true
+- expression: '*'
+  aggregation: count
+  in_the_profile: true
+- expression: AMOUNT
+  dialect: ANSI_SQL
+  in_the_profile: true
+- expression: AMOUNT
+  dialect: Snowflake
+  in_the_profile: true
+- expression: AMOUNT
+  dialect: BigQuery
+  in_the_profile: true
+- expression: AMOUNT
+  dialect: PostgreSQL
+  in_the_profile: true
+- expression: IF(STATUS = 'sent back', 0, AMOUNT)
+  dialect: BigQuery
+  in_the_profile: true
+- expression: AMOUNT minus DISCOUNT_AMOUNT
+  in_the_profile: false
+  breaks: C14
+- expression: the amount after the discount
+  in_the_profile: false
+  breaks: C14
+- expression: AMOUNT less 10 percent
+  in_the_profile: false
+  breaks: C14
+- expression: net amount
+  in_the_profile: false
+  breaks: C14
+- expression: NULLIF(AMOUNT, 0)
+  in_the_profile: false
+  breaks: C14
+- expression: ABS(AMOUNT)
+  in_the_profile: false
+  breaks: C14
+- expression: ROUND(AMOUNT, 2)
+  in_the_profile: false
+  breaks: C14
+- expression: CAST(AMOUNT AS DECIMAL(12, 2))
+  in_the_profile: false
+  breaks: C14
+- expression: SUM(AMOUNT)
+  in_the_profile: false
+  breaks: C14
+- expression: AMOUNT IN (1, 2)
+  in_the_profile: false
+  breaks: C14
+- expression: (SELECT MAX(AMOUNT) FROM orders)
+  in_the_profile: false
+  breaks: C14
+- expression: AMOUNT AS total
+  in_the_profile: false
+  breaks: C14
+- expression: AMOUNT; DISCOUNT_AMOUNT
+  in_the_profile: false
+  breaks: C14
+- expression: '''the amount after the discount'''
+  in_the_profile: false
+  breaks: C14
+- expression: AMOUNT -- less the discount
+  in_the_profile: false
+  breaks: C14
+- expression: AMOUNT
+  dialect: no such dialect
+  in_the_profile: false
+  breaks: C14
+- expression: '*'
+  in_the_profile: false
+  breaks: C15
+- expression: amount
+  in_the_profile: false
+  breaks: C15
+- expression: TOTAL
+  in_the_profile: false
+  breaks: C15
+- expression: orders
+  aggregation: count
+  in_the_profile: false
+  breaks: C15
+- expression: refunds.AMOUNT
+  in_the_profile: false
+  breaks: C15

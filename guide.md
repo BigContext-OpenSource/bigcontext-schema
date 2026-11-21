@@ -64,6 +64,13 @@ statements under it is their `scope`; other headings are `skipped`.
 - Tables and views: `t.<schema>.<table>`, dropping any database or project prefix. If the schema is not given but
   the same table is described elsewhere in the source with its schema, use that id; otherwise `t.table.<table>`.
 - Fields: `t.<schema>.<table>.<field>` when the table is known, otherwise `t.field.<field>`. Never guess.
+- A label is a name: the name the text gives the element, or, when the text describes it and gives it no name, a
+  short name of your own, the words of its id (`c.order_value`: order value). It is never a formula or a condition:
+  for "Sales is AMOUNT minus DISCOUNT_AMOUNT for each order shipped in the week, less the value of items sent back",
+  the first part is `c.order_value`, labelled "order value", with the text's phrase "AMOUNT minus DISCOUNT_AMOUNT for
+  each order shipped in the week" in `aliases` and as its evidence, and `AMOUNT - DISCOUNT_AMOUNT` in its
+  definition's `expression`. A label the text does not hold is a name its writer gave: a reader may show it as such,
+  and the people who own the context may rename it.
 - Statements `s.<SECTION>.<n>`; steps `<procedure id>.<SECTION>.<n>`. `<SECTION>` names the part of the text a
   file covers, so ids stay unique when a long text is split across several files.
 - Declare every thing and concept you refer to in your own file. The exception: a statement or procedure that
@@ -86,7 +93,8 @@ thing per copy, each `PartOf` its environment, with its own `physical_name`. A g
 heads, with `HoldsRole` from the post to the role concept.
 
 Concepts: entity_type, metric, dimension, segment, category_value, state, role, activity (a kind of work,
-analysis or question: the use case a pattern or procedure serves), `event` (a kind of event that happens or is
+analysis or question: the use case a pattern or procedure serves; also something an organization does to change an
+outcome, "a promotion", "free shipping", whose effect is an `Influences` from it), `event` (a kind of event that happens or is
 recorded: "Order Completed", "a payment is captured"; a status or stage is a state), area, calendar, period, party_attribute
 (something about whoever is acting, filled in when a rule is checked: see conditions), term, other.
 
@@ -119,6 +127,14 @@ Meaning
   unit, time_zone, freshness, retention, aggregation (how a stored column is combined; a metric's aggregation is
   its ComputedAs), sensitivity, response_time, location, address, headcount,
   start, duration (of an element that is itself a period or phase: "the freeze starts on 1 December"), web_address.
+  From 1.4: a system's `platform` (PostgreSQL), its `environment` (production, test) and its `credential_ref`, where
+  the secret that gives access is kept (a name in a secret store; never write the secret); the `external_id`
+  something has in another system (a person's id in the directory); whether a field is `nullable` and whether a tool
+  or a job is `idempotent`, doing it again changes nothing more (each `value: "true"` or `"false"`, in quotes); the
+  `version` of a model, a tool, a document or a calendar; a tool's `side_effect`, what using it changes, in the
+  text's words, and its `timeout` (`{value: "30", unit: seconds}`); the `schedule` a job or a refresh runs on, in the
+  text's words; a document's `language`, as a tag (en), and the `digest` of its content (sha256:9f2c1ab4); and the
+  `null_handling` of a metric or a dimension, how empty values are treated when it is computed.
   A calendar concept's settings are `year_start` (in the text's words: "the Sunday nearest 1 February"),
   `week_start` (the day, in English: Monday), `week_pattern` (4-4-5, 4-5-4 or 5-4-4) and `day_start` (when a business day starts, HH:MM:
   "a sales day runs from 04:00", with its zone a time_zone property; in YAML write the time in quotes, `value: "10:00"`, since
@@ -126,6 +142,12 @@ Meaning
   `unit_from`, the column that holds it ("amount is in the currency given by currency_code": `standard_attribute: unit`,
   `property_value: {value: currency, unit_from: t.shop.orders.currency_code}`); in a threshold the value keeps its
   amount. A currency the text names is its ISO 4217 code (US dollars: USD); a unit the text leaves vague stays its words.
+  How a metric's numbers are written is its `format`, as a number pattern: `0` or `#,##0` (with thousands
+  separators) for the whole part, `.` and one `0` for each decimal shown, `%` at the end for a percentage (the value
+  times 100), a currency sign or code before it when one is shown ("show gross margin as a percentage with one
+  decimal": `subject: c.gross_margin`, `standard_attribute: format`, `property_value: {value: "0.0%"}`; whole dollars
+  with separators: `"$#,##0"`). A sentence that makes it a duty ("always show it as...") is also a `Rule` with the
+  verb show; the format is the field a tool applies, and both quote the sentence.
   Only otherwise name an `attribute` concept. Grain, coverage and status have their own types below.
 - `UsedFor`: what something is for (`negated: true` for "not for").
 
@@ -156,8 +178,9 @@ Rules
   | need not, does not have to, is not required | `need_not` |
   | by default, default to, unless told otherwise, assume | `by_default` |
   | **only** do X when Y / X **only** if Y (only limits when the act is allowed) | `must_not` X, `unless` Y (not `must`) |
-  | check with, consult or clear it with Y **before** X ("clear any discount with Finance before you quote it") | `must_not` X, `unless` checked with Y (`about` Y), as for an approval (not `must` check, `when` before X) |
+  | check with, consult or clear it with Y **before** X ("clear any discount with Finance before you quote it") | `must_not` X, `unless` checked with Y (`about` Y and the state the check gives, a concept of `concept_type: state`), as for an approval (not `must` check, `when` before X) |
   | **only** these may do X ("only managers may approve") | `may`, with `exclusive: true` when the parties are named; when they are defined by a responsibility for what is acted on ("only the metric's owner may change it"), `must_not` X `unless` a condition with `party_responsibility`; "only through the tool" or "only for fraud checks" is `must_not` X `unless` through or for it |
+  | Y counts as X **only** if a column has a value ("an order is a test order only if IS_TEST is 1": which rows a segment is) | no strength: the segment's `ImplementedBy` with `filters` (see rules about what a metric counts), not a rule about labelling |
   | required to do X **only** when Y ("only required to submit receipts over $50": only limits the duty) | `must` X, `when` Y; nothing is required otherwise |
 
   Instruction or fact: when the text tells the reader to do something, write a `Rule`; when it describes how
@@ -165,13 +188,22 @@ Rules
   ("Code Freeze: only critical fixes are merged") is a `Definition` quoting the defining words and a `Rule` quoting
   the norm's words.
 
+  A range a metric or a load is expected to stay within ("weekly sign-ups stay within 15% of the week before") is a
+  `Rule`, not a definition of the metric: `must` with `verb: check`, the metric in `objects` and in `scope`, what it is
+  compared with in `detail`, the bound as a value with `value_role: maximum` (or `minimum`), and `importance` when the
+  text says how much a miss matters ("a miss here matters a lot": `high`). A value a metric should reach ("revenue
+  should grow 10% a year through 2027") is a `Rule` `should` with the metric in `objects` and in `scope`, the value
+  with `value_role: target`, and `due_by` when it should be reached.
+
   Who must act goes in `binds` (a step's in `performer`), never in the action's `by`. A list of duties for a role
   ("Managers are responsible for...", "Team members must...") is one `Rule` per duty binding the role when the text
   states it as a norm (must, should, is expected to); a standing area of work stated without a norm ("Accounting
   handles reimbursements") is `ResponsibleFor`. "X needs to be approved by Y" and "X must be nominated by Y" are
-  conditions on X, not duties on Y: a `Rule` that X `must_not` go ahead `unless` Y approves (or nominates) it; Y is
-  not bound to approve anything. "Y or higher" adds `or_more_senior: true`. A vote threshold ("passing requires a
-  strict majority", "at least two-thirds") is a condition with a threshold value:
+  conditions on X, not duties on Y: a `Rule` that X `must_not` go ahead `unless` Y approves (or nominates) it, the
+  `unless` naming in `about` both Y and the approved state (a concept of `concept_type: state`, "refund approved by a
+  manager"), which an approval step grants; Y is not bound to approve anything. "Y or higher" adds
+  `or_more_senior: true`. A vote threshold ("passing requires a strict majority", "at least two-thirds") is a condition
+  with a threshold value:
   `{value: "2/3", value_role: threshold, comparator: at_least, unit: "of votes cast"}`. A consequence with no one named as acting ("they are removed", "the council
   is dissolved", "it is moved out automatically") is a `Transition` to the new state with `automatic: true` when
   the text says it happens by itself; never invent who does it. When the text names the check, job or system whose
@@ -227,7 +259,14 @@ Mapping and data
   `primary`; also code or a model that computes it: "the SQL lives in the dbt model churn_monthly"; a document that
   describes it is `DescribedIn`; `filters` when the concept is the rows of a table or view that pass them: "active
   customers are customers whose status is active"), `JoinsTo` (`keys`, `cardinality`, `dedup`, `join_type`,
-  `recursive`).
+  `recursive`). A filter may compare its field with another column (`compare_to`), on the concept's table or on a table
+  it joins to ("late orders are orders shipped after their promised date": shipped_date `more_than` promised_date). A
+  range ("on or between A and B") is two filters, `at_least` A and `at_most` B; all of a statement's filters must hold.
+- A member concept of a dimension (in a `HasValues` `members`) whose value the text or an earlier statement gives is
+  linked to that value by an `ImplementedBy` from the member to the dimension's table with one filter, the same form
+  as a segment (the region North: `{field: orders.region, comparator: equal, values: [{value: North}]}`). When the
+  value is not given, write a `Gap` about the member. Code then finds a row's member, and through `ResponsibleFor` its
+  owner, without matching labels.
 - Several elements that together correspond to one ("the Silver and Gold plans together roughly match the CRM's
   Premium tier"): name the group as a concept, list its members with `Groups` (`complete: true` for "together"), and
   map the group once (`match: close` for "roughly"). One mapping per member loses "together". When each maps on its
@@ -265,10 +304,11 @@ Mapping and data
   join's other pairs equal; only a JoinsTo takes `nearest`, and a RecordMatch's pairs are equal. `recursive: true` when
   the join can be followed again and again ("manager_id points to the employee's manager, to any depth"). A measure
   split across a join ("split_pct gives each rep's share of a deal's amount") is a `ComputedAs` of the measure times
-  the share column, both in `inputs`.
+  the share column, both in `inputs` (outside the compilable profile, whose totals read the columns of one table).
   A key pair's `normalize` says what is done to both columns before they are compared (`trim`, `ignore_case`,
-  `cast_to_text` or `cast_to_number`, always in that order); `keys` is for plain equalities written as text, never for
-  what `normalize` says. `role` names the
+  `cast_to_text` or `cast_to_number`, always in that order). `keys` holds, as the text writes it, only a condition key
+  pairs cannot say (a function on a column: `DATE(orders.ORDER_TS) = days.DAY`), and no key pair is then written for
+  that condition; a comparison of two columns is a key pair, and is never given in `keys` as well. `role` names the
   part the joined table plays when it is joined more than once ("the buyer" and "the recipient", both customers).
 - `RecordMatch`: when records count as the same individual, within one table or across two ("a shop customer and a
   newsletter contact count as one customer when their lowercased emails match"): `subject`, `object`, `key_pairs`
@@ -323,6 +363,25 @@ definition can be exported to a semantic layer:
   ratio: "refunds per 100 orders" divides refunds by orders); `inputs` for a derived metric; `time_dimension`; `filters`
   as conditions that give `field`, `comparator` and `values` (`ORDER_STATUS != 'Cancelled'`); `dialect` of the
   expression; `reporting_grain` when the text says what grain it is reported at ("daily sales").
+- An `expression` is one SQL expression, whatever words the text uses: "AMOUNT minus DISCOUNT_AMOUNT" is
+  `AMOUNT - DISCOUNT_AMOUNT`, and "AMOUNT, taking 0 for an order whose STATUS is sent back" is
+  `CASE WHEN STATUS = 'sent back' THEN 0 ELSE AMOUNT END`. It is made of names, numbers, text in single quotes,
+  `+ - * /`, parentheses, comparisons, `AND`, `OR`, `NOT`, `IS NULL`, `CASE WHEN`, `COALESCE` and `CAST`, in ANSI SQL
+  unless `dialect` names another. The quote keeps the text's words. An aggregate, a join and a query are never in it:
+  the aggregate is `aggregation`, a join is a `JoinsTo`, and a count of rows is `aggregation: count` with
+  `expression: "*"`. When the text gives no formula over columns or metrics it names ("hours to deliver", with no
+  column for either time), keep its words and add a `Gap` about the metric that says what is not given.
+- Each name in an `expression` is a declared element, so the table a column comes from is read from fields, never
+  from words. In a definition with `aggregation`, a name is a column of `base`, written as its `physical_name` or its
+  label gives it (`AMOUNT`; `"Order Date"`, in double quotes); list the fields it reads in `inputs`
+  (`inputs: [t.shop.orders.status, t.shop.orders.amount]`). In a `derived` metric, a name is the last part of an
+  input's id (`sales` for `c.sales`; in double quotes when it is not a plain word, `"7d_orders"`), and every input is
+  named. An amount over the columns of two tables is one metric for each table and a `derived` metric over them.
+- A definition that needs another table names only the column it reads there, and the join is a statement of its
+  own: "Member sales adds up AMOUNT over the orders of customers whose TIER is member" is a `ComputedAs` with `base`
+  the orders table and a filter on `t.shop.customers.tier`, beside a `JoinsTo` from orders to customers with its
+  `key_pairs` ("each order belongs to one customer, by its CUSTOMER_ID"). An `ImplementedBy` likewise gives its column
+  as `object` and its rows as `filters`, and no `expression`.
 - A rolling or to-date metric is `cumulative`: its input's aggregation applied over a trailing window, a value with
   `value_role: window` ("distinct visitors over the last 7 days": 7 days, distinct over the 7 days, not a sum of daily
   counts), or from the start of a grain, `grain_to_date` ("sales year to date": year), not both; `inputs` names the
@@ -331,7 +390,17 @@ definition can be exported to a semantic layer:
   reports such a metric instead of writing it.
 - A comparison with an earlier period is two metrics: the earlier one is a `derived` ComputedAs with one input and a
   value with `value_role: offset` ("sales the same week last year": 1 year, `unit` "year" or "fiscal year"), and the
-  comparison is a `derived` metric over both.
+  comparison is a `derived` metric over both. The earlier one's `expression` is its input's name (`sales`), with the
+  grain in `reporting_grain`; words there read as a formula of their own. The comparison's `expression` is a formula
+  over the two names when the text says how they compare. A comparison and a threshold on it, in a rule or a step, use
+  one unit: "when weekly sales differ by over 10% from the same week last year" is a percent, so the expression
+  multiplies by 100 (`(sales - sales_last_year) / sales_last_year * 100`) and the threshold is `10` with `datatype:
+  percent`; a comparison written as a fraction (`(sales - sales_last_year) / sales_last_year`) takes a fraction
+  threshold (`0.1`, no `datatype`). When the threshold is judged for each value of a dimension ("when a region's
+  weekly sales differ by over 10% from the same week last year"), the rule's action names that dimension in `by`; it
+  may also be named in the condition's `about`, beside the comparison. When an earlier statement you are shown already
+  defines the comparison, list its id in `external` and write no second version, unless the text changes how it is
+  computed.
 - A conversion metric ("the share of carts that become orders within 2 days") is `conversion`: `numerator` the
   converting count and `denominator` the starting count (both counts, both required), `entity` the kind of thing it
   follows (the cart), and its window a value with `value_role: window`. "Sales per customer" is a ratio, not a
@@ -345,12 +414,15 @@ definition can be exported to a semantic layer:
 - A percentile is `aggregation: percentile` (interpolated) or `percentile_discrete` (always one of the values), with
   its level as a value with `value_role: percentile` between 0 and 1 ("the 95th percentile": 0.95). "The median and
   the 90th percentile of days to deliver" is two metrics over the same amount (days from order to delivery, the
-  `expression`, in words when the text gives no formula), even when the text names neither as a metric.
+  `expression`, in words when the text gives no formula, each then with a `Gap` that says which columns are not given),
+  even when the text names neither as a metric.
 - What an empty period shows ("days with no sales show 0") is a value with `value_role: default`.
 - An attribute taken from the first or last of several rows ("a visit's channel is the channel of its first page
   view", "an order's status is its latest status") is a `ComputedAs` on that attribute (a dimension concept) with
-  `aggregation` first or last, even when the text gives no full formula.
-- `JoinsTo`: `key_pairs` that point at the column elements (`from_field`, `to_field`), not only key text. A join the
+  `aggregation` first or last, even when the text gives no full formula; its `expression` is the column taken
+  (`CHANNEL`).
+- `JoinsTo`: `key_pairs` that point at the column elements (`from_field`, `to_field`), never key text for a
+  comparison of two columns; its `cardinality` when the text or a table's key gives it. A join the
   text forbids ("never join on email") is not a JoinsTo, which would read as a usable path: it is a `Rule`
   `must_not` join with the key fields as `objects`.
 - `Contains`: `data_role` dimension | time_dimension | measure, with `time_grain` for a time dimension.
@@ -368,7 +440,8 @@ definition can be exported to a semantic layer:
   say; never guess. A ratio or derived metric takes its dates from its parts.
 - A formula that combines aggregations (`SUM(a) - SUM(b)`) is one simple metric per aggregation and a `derived`
   metric whose `expression` uses their names (the last part of their ids) and whose `inputs` lists them. A formula
-  that needs joins or subqueries to run keeps its SQL in `expression`, with `dialect`, and no computable fields.
+  that cannot be written as metrics and `JoinsTo` statements, and needs joins or subqueries to run, keeps its SQL in
+  `expression`, with `dialect`, and no computable fields; such a statement is outside the compilable profile.
 
 The expected shape, with the fields to give when the text says them:
 
@@ -378,8 +451,11 @@ things:
   - {id: t.shop.orders.order_ts, label: ORDER_TS, thing_type: field, evidence: [...]}
   - {id: t.shop.orders.amount, label: AMOUNT, thing_type: field, evidence: [...]}
   - {id: t.shop.orders.status, label: STATUS, thing_type: field, evidence: [...]}
+  - {id: t.shop.promotions.starts_on, label: STARTS_ON, thing_type: field, evidence: [...]}
+  - {id: t.shop.promotions.ends_on, label: ENDS_ON, thing_type: field, evidence: [...]}
 concepts:
   - {id: c.revenue, label: Revenue, concept_type: metric, evidence: [...]}
+  - {id: c.promotion_order, label: order placed during its promotion, concept_type: segment, evidence: [...]}
 statements:
   - {id: s.T.1, predicate: Contains, subject: t.shop.orders, object: t.shop.orders.order_ts, data_role: time_dimension, evidence: [...]}
   - {id: s.T.2, predicate: Contains, subject: t.shop.orders, object: t.shop.orders.status, data_role: dimension, evidence: [...]}
@@ -388,11 +464,20 @@ statements:
     subject: c.revenue
     metric_type: simple
     aggregation: sum
-    expression: AMOUNT                        # what is aggregated, as the text gives it
+    expression: AMOUNT                        # what is aggregated: SQL over the columns of base
+    inputs: [t.shop.orders.amount]            # the fields the expression reads
     base: t.shop.orders
     time_dimension: t.shop.orders.order_ts    # the date it is counted by; may be left out when the table has one
     filters:
       - {description: "status is not Cancelled", field: t.shop.orders.status, comparator: not_equal, values: [{value: Cancelled}]}
+    evidence: [...]
+  - id: s.M.2                                 # a segment: orders placed on or between their promotion's dates
+    predicate: ImplementedBy
+    subject: c.promotion_order
+    object: t.shop.orders
+    filters:                                  # all hold; promotions is reached by its JoinsTo from orders
+      - {description: "placed on or after the promotion starts", field: t.shop.orders.order_ts, comparator: at_least, compare_to: t.shop.promotions.starts_on}
+      - {description: "placed on or before the promotion ends", field: t.shop.orders.order_ts, comparator: at_most, compare_to: t.shop.promotions.ends_on}
     evidence: [...]
 ```
 
@@ -555,6 +640,58 @@ metric's owner approves them" is two rules: a change `must_not` be adopted `unle
 approved state), and a change `must_not` be approved `unless` `{field: metric_changes.metric_id,
 party_responsibility: owns}`: whoever approves owns the metric the change is about.
 
+Rules about what a metric counts: a rule that leaves rows out of a metric, or counts them only when something holds,
+is `must_not` with verb `include`, `count`, `use` or `select`, or `must` with verb `exclude`, with the metric in
+`scope`. It names the rows as a segment concept in its action's `objects`, and an exception in
+`unless`, naming a segment in `about` ("test orders are never included in revenue"; "a promotion order counts in
+promotion sales only if it was bought during its promotion": `must_not` count promotion orders, `unless` about the
+orders bought during their promotion). Each segment such a rule names has an `ImplementedBy` from the segment to
+its table, with `filters`, whenever the text or an earlier statement names the column and the value or the other
+column: "the day it was ordered" is the table's time dimension, and "a marketplace order" is the column that says
+where an order came from, with that value. When neither says which rows, write a `Gap` about the segment. Rows
+defined as failing a range ("promotion orders placed outside their promotion") stay on the segment of the whole set,
+with `unless` naming the in-range segment; filters must all hold, so no segment is written for the complement. A state the
+data records by dates ("until the promotion is extended") is read against those dates: an extended promotion is one
+whose dates cover the order, so the sentence restates the in-range segment's exception and adds no rule with a state
+in `unless`. A field in `objects` ("do not use DISCOUNT_AMOUNT in revenue": `must_not` use the field, the metric in
+`scope`) is about the field and needs no segment. A metric in `objects` is not rows: write the rows it means as a
+segment, or the field. A definition that leaves an amount out ("before shipping", "do not take off returns") says
+so by its formula, which does not add that amount, and adds no rule: a rule that leaves rows out names rows the metric
+counts (rows of its table, or of a table each of them joins to once), never another table's rows such as returns
+against an order amount.
+
+A definition limited to the rows another metric counts ("average basket size, for the baskets counted in revenue")
+puts that metric in its `scope`; the definition then takes that metric's filters and the rules bound to it.
+
+The forms a compiler reads (a filter's `field`, a rule's segments and the metric in its `scope`, a member's value, one
+unit, an approved state, a dated period, an earlier-period metric's `expression`, the dimension in `by`, an
+`expression` in SQL over declared names, a join in a `JoinsTo` alone, the state a label applies in) are the compilable
+profile: `conformance.md`, rules C1 to C18.
+
+Sign-offs, restatements and the approvals they need: a period's sign-off ("Q1 sales were signed off") is a
+`Transition` with `subject` the metric, `to_state` its signed-off state (a concept of `concept_type: state`), and
+`period` with `named` (a concept of `concept_type: period`) and its `start` and `end`. A fiscal period is dated from
+the context's fiscal calendar ("our fiscal year starts on 1 February": fiscal Q1 2026 is 2026-02-01 to 2026-04-30);
+while the calendar is known, every period a rule, a label or a sign-off names carries both dates. A restatement is a
+`Transition` of the same form, with `to_state` the restated state. "Nobody edits a signed-off figure without the
+controller's approval" is a `Rule` that the change `must_not` go ahead `unless` the controller approves, its `unless`
+naming in `about` the controller and the approved state, as for any approval. A label a state calls for ("an edited
+figure carries the mark revised in every report") is a `Rule` with verb `label`, the label in its `values`, the metric
+in `objects`, and `when` about the state the change produces (the restatement's `to_state`). A label always says, in
+`when`, the state its object is in while the label applies, or it has no condition and applies always: "a figure
+that is still open carries the mark draft" names the open state (a concept of type state, with the `Transition` that
+puts the figure in it) in the condition's `about`, never only the closed state in `unless`.
+
+An owner's answer about comparing across a change in a definition ("compare both years on the current definition")
+is a `Rule` about comparisons, not a restated definition: `must`, verb `use`, the metric in `scope`, the definition
+chosen in the action's `objects` (the id of its `ComputedAs` statement, when you are shown it), and `when` about a
+comparison of the metric with an earlier period (the metric and its earlier-period metric in `about`), saying both
+periods are computed with the definition in force on the day of the comparison. It has no `period` and leaves the definition's own `valid_from` as it is, so the earlier
+definition stays on record and a rule about a signed-off period still applies. "Compare each year on its own
+definition" is the same rule, each period computed with the definition in force in it. A new `ComputedAs` without
+`valid_from` would hold on every day and replace the earlier definition on earlier days too; one with a `period` would
+give the metric two definitions in force.
+
 A threshold in a condition ("if returns rise by more than 10%", "orders over $50") is a value in the condition's
 `values` that carries its own comparison: `{value: "10", datatype: percent, value_role: threshold, comparator: more_than}`.
 `value` is the number alone; its kind goes in `datatype` (percent, number) and anything else in `unit` ("USD", "of
@@ -607,7 +744,16 @@ Free text is allowed only in: `Definition.text`, `UsedFor.text`, `Indicates.text
 `GovernedBy.text`, `HasGrain.text`, `CorrelatesWith.text`, `CreatedBy.text`, `DescribedIn.text`, `ComputedAs.expression`,
 `ImplementedBy.expression`, `RecordMatch.expression`, `Mapping.justification`, `Condition.description`, `Action.detail`,
 `Action.specific_verb`, `due_by`, `recurrence`, `cadence`, `goal` and `note`. Keep conditions and details
-short. `note` is never part of the meaning; use it only to flag a choice you were unsure of (notes are counted).
+short.
+
+A field holds the standard form of what the text says, and the quote keeps the text's own words. Where the schema
+gives a field, a closed list or a typed value for something, fill it, in its one form, and do not copy the sentence
+into a text field: a formula is SQL in `expression` ("AMOUNT minus DISCOUNT_AMOUNT": `AMOUNT - DISCOUNT_AMOUNT`); a
+date is an ISO date; an amount is a `value` with its `datatype`, `unit` and `comparator` ("over 10%": `10`, `percent`,
+`more_than`); a condition on a column is `field`, `comparator` and `values`; a join is `key_pairs`; a verb is one of
+the closed list, with the text's own in `specific_verb`. Words go in a text field only when the schema has no field
+for what they say. A `description` or a `detail` beside complete fields is words for people: no meaning sits in the
+words alone. `note` is never part of the meaning; use it only to flag a choice you were unsure of (notes are counted).
 
 ## Conflicts
 

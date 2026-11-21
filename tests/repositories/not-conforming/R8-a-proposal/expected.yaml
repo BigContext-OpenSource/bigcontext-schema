@@ -1,0 +1,6 @@
+based_on: ../../../../examples/context-repository
+conforms: false
+breaks: R8
+why: A statement that is proposed, not decided.
+reference_checker_says:
+- 'org/meaning/metrics/orders.yaml: s.orders.computed_as.shop.orders is proposed; only decided context is held at org or team level.'

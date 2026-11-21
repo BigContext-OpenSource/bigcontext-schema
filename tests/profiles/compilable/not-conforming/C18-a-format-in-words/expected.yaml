@@ -1,0 +1,5 @@
+profile: compilable
+conforms: false
+breaks: C18
+reference_checker_says:
+- 'Statement s.60 (HasProperty): it gives the format of the metric c.sales as ''whole dollars with thousands separators'', which is not a number pattern; write it as a number pattern: `0` or `#,##0` (with thousands separators) for the whole part, `.` and one `0` for each decimal shown, `%` at the end when it is shown as a percentage (the value times 100), and a currency sign or code before it when one is shown (`0.0%`, `#,##0`, `$#,##0.00`).'

@@ -1,0 +1,591 @@
+schema_version: 1.4.0
+source:
+  id: shop-sales-notes
+  title: Shop sales notes
+  as_of: '2026-11-09'
+things:
+- id: t.shop.orders
+  label: orders
+  thing_type: table
+  evidence:
+  - quote: the orders table
+- id: t.shop.orders.order_id
+  label: ORDER_ID
+  thing_type: field
+  evidence:
+  - quote: each ORDER_ID in the orders table
+- id: t.shop.orders.amount
+  label: AMOUNT
+  thing_type: field
+  evidence:
+  - quote: AMOUNT in the orders table
+- id: t.shop.orders.order_date
+  label: ORDER_DATE
+  thing_type: field
+  evidence:
+  - quote: by ORDER_DATE
+- id: t.shop.orders.is_test
+  label: IS_TEST
+  thing_type: field
+  evidence:
+  - quote: IS_TEST
+- id: t.shop.orders.promotion_id
+  label: PROMOTION_ID
+  thing_type: field
+  evidence:
+  - quote: PROMOTION_ID
+- id: t.shop.orders.discount_amount
+  label: DISCOUNT_AMOUNT
+  thing_type: field
+  evidence:
+  - quote: DISCOUNT_AMOUNT
+- id: t.shop.orders.region
+  label: REGION
+  thing_type: field
+  evidence:
+  - quote: REGION in the orders table
+- id: t.shop.promotions
+  label: promotions
+  thing_type: table
+  evidence:
+  - quote: the promotion's STARTS_ON
+- id: t.shop.promotions.starts_on
+  label: STARTS_ON
+  thing_type: field
+  evidence:
+  - quote: STARTS_ON
+- id: t.shop.promotions.ends_on
+  label: ENDS_ON
+  thing_type: field
+  evidence:
+  - quote: ENDS_ON
+- id: t.shop.returns
+  label: returns
+  thing_type: table
+  evidence:
+  - quote: the returns table
+- id: t.shop.returns.order_id
+  label: ORDER_ID
+  thing_type: field
+  evidence:
+  - quote: by its ORDER_ID
+- id: t.shop.returns.reason
+  label: REASON
+  thing_type: field
+  evidence:
+  - quote: REASON
+- id: t.merchandising
+  label: Merchandising
+  thing_type: team
+  evidence:
+  - quote: Merchandising
+- id: t.controller
+  label: controller
+  thing_type: post
+  evidence:
+  - quote: the controller
+- id: t.shop.orders.status
+  label: STATUS
+  thing_type: field
+  evidence:
+  - quote: STATUS
+- id: t.shop.orders.customer_id
+  label: CUSTOMER_ID
+  thing_type: field
+  evidence:
+  - quote: by its CUSTOMER_ID
+- id: t.shop.customers
+  label: customers
+  thing_type: table
+  evidence:
+  - quote: the customers table
+- id: t.shop.customers.customer_id
+  label: CUSTOMER_ID
+  thing_type: field
+  evidence:
+  - quote: by its CUSTOMER_ID
+- id: t.shop.customers.tier
+  label: TIER
+  thing_type: field
+  evidence:
+  - quote: TIER
+- id: t.shop.promotions.promotion_id
+  label: PROMOTION_ID
+  thing_type: field
+  evidence:
+  - quote: by its PROMOTION_ID
+concepts:
+- id: c.sales
+  label: sales
+  concept_type: metric
+  evidence:
+  - quote: Sales
+- id: c.order_count
+  label: order count
+  concept_type: metric
+  evidence:
+  - quote: The order count
+- id: c.promotion_sales
+  label: promotion sales
+  concept_type: metric
+  evidence:
+  - quote: Promotion sales
+- id: c.average_basket
+  label: average basket
+  concept_type: metric
+  evidence:
+  - quote: Average basket
+- id: c.sales_last_year
+  label: sales the same week last year
+  concept_type: metric
+  evidence:
+  - quote: Sales the same week last year
+- id: c.weekly_change
+  label: weekly change
+  concept_type: metric
+  evidence:
+  - quote: The weekly change
+- id: c.test_order
+  label: test order
+  concept_type: segment
+  evidence:
+  - quote: A test order
+- id: c.large_order
+  label: large order
+  concept_type: segment
+  evidence:
+  - quote: A large order
+- id: c.promotion_order
+  label: promotion order
+  concept_type: segment
+  evidence:
+  - quote: Promotion orders
+- id: c.order_in_promotion
+  label: order placed during its promotion
+  concept_type: segment
+  evidence:
+  - quote: placed during its promotion
+- id: c.damaged_return
+  label: damaged return
+  concept_type: segment
+  evidence:
+  - quote: A damaged return
+- id: c.region
+  label: region
+  concept_type: dimension
+  evidence:
+  - quote: The regions
+- id: c.north
+  label: North
+  concept_type: category_value
+  evidence:
+  - quote: North
+- id: c.south
+  label: South
+  concept_type: category_value
+  evidence:
+  - quote: South
+- id: c.fiscal_calendar
+  label: fiscal calendar
+  concept_type: calendar
+  evidence:
+  - quote: Our fiscal year
+- id: c.fiscal_q1_2026
+  label: Q1 of fiscal 2026
+  concept_type: period
+  evidence:
+  - quote: fiscal Q1 2026
+- id: c.sales_signed_off
+  label: signed-off sales
+  concept_type: state
+  evidence:
+  - quote: signed off
+- id: c.sales_edit_approved
+  label: edit of signed-off sales approved
+  concept_type: state
+  evidence:
+  - quote: the controller's approval
+- id: c.kept_sales
+  label: kept sales
+  concept_type: metric
+  evidence:
+  - quote: Kept sales
+- id: c.member_sales
+  label: member sales
+  concept_type: metric
+  evidence:
+  - quote: Member sales
+statements:
+- id: s.1
+  predicate: ComputedAs
+  subject: c.sales
+  metric_type: simple
+  aggregation: sum
+  expression: AMOUNT
+  base: t.shop.orders
+  time_dimension: t.shop.orders.order_date
+  evidence:
+  - quote: Sales adds up AMOUNT in the orders table, by ORDER_DATE.
+  - quote: Sales does not take off returns.
+- id: s.2
+  predicate: ComputedAs
+  subject: c.order_count
+  metric_type: simple
+  aggregation: count_distinct
+  expression: ORDER_ID
+  base: t.shop.orders
+  time_dimension: t.shop.orders.order_date
+  evidence:
+  - quote: The order count counts each ORDER_ID in the orders table once.
+- id: s.3
+  predicate: ImplementedBy
+  subject: c.test_order
+  object: t.shop.orders
+  filters:
+  - description: IS_TEST is 1
+    field: t.shop.orders.is_test
+    comparator: equal
+    values:
+    - value: '1'
+  evidence:
+  - quote: A test order is one whose IS_TEST is 1.
+- id: s.4
+  predicate: Rule
+  modality: must_not
+  action:
+    verb: include
+    objects:
+    - c.test_order
+  scope:
+  - c.sales
+  evidence:
+  - quote: Test orders are never included in sales.
+- id: s.5
+  predicate: ImplementedBy
+  subject: c.large_order
+  object: t.shop.orders
+  filters:
+  - description: AMOUNT is over 500
+    field: t.shop.orders.amount
+    comparator: more_than
+    values:
+    - value: '500'
+  evidence:
+  - quote: A large order is one whose AMOUNT is over 500.
+- id: s.6
+  predicate: ImplementedBy
+  subject: c.promotion_order
+  object: t.shop.orders
+  filters:
+  - description: it has a PROMOTION_ID
+    field: t.shop.orders.promotion_id
+    comparator: is_not_null
+  evidence:
+  - quote: Promotion orders carry a PROMOTION_ID.
+- id: s.7
+  predicate: ImplementedBy
+  subject: c.order_in_promotion
+  object: t.shop.orders
+  filters:
+  - description: ORDER_DATE is on or after STARTS_ON
+    field: t.shop.orders.order_date
+    comparator: at_least
+    compare_to: t.shop.promotions.starts_on
+  - description: ORDER_DATE is on or before ENDS_ON
+    field: t.shop.orders.order_date
+    comparator: at_most
+    compare_to: t.shop.promotions.ends_on
+  evidence:
+  - quote: An order is placed during its promotion when its ORDER_DATE falls from the promotion's STARTS_ON to its ENDS_ON.
+- id: s.8
+  predicate: ComputedAs
+  subject: c.promotion_sales
+  metric_type: simple
+  aggregation: sum
+  expression: AMOUNT
+  base: t.shop.orders
+  time_dimension: t.shop.orders.order_date
+  filters:
+  - description: the order has a PROMOTION_ID
+    field: t.shop.orders.promotion_id
+    comparator: is_not_null
+  evidence:
+  - quote: Promotion sales adds up AMOUNT over promotion orders.
+- id: s.9
+  predicate: Rule
+  modality: must_not
+  action:
+    verb: count
+    objects:
+    - c.promotion_order
+  scope:
+  - c.promotion_sales
+  unless:
+  - description: it was placed during its promotion
+    about:
+    - c.order_in_promotion
+  evidence:
+  - quote: A promotion order counts in promotion sales only if it was placed during its promotion.
+- id: s.10
+  predicate: Rule
+  modality: must_not
+  action:
+    verb: use
+    objects:
+    - t.shop.orders.discount_amount
+  scope:
+  - c.sales
+  evidence:
+  - quote: Do not use DISCOUNT_AMOUNT in sales.
+- id: s.11
+  predicate: ComputedAs
+  subject: c.average_basket
+  metric_type: ratio
+  numerator: c.sales
+  denominator: c.order_count
+  expression: sales / order_count
+  scope:
+  - c.sales
+  evidence:
+  - quote: Average basket is sales over the order count, for the orders counted in sales.
+- id: s.12
+  predicate: HasValues
+  subject: c.region
+  members:
+  - c.north
+  - c.south
+  values:
+  - value: North
+  - value: South
+  evidence:
+  - quote: The regions are North and South, and REGION in the orders table holds an order's region.
+- id: s.13
+  predicate: ImplementedBy
+  subject: c.region
+  object: t.shop.orders.region
+  evidence:
+  - quote: The regions are North and South, and REGION in the orders table holds an order's region.
+- id: s.14
+  predicate: ImplementedBy
+  subject: c.north
+  object: t.shop.orders
+  filters:
+  - description: REGION is North
+    field: t.shop.orders.region
+    comparator: equal
+    values:
+    - value: North
+  evidence:
+  - quote: The regions are North and South, and REGION in the orders table holds an order's region.
+- id: s.15
+  predicate: ImplementedBy
+  subject: c.south
+  object: t.shop.orders
+  filters:
+  - description: REGION is South
+    field: t.shop.orders.region
+    comparator: equal
+    values:
+    - value: South
+  evidence:
+  - quote: The regions are North and South, and REGION in the orders table holds an order's region.
+- id: s.16
+  predicate: ComputedAs
+  subject: c.sales_last_year
+  metric_type: derived
+  inputs:
+  - c.sales
+  values:
+  - value: '1'
+    unit: year
+    value_role: offset
+  reporting_grain: week
+  expression: sales
+  evidence:
+  - quote: Sales the same week last year is sales one year back, by week.
+- id: s.17
+  predicate: ComputedAs
+  subject: c.weekly_change
+  metric_type: derived
+  inputs:
+  - c.sales
+  - c.sales_last_year
+  expression: (sales - sales_last_year) / sales_last_year * 100
+  evidence:
+  - quote: The weekly change is sales against the same week last year, in percent.
+- id: s.18
+  predicate: Rule
+  modality: must
+  action:
+    verb: notify
+    specific_verb: tell
+    to:
+    - t.merchandising
+    by:
+    - c.region
+  when:
+  - description: a region's weekly change is over 10%
+    about:
+    - c.weekly_change
+    - c.region
+    values:
+    - value: '10'
+      datatype: percent
+      value_role: threshold
+      comparator: more_than
+  evidence:
+  - quote: Tell Merchandising when a region's weekly change is over 10%.
+- id: s.19
+  predicate: HasProperty
+  subject: c.fiscal_calendar
+  standard_attribute: year_start
+  property_value:
+    value: 1 February
+  evidence:
+  - quote: Our fiscal year starts on 1 February.
+- id: s.20
+  predicate: Transition
+  subject: c.sales
+  to_state: c.sales_signed_off
+  period:
+    named: c.fiscal_q1_2026
+    start: '2026-02-01'
+    end: '2026-04-30'
+  evidence:
+  - quote: Sales for fiscal Q1 2026 were signed off.
+- id: s.21
+  predicate: Rule
+  modality: must_not
+  action:
+    verb: update
+    specific_verb: edit
+    objects:
+    - c.sales
+  when:
+  - description: the sales are signed off
+    about:
+    - c.sales_signed_off
+  unless:
+  - description: the controller approves the edit
+    about:
+    - t.controller
+    - c.sales_edit_approved
+  evidence:
+  - quote: Nobody edits signed-off sales without the controller's approval.
+- id: s.22
+  predicate: Rule
+  modality: must
+  action:
+    verb: use
+    objects:
+    - s.1
+    detail: for both years
+  scope:
+  - c.sales
+  when:
+  - description: sales is compared with an earlier year
+    about:
+    - c.sales
+    - c.sales_last_year
+  evidence:
+  - quote: Compare both years on the current definition of sales.
+- id: s.23
+  predicate: JoinsTo
+  subject: t.shop.returns
+  object: t.shop.orders
+  cardinality: many_to_one
+  key_pairs:
+  - from_field: t.shop.returns.order_id
+    to_field: t.shop.orders.order_id
+  evidence:
+  - quote: Each row of the returns table belongs to one order, by its ORDER_ID.
+- id: s.24
+  predicate: ImplementedBy
+  subject: c.damaged_return
+  object: t.shop.returns
+  filters:
+  - description: REASON is damaged
+    field: t.shop.returns.reason
+    comparator: equal
+    values:
+    - value: damaged
+  evidence:
+  - quote: A damaged return is one whose REASON is damaged.
+- id: s.25
+  predicate: ComputedAs
+  subject: c.kept_sales
+  metric_type: simple
+  aggregation: sum
+  expression: AMOUNT, or 0 for an order sent back
+  base: t.shop.orders
+  inputs:
+  - t.shop.orders.status
+  - t.shop.orders.amount
+  time_dimension: t.shop.orders.order_date
+  evidence:
+  - quote: Kept sales adds up AMOUNT in the orders table, taking 0 for an order whose STATUS is sent back.
+- id: s.26
+  predicate: JoinsTo
+  subject: t.shop.orders
+  object: t.shop.customers
+  cardinality: many_to_one
+  key_pairs:
+  - from_field: t.shop.orders.customer_id
+    to_field: t.shop.customers.customer_id
+  evidence:
+  - quote: Each order belongs to one row of the customers table, by its CUSTOMER_ID.
+- id: s.27
+  predicate: ComputedAs
+  subject: c.member_sales
+  metric_type: simple
+  aggregation: sum
+  expression: AMOUNT
+  base: t.shop.orders
+  inputs:
+  - t.shop.orders.amount
+  time_dimension: t.shop.orders.order_date
+  filters:
+  - description: the customer's TIER is member
+    field: t.shop.customers.tier
+    comparator: equal
+    values:
+    - value: member
+  evidence:
+  - quote: Member sales adds up AMOUNT over the orders of customers whose TIER is member.
+- id: s.28
+  predicate: JoinsTo
+  subject: t.shop.orders
+  object: t.shop.promotions
+  cardinality: many_to_one
+  key_pairs:
+  - from_field: t.shop.orders.promotion_id
+    to_field: t.shop.promotions.promotion_id
+  evidence:
+  - quote: A promotion order belongs to one row of the promotions table, by its PROMOTION_ID.
+- id: s.29
+  predicate: Rule
+  modality: must
+  action:
+    verb: label
+    objects:
+    - c.sales
+    values:
+    - value: final
+  when:
+  - description: the sales are signed off
+    about:
+    - c.sales_signed_off
+  evidence:
+  - quote: Signed-off sales carry the mark final in every report.
+- id: s.60
+  predicate: HasProperty
+  subject: c.sales
+  standard_attribute: format
+  property_value:
+    value: $#,##0
+  evidence:
+  - quote: Sales are written in whole dollars with thousands separators.
+skipped:
+- reason: heading
+  evidence:
+  - quote: Shop sales notes

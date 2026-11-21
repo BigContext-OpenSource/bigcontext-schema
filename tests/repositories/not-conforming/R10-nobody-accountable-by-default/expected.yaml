@@ -1,0 +1,6 @@
+based_on: ../../../../examples/context-repository
+conforms: false
+breaks: R10
+why: The org has files and nobody accountable by default.
+reference_checker_says:
+- 'bigcontext.yaml: accountable names nobody by default for the org.'

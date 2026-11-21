@@ -1,0 +1,6 @@
+based_on: ../../../../examples/context-repository
+conforms: false
+breaks: R2
+why: A team folder for a team the org's files do not declare.
+reference_checker_says:
+- 'teams/billing: no team with the id t.billing is declared in the org''s files.'

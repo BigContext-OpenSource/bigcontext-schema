@@ -1,0 +1,5 @@
+profile: compilable
+conforms: false
+breaks: C11
+reference_checker_says:
+- 'Statement s.10 (Rule): it is a rule about what c.sales counts, and it names c.sales in its action''s to; name the metric in scope, which is where a rule about a table or a field is limited to a metric.'

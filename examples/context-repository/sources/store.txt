@@ -1,0 +1,15 @@
+Acme is an online store. The Operations team and the Support team are part of Acme.
+Dana leads the Operations team.
+
+The orders table has one row per order. Its columns are ORDER_ID, ORDER_DATE and STATUS.
+The shipments table has one row per shipment. Its columns are SHIPMENT_ID and ORDER_ID.
+The shipments table joins to the orders table on ORDER_ID.
+
+Orders is the number of orders placed in a period, counted by ORDER_DATE.
+Customers must receive a text message when their order goes out for delivery.
+
+When an order is late:
+1. Check the carrier status.
+2. Tell the customer what happened.
+
+For Support, Orders is the number of orders placed in a period whose STATUS is Shipped.

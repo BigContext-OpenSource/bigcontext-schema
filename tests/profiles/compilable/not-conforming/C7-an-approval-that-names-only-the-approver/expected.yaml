@@ -1,0 +1,5 @@
+profile: compilable
+conforms: false
+breaks: C7
+reference_checker_says:
+- 'Statement s.21 (Rule): its unless condition ''the controller approves the edit'' names only who approves (t.controller); also name in about the state the approval gives (a concept of concept_type state), so an approval step can grant it.'

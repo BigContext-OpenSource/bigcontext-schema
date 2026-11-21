@@ -1,0 +1,8 @@
+based_on: ../../../../examples/context-repository
+conforms: false
+breaks: R4
+why: The file that holds c.orders is not named orders.yaml.
+removes:
+- org/meaning/metrics/orders.yaml
+reference_checker_says:
+- 'org/meaning/metrics/order_count.yaml: it holds c.orders, so its name is orders.yaml.'

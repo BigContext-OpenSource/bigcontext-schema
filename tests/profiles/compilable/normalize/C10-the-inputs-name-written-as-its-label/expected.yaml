@@ -1,0 +1,8 @@
+profile: compilable
+conforms: false
+breaks: C10
+reference_checker_says:
+- 'Statement s.16 (ComputedAs): it takes c.sales back by an offset and writes its input''s name as ''`Sales`''; `bigcontext-schema normalize` rewrites it.'
+normalized: normalized.yaml
+changes:
+- 'Statement s.16 (ComputedAs): its expression is now its input''s name, sales.'

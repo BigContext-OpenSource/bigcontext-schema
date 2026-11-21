@@ -4,7 +4,7 @@
 responsibilities. People, software and AI agents all read it the same way, and every statement points back to the
 exact words it came from.**
 
-Status: version 1.3.0; version 1.3 adds fields for enterprise data (see `CHANGELOG.md`). Licence: Apache 2.0, free for anyone
+Status: version 1.4.0; version 1.4 adds a context repository and facts about systems, tools and columns (see `CHANGELOG.md`). Licence: Apache 2.0, free for anyone
 to use and build on.
 
 ---
@@ -165,7 +165,7 @@ converters to dbt, OSI and ODRL.
 | `bigcontext_schema.yaml` | The schema, written in [LinkML](https://linkml.io). The single source of truth |
 | `guide.md` | How to express a text in the schema, for people and AI models alike |
 | `graph.md` | How documents become a knowledge graph, and which statements count as in force on a date |
-| `conformance.md`, `tests/` | What a conforming document, producer and graph builder must do, and the cases that check it |
+| `conformance.md`, `tests/` | What a conforming document, producer and graph builder must do, the compilable profile (the one form of each meaning a compiler reads, added in 1.4), and the cases that check them |
 | `CHANGELOG.md`, `GOVERNANCE.md`, `CONTRIBUTING.md`, `CODE_OF_CONDUCT.md` | What changed in each version; who decides changes and how; how to contribute; how everyone taking part behaves |
 | `bigcontext_facts.yaml` | The vocabulary of the graph's facts (reports to, owns, escalates to, same as) |
 | `bigcontext_link_roles.yaml` | What each link role means (added in 1.2), one line per role; the link table and `graph.md`'s roles table carry these |
@@ -237,7 +237,7 @@ Permanent address: `https://w3id.org/bigcontext-schema`.
 
 ## Citing
 
-Big Context & Company (2026). *BigContext Schema*, version 1.3.0. https://w3id.org/bigcontext-schema
+Big Context & Company (2026). *BigContext Schema*, version 1.4.0. https://w3id.org/bigcontext-schema
 
 `CITATION.cff` gives the same in a form citation tools read.
 

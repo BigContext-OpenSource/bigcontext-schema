@@ -3,6 +3,95 @@
 What changed in each version of BigContext Schema. Versions follow the rules in the README: patch, minor and major,
 with drafts (`0.9.x-draft`) before 1.0.
 
+## 1.4.0 (2026-11-21)
+
+A minor version: it adds allowed values and nothing else. Every 1.3.0 document is valid and
+keeps its meaning and its graph facts. The guide gives the forms a compiler reads to run a rule, and `conformance.md`
+names them as a profile a document may be checked against.
+
+Schema
+- Thirteen standard attributes for `HasProperty` (`StandardAttributeEnum`), each for a fact about a kind of thing
+  that no attribute held: `environment`, `platform` and `credential_ref` (a system, a data container); `external_id`
+  (the id something has in another system); `nullable` (a field); `version` (a model, a tool, a document, a
+  calendar); `side_effect`, `timeout` and `idempotent` (a tool, a job); `schedule` (a job, a refresh); `language` and
+  `digest` (a document, a model's file); and `null_handling` (how empty values are treated when a metric or a
+  dimension is computed). A document of 1.3 or earlier that uses one is refused, as for every addition. Cases:
+  `tests/documents/valid/added-in-1-4/` and `tests/documents/invalid/D1-a-1-4-value-in-a-1-3-document/`.
+- D2: a `HasProperty` with `nullable` or `idempotent` gives true or false
+  (`tests/documents/invalid/D2-nullable-not-true-or-false/`).
+
+A repository
+- A conforming repository (`conformance.md`, "A conforming repository"): rules R1 to R10 for an organization's and its
+  teams' context kept as one document per file, with the level and the kind of a file given by its folders, a
+  registry of kinds that is the repository's own, a view for the organization and for each team, and what stands in a
+  view on a day. It is optional: a conforming document need not be in a repository.
+- `examples/context-repository/`: a repository of 11 files with a registry of nine kinds, an organization and one
+  team's version of a metric. `tests/repositories/not-conforming/`: one case for each of R1 to R10, as the files that
+  differ from the example.
+- A kind's `complete_with` in the registry says what a complete file of the kind holds: statement types, a statement
+  type with a field or a value it gives, fields of the file's own element, procedure or statement, alternatives, and
+  the words a note uses for each. A file that lacks one conforms; a check may note it.
+- `repository.md` says how a repository's files are made: one thing per file, `external` for
+  what another file declares, ids that say what a statement is about, a team's version, and a change that holds from
+  a day.
+
+Conformance
+- The compilable profile (`conformance.md`, "The compilable profile"): rules C1 to C18, the one form of each of
+  seventeen meanings a compiler reads. It is optional: a conforming document need not be in it, and a document does not
+  declare it. For C10, C11 and C12 a tool may rewrite the other form; it keeps every id, every quote and the stated
+  facts.
+- Cases in `tests/profiles/compilable/`: one document in the profile, one change to it for each of C1 to C11 and C13
+  to C17, three documents in a form a tool may rewrite, each beside its rewritten form, and `expressions.yaml`:
+  expressions of a total on one table, each in the profile or breaking C14 or C15, for a checker and a compiler.
+- C14: the `expression` of a definition a reader computes is one SQL expression (names, literals, `+ - * /`,
+  comparisons, `AND`, `OR`, `NOT`, `IS NULL`, `CASE WHEN`, `COALESCE`, `CAST`; `*` for a count of rows), in ANSI SQL or
+  the statement's `dialect`. C15: each name in it is one declared element, a total's on its `base` table, so a
+  column's table is read from fields. C16: a join is a `JoinsTo` and nothing else holds one; an `ImplementedBy` gives
+  no `expression`, and a join's condition is given once, in `key_pairs` or, for what key pairs cannot say, in `keys`.
+- C17: a rule that calls for a label (`must` or `should`, verb `label`) says in fields when the label applies: no
+  condition, a state named in a condition's `about`, a condition a reader runs, or a dated `period`.
+- C18: how a metric's numbers are written is a `HasProperty` with `standard_attribute: format` whose value is a number
+  pattern (`0.0%`, `#,##0`, `$#,##0.00`), a field a tool applies; a format in words breaks the rule. The guide says so
+  under `HasProperty`. No schema change.
+- A check may give advice that keeps no document out of the profile; the reference check's four notes are listed.
+
+Guide
+- An `activity` is also something an organization does to change an outcome ("a promotion"), with its effect as an
+  `Influences`. A range a metric is expected to stay within is a `Rule` with a check and the bound as a value, not a
+  definition of the metric; a value a metric should reach is a `Rule` with a `target` value and `due_by`.
+- A field holds the standard form of what the text says, and the quote keeps its words ("Free text"): where the
+  schema has a field, a closed list or a typed value, the sentence is not copied into a text field.
+- A label is a name, never a formula or a condition: an element the text describes without naming gets a short name,
+  the words of its id, and the text's phrase is an alias. A label the text does not hold is a name its writer gave.
+- An `expression` is one SQL expression, with a `Gap` when the text gives no formula; its names are columns of `base`
+  or the inputs' names, with the fields a total reads in `inputs`; a definition that needs another table names the
+  column, and the join is a `JoinsTo`; `keys` holds only a condition key pairs cannot say.
+- A label a rule calls for names, in `when`, the state its object is in while the label applies.
+- An owner's choice of definition for comparing periods names the definition's statement in the action's `objects`
+  and the metrics compared in the condition's `about`.
+- A filter of an `ImplementedBy` may compare its field with another column (`compare_to`), on the concept's table or
+  on a table it joins to; a range is two filters, `at_least` and `at_most`. The metric example gains such a segment.
+- A member concept of a dimension whose value is given has an `ImplementedBy` to the dimension's table with one
+  filter, or a `Gap` when the value is not given.
+- Rules about what a metric counts: `must_not` with verb `include`, `count`, `use` or `select`, or `must` with verb
+  `exclude`, with the metric in `scope`. Their rows are segments, each with an `ImplementedBy` and `filters`, or
+  a `Gap`; rows outside a range stay on the whole set's segment with `unless`; a field in `objects` needs no segment,
+  and a metric there is not rows. The strength table's "only" row points there.
+- A definition limited to the rows another metric counts names that metric in `scope`.
+- An amount a definition leaves out is left out of its formula; a rule that leaves rows out names rows the metric counts.
+- A comparison with an earlier period: the earlier metric's `expression` is its input's name; the comparison's
+  `expression` is a formula when the text says how they compare; the comparison and a threshold on it use one unit
+  (`* 100` with `datatype: percent`, or a fraction); a threshold judged for each value of a dimension names that
+  dimension in the rule's action, in `by`; an earlier statement that defines the comparison is reused.
+- A period's sign-off and a restatement are a `Transition` with a dated `period`; an approval's `unless` names the
+  approver and the approved state (also in the strength table's "check with" row); a label a state calls for is a
+  `Rule` with verb `label` and `when` about that state.
+- An owner's choice of definition for comparing periods is a `Rule` about comparisons, not a restated definition.
+
+Examples and conformance
+- `examples/agent-context` (`s.1.3`) and `tests/documents/valid/added-in-1-1` (`s.30`): each approval's `unless`
+  names the approved state beside the approver, a new concept of `concept_type: state`.
+
 ## 1.3.0 (2026-11-06)
 
 Every 1.0, 1.1 and 1.2 document is valid under 1.3.0 and keeps its meaning and its graph facts. The additions come

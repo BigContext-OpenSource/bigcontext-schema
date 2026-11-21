@@ -1,0 +1,5 @@
+profile: compilable
+conforms: false
+breaks: C9
+reference_checker_says:
+- 'Statement s.20 (Transition): its period names c.fiscal_q1_2026 without its start and end; the context gives the calendar, so give both dates (the period''s first and last day).'

@@ -1,0 +1,5 @@
+profile: compilable
+conforms: false
+breaks: C4
+reference_checker_says:
+- 'Statement s.2 (ComputedAs): its scope limits c.order_count to the rows c.average_basket counts, and c.order_count is a part c.average_basket is computed from; remove c.average_basket from its scope.'

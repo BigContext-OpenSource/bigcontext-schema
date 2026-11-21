@@ -1,0 +1,172 @@
+source:
+  id: added-in-1-4
+  title: What BigContext Schema 1.4 adds
+things:
+- id: t.warehouse
+  label: warehouse
+  thing_type: system
+  evidence:
+  - quote: The warehouse
+- id: t.dana
+  label: Dana
+  thing_type: person
+  evidence:
+  - quote: Dana
+- id: t.table.customers
+  label: customers
+  thing_type: table
+  evidence:
+  - quote: The customers table
+- id: t.table.customers.email
+  label: EMAIL
+  thing_type: field
+  evidence:
+  - quote: an EMAIL column
+- id: t.churn_model
+  label: churn model
+  thing_type: ml_model
+  evidence:
+  - quote: The churn model
+- id: t.refund_tool
+  label: refund tool
+  thing_type: tool
+  evidence:
+  - quote: the refund tool
+- id: t.nightly_load
+  label: nightly load
+  thing_type: job
+  evidence:
+  - quote: The nightly load
+- id: t.returns_policy
+  label: returns policy
+  thing_type: document
+  evidence:
+  - quote: The returns policy
+concepts:
+- id: c.orders
+  label: Orders
+  concept_type: metric
+  evidence:
+  - quote: Orders is the number of orders placed in a period
+statements:
+- id: s.A.1
+  predicate: HasProperty
+  subject: t.warehouse
+  standard_attribute: platform
+  property_value:
+    value: PostgreSQL
+  evidence:
+  - quote: The warehouse runs on PostgreSQL
+- id: s.A.2
+  predicate: HasProperty
+  subject: t.warehouse
+  standard_attribute: environment
+  property_value:
+    value: production
+  evidence:
+  - quote: is our production environment.
+- id: s.A.3
+  predicate: HasProperty
+  subject: t.warehouse
+  standard_attribute: credential_ref
+  property_value:
+    value: warehouse-reader
+  evidence:
+  - quote: The password for the warehouse is kept in the secret store under warehouse-reader.
+- id: s.A.4
+  predicate: HasProperty
+  subject: t.dana
+  standard_attribute: external_id
+  property_value:
+    value: E-1042
+  evidence:
+  - quote: Dana's id in the staff directory is E-1042.
+- id: s.A.5
+  predicate: Contains
+  subject: t.table.customers
+  object: t.table.customers.email
+  evidence:
+  - quote: The customers table has an EMAIL column
+- id: s.A.6
+  predicate: HasProperty
+  subject: t.table.customers.email
+  standard_attribute: nullable
+  property_value:
+    value: 'true'
+    datatype: boolean
+  evidence:
+  - quote: which may be empty.
+- id: s.A.7
+  predicate: HasProperty
+  subject: t.churn_model
+  standard_attribute: version
+  property_value:
+    value: '3'
+  evidence:
+  - quote: The churn model is at version 3.
+- id: s.A.8
+  predicate: HasProperty
+  subject: t.refund_tool
+  standard_attribute: side_effect
+  property_value:
+    value: sends money to a customer
+  evidence:
+  - quote: Using the refund tool sends money to a customer.
+- id: s.A.9
+  predicate: HasProperty
+  subject: t.refund_tool
+  standard_attribute: timeout
+  property_value:
+    value: '30'
+    unit: seconds
+    datatype: duration
+  evidence:
+  - quote: A call to the refund tool is stopped after 30 seconds
+- id: s.A.10
+  predicate: HasProperty
+  subject: t.refund_tool
+  standard_attribute: idempotent
+  property_value:
+    value: 'true'
+    datatype: boolean
+  evidence:
+  - quote: calling it twice with the same request pays once.
+- id: s.A.11
+  predicate: HasProperty
+  subject: t.nightly_load
+  standard_attribute: schedule
+  property_value:
+    value: every day at 02:00 UTC
+  evidence:
+  - quote: The nightly load runs every day at 02:00 UTC.
+- id: s.A.12
+  predicate: HasProperty
+  subject: t.returns_policy
+  standard_attribute: language
+  property_value:
+    value: en
+  evidence:
+  - quote: The returns policy is written in English
+- id: s.A.13
+  predicate: HasProperty
+  subject: t.returns_policy
+  standard_attribute: digest
+  property_value:
+    value: sha256:9f2c1ab4
+  evidence:
+  - quote: its content has the digest sha256:9f2c1ab4.
+- id: s.A.14
+  predicate: Definition
+  subject: c.orders
+  text: the number of orders placed in a period
+  evidence:
+  - quote: Orders is the number of orders placed in a period
+- id: s.A.15
+  predicate: HasProperty
+  subject: c.orders
+  standard_attribute: null_handling
+  property_value:
+    value: left out
+  evidence:
+  - quote: an order with no ORDER_DATE is left out.
+schema_version: 1.3.0

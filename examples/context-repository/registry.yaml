@@ -1,0 +1,18 @@
+# The kinds of this repository and the folder of each. A repository's registry is its own: these nine are an example.
+registry_version: "1.0.0"
+layers: [organization, data, meaning, rules]
+kinds:
+  organization: {layer: organization, folder: organization/organization, git: true, things: [organization], conflict: org}
+  team: {layer: organization, folder: organization/teams, git: true, things: [team, unit], conflict: org}
+  person: {layer: organization, folder: organization/people, git: true, things: [person, post], conflict: org}
+  table: {layer: data, folder: data/tables, git: true, things: [table], members: [field], conflict: org}
+  column: {layer: data, member_of: [table], git: true, things: [field], conflict: org}
+  metric: {layer: meaning, folder: meaning/metrics, git: true, concepts: [metric], complete_with: [ComputedAs], conflict: narrowest}
+  join: {layer: meaning, folder: meaning/joins, git: true, statements: [JoinsTo], conflict: org}
+  rule: {layer: rules, folder: rules/rules, git: true, statements: [Rule], conflict: org}
+  procedure: {layer: rules, folder: rules/procedures, git: true, procedures: instruction, conflict: narrowest}
+  question: {layer: rules, git: false, statements: [Gap], conflict: narrowest}
+defaults:
+  things: {organization: organization, team: team, unit: team, person: person, post: person, table: table, field: column}
+  concepts: {metric: metric}
+  statements: {JoinsTo: join, Rule: rule, Gap: question}

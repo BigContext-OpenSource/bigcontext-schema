@@ -2,7 +2,7 @@
 id: https://w3id.org/bigcontext-schema
 name: bigcontext_schema
 title: BigContext Schema
-version: 1.3.0
+version: 1.4.0
 description: >-
   A small, closed set of building blocks for expressing business context taken from natural language:
   simple rules, long procedures, company structure, data and mappings. Tier 1 is the element types, tier 2 the
@@ -1229,6 +1229,19 @@ enums:
       week_start: {description: "The day a calendar's week starts on, in English (Monday, Sunday). Added in 1.3.", annotations: {added_in: "1.3"}}
       week_pattern: {description: "How each quarter of a calendar divides into weeks: 4-4-5, 4-5-4 or 5-4-4. Added in 1.3.", annotations: {added_in: "1.3"}}
       day_start: {description: "When a business day starts, as HH:MM on a 24-hour clock, when not at midnight (04:00); its time zone is a time_zone property. Added in 1.3.", annotations: {added_in: "1.3"}}
+      environment: {description: "Which environment a system or a data container is, in the text's words (production, test, development). Added in 1.4.", annotations: {added_in: "1.4"}}
+      platform: {description: "The product a system runs on (PostgreSQL, BigQuery, Slack). Added in 1.4.", annotations: {added_in: "1.4"}}
+      external_id: {description: "The id something has in another system: a person's id in the directory, an account's id at its provider. Added in 1.4.", annotations: {added_in: "1.4"}}
+      nullable: {description: "Whether a field may be empty: true or false. Added in 1.4.", annotations: {added_in: "1.4"}}
+      version: {description: "The version of a model, a tool, a document or a calendar, in its own words (v3, 2026-01). Added in 1.4.", annotations: {added_in: "1.4"}}
+      side_effect: {description: "What using a tool changes, in the text's words (nothing, reads data, writes data, sends a message, deletes). Added in 1.4.", annotations: {added_in: "1.4"}}
+      null_handling: {description: "How empty values are treated when a metric or a dimension is computed, in the text's words (left out, counted as zero, shown as Unknown). Added in 1.4.", annotations: {added_in: "1.4"}}
+      schedule: {description: "When a job or a refresh runs, in the text's words (every day at 02:00 UTC, hourly). Added in 1.4.", annotations: {added_in: "1.4"}}
+      timeout: {description: "How long a call or a run may take before it is stopped (30 seconds). Added in 1.4.", annotations: {added_in: "1.4"}}
+      idempotent: {description: "Whether doing it again with the same input changes nothing more: true or false. Added in 1.4.", annotations: {added_in: "1.4"}}
+      digest: {description: "A digest of something's content, with its algorithm (sha256:9f2c1ab4). Added in 1.4.", annotations: {added_in: "1.4"}}
+      language: {description: "The language something is written in, as a language tag (en, de-CH). Added in 1.4.", annotations: {added_in: "1.4"}}
+      credential_ref: {description: "Where the secret that gives access is kept: its name or address in a secret store, never the secret. Added in 1.4.", annotations: {added_in: "1.4"}}
   ProgressEnum:
     permissible_values: {pending: {}, in_progress: {}, nearly_done: {}, done: {}, overdue: {}, blocked: {}, dropped: {}}
   DecisionStatusEnum:

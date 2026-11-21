@@ -1,0 +1,30 @@
+Shop sales notes
+
+Sales adds up AMOUNT in the orders table, by ORDER_DATE.
+The order count counts each ORDER_ID in the orders table once.
+A test order is one whose IS_TEST is 1.
+Test orders are never included in sales.
+A large order is one whose AMOUNT is over 500.
+Promotion orders carry a PROMOTION_ID.
+An order is placed during its promotion when its ORDER_DATE falls from the promotion's STARTS_ON to its ENDS_ON.
+Promotion sales adds up AMOUNT over promotion orders.
+A promotion order counts in promotion sales only if it was placed during its promotion.
+Do not use DISCOUNT_AMOUNT in sales.
+Average basket is sales over the order count, for the orders counted in sales.
+The regions are North and South, and REGION in the orders table holds an order's region.
+Sales the same week last year is sales one year back, by week.
+The weekly change is sales against the same week last year, in percent.
+Tell Merchandising when a region's weekly change is over 10%.
+Our fiscal year starts on 1 February.
+Sales for fiscal Q1 2026 were signed off.
+Nobody edits signed-off sales without the controller's approval.
+Compare both years on the current definition of sales.
+Each row of the returns table belongs to one order, by its ORDER_ID.
+A damaged return is one whose REASON is damaged.
+Sales does not take off returns.
+Kept sales adds up AMOUNT in the orders table, taking 0 for an order whose STATUS is sent back.
+Each order belongs to one row of the customers table, by its CUSTOMER_ID.
+Member sales adds up AMOUNT over the orders of customers whose TIER is member.
+A promotion order belongs to one row of the promotions table, by its PROMOTION_ID.
+Signed-off sales carry the mark final in every report.
+Sales are written in whole dollars with thousands separators.

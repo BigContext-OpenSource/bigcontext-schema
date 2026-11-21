@@ -1,0 +1,8 @@
+profile: compilable
+conforms: false
+breaks: C12
+reference_checker_says:
+- 'Statement s.18 (Rule): it has a threshold on a metric and names c.region in scope, the dimension the threshold is judged by; `bigcontext-schema normalize` rewrites it.'
+normalized: normalized.yaml
+changes:
+- 'Statement s.18 (Rule): c.region moved from scope to its action''s by.'

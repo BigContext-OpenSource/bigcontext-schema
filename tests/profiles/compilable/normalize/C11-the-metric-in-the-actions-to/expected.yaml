@@ -1,0 +1,8 @@
+profile: compilable
+conforms: false
+breaks: C11
+reference_checker_says:
+- 'Statement s.4 (Rule): it names the metric it binds, c.sales, in its action''s to; `bigcontext-schema normalize` rewrites it.'
+normalized: normalized.yaml
+changes:
+- 'Statement s.4 (Rule): c.sales moved from its action''s to to scope.'

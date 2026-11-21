@@ -1,0 +1,6 @@
+based_on: ../../../../examples/context-repository
+conforms: false
+breaks: R9
+why: The metric's file holds a statement about a person another file declares.
+reference_checker_says:
+- 'org/meaning/metrics/orders.yaml: s.dana.definition is about t.dana, which this file does not hold.'

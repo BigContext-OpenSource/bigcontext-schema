@@ -1,0 +1,6 @@
+based_on: ../../../../examples/context-repository
+conforms: false
+breaks: R3
+why: A file in a folder the registry gives no kind.
+reference_checker_says:
+- 'org/meaning/numbers/returns.yaml: no kind of registry.yaml has this folder.'

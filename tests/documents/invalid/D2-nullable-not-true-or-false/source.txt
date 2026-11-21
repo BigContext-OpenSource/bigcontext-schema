@@ -1,0 +1,10 @@
+The warehouse runs on PostgreSQL and is our production environment.
+The password for the warehouse is kept in the secret store under warehouse-reader.
+Dana's id in the staff directory is E-1042.
+The customers table has an EMAIL column, which may be empty.
+The churn model is at version 3.
+Using the refund tool sends money to a customer.
+A call to the refund tool is stopped after 30 seconds, and calling it twice with the same request pays once.
+The nightly load runs every day at 02:00 UTC.
+The returns policy is written in English, and its content has the digest sha256:9f2c1ab4.
+Orders is the number of orders placed in a period; an order with no ORDER_DATE is left out.

@@ -1,0 +1,22 @@
+schema_version: 1.3.0
+source:
+  id: acme-store
+procedures:
+- id: p.when_an_order_is_late
+  label: When an order is late
+  mode: instruction
+  steps:
+  - id: p.when_an_order_is_late.1
+    order: 1
+    action:
+      verb: check
+      detail: the carrier status
+    evidence:
+    - quote: Check the carrier status.
+  - id: p.when_an_order_is_late.2
+    order: 2
+    action:
+      verb: tell
+      detail: the customer what happened
+    evidence:
+    - quote: Tell the customer what happened.

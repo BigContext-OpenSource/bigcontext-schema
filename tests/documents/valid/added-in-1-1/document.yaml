@@ -134,6 +134,11 @@ things:
   evidence:
   - quote: the sales dashboard
 concepts:
+- id: c.refund_approved_by_two_managers
+  label: refund approved by two managers
+  concept_type: state
+  evidence:
+  - quote: needs approval from two different managers
 - id: c.shopper
   label: shopper
   concept_type: entity_type
@@ -695,6 +700,7 @@ statements:
   - description: two different managers approve it
     about:
     - t.manager
+    - c.refund_approved_by_two_managers
     values:
     - value: '2'
       datatype: number

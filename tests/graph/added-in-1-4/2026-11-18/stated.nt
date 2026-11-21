@@ -1,0 +1,1 @@
+<urn:bigcontext-schema:added-in-1-4/t.table.customers> <https://w3id.org/bigcontext-schema/facts/has_column> <urn:bigcontext-schema:added-in-1-4/t.table.customers.email> .

@@ -1,0 +1,4 @@
+conforms: false
+breaks: D2
+reference_checker_says:
+- Statement s.A.6 (HasProperty) gives nullable 'sometimes', which is not true or false.

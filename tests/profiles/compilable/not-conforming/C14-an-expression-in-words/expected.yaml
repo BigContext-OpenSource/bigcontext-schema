@@ -1,0 +1,5 @@
+profile: compilable
+conforms: false
+breaks: C14
+reference_checker_says:
+- 'Statement s.25 (ComputedAs): its expression, ''AMOUNT, or 0 for an order sent back'', is not one SQL expression: it does not read as SQL; write it as SQL over the declared names: + - * / and parentheses, comparisons, AND, OR, NOT, IS NULL, CASE WHEN ... THEN ... ELSE ... END, COALESCE and CAST. When the text gives no formula over declared names, add a Gap about c.kept_sales that says what it does not give.'

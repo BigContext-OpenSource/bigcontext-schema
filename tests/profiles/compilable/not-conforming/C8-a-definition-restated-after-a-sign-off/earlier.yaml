@@ -1,0 +1,42 @@
+schema_version: 1.4.0
+source:
+  id: shop-sales-notes-2025
+  title: Shop sales notes, 2025
+  as_of: '2025-11-03'
+things:
+- id: t.shop.orders
+  label: orders
+  thing_type: table
+  evidence:
+  - quote: the orders table
+- id: t.shop.orders.amount
+  label: AMOUNT
+  thing_type: field
+  evidence:
+  - quote: AMOUNT in the orders table
+- id: t.shop.orders.discount_amount
+  label: DISCOUNT_AMOUNT
+  thing_type: field
+  evidence:
+  - quote: DISCOUNT_AMOUNT
+- id: t.controller
+  label: controller
+  thing_type: post
+  evidence:
+  - quote: the controller
+concepts:
+- id: c.sales
+  label: sales
+  concept_type: metric
+  evidence:
+  - quote: Sales
+statements:
+- id: s.E.1
+  predicate: ComputedAs
+  subject: c.sales
+  metric_type: simple
+  aggregation: sum
+  expression: AMOUNT - DISCOUNT_AMOUNT
+  base: t.shop.orders
+  stated_by:
+  - t.controller

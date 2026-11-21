@@ -1,0 +1,7 @@
+<urn:bigcontext-schema:added-in-1-5/c.city> <https://w3id.org/bigcontext-schema/facts/implemented_by> <urn:bigcontext-schema:added-in-1-5/t.shop.customers.city> .
+<urn:bigcontext-schema:added-in-1-5/c.customer> <https://w3id.org/bigcontext-schema/facts/key_column> <urn:bigcontext-schema:added-in-1-5/t.shop.customers.customer_id> .
+<urn:bigcontext-schema:added-in-1-5/c.order> <https://w3id.org/bigcontext-schema/facts/key_column> <urn:bigcontext-schema:added-in-1-5/t.shop.orders.order_id> .
+<urn:bigcontext-schema:added-in-1-5/c.orders> <https://w3id.org/bigcontext-schema/facts/aggregates_over> <urn:bigcontext-schema:added-in-1-5/t.shop.orders> .
+<urn:bigcontext-schema:added-in-1-5/t.shop.customers> <https://w3id.org/bigcontext-schema/facts/key_column> <urn:bigcontext-schema:added-in-1-5/t.shop.customers.customer_id> .
+<urn:bigcontext-schema:added-in-1-5/t.shop.orders> <https://w3id.org/bigcontext-schema/facts/joins_to> <urn:bigcontext-schema:added-in-1-5/t.shop.customers> .
+<urn:bigcontext-schema:added-in-1-5/t.shop.orders> <https://w3id.org/bigcontext-schema/facts/key_column> <urn:bigcontext-schema:added-in-1-5/t.shop.orders.order_id> .

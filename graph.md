@@ -89,6 +89,25 @@ the record.
 | Rule | `binds` for each party in `binds` and each party in `scope`; `about` for the action's objects; `overrides`, a rule set's members standing for the set |
 | RuleSet | `in_rule_set` for each member; when one set overrides another, each member overrides each member of the other; a set with no `members` field stands for itself, as the source and the target of overrides; an override that names a rule set's `subject` concept (as another section does) names that set |
 
+## Facts from several statements
+
+Added in 1.5. Five facts follow from more than one statement in force, so no single statement gives them. They are
+worked out before reasoning, from the statements in force that have no `when`, `when_any`, `unless`, `valid_while`,
+`scope` or `period`, in documents that follow 1.5 or later; the graph of an earlier document is unchanged. Each is
+written into the stated graph, and its provenance names one statement it rests on.
+
+| Fact (`bcf:`) | From | Holds when |
+|---|---|---|
+| `row_of` | a table to an entity | a HasGrain of the table names the entity in `members`; or an IdentifiedBy of the table and an IdentifiedBy of the entity give the same columns |
+| `refers_to` | a column to an entity | an IdentifiedBy of the entity names the column; or an ImplementedBy of the entity has the column as its object; or the column is the one key column of a table that is `row_of` the entity; or a JoinsTo pairs it (`key_pairs`) with a column that refers to the entity, however many joins away |
+| `held_in` | an entity to a table | the table is `row_of` the entity, or a column of the table `refers_to` it |
+| `measures` | a metric to an entity | the metric's exported ComputedAs has a `base` table that is `row_of` the entity |
+| `describes` | a dimension to an entity | an ImplementedBy of the dimension has a column as its object, and the column's table is `row_of` the entity |
+
+A column's table is the element its id is under (`t.shop.orders.status` is a column of `t.shop.orders`), else the table
+whose Contains names it. An entity is a concept whose `concept_type` is `entity_type`; a metric and a dimension are
+concepts of those types. None of the five is transitive or has an inverse, and the reasoner adds nothing to them.
+
 ## What the reasoner works out
 
 - Transitive: `part_of`, `reports_to`, `depends_on`, `derived_from`, `overrides`. Symmetric: `joins_to`.

@@ -3,6 +3,29 @@
 What changed in each version of BigContext Schema. Versions follow the rules in the README: patch, minor and major,
 with drafts (`0.9.x-draft`) before 1.0.
 
+## 1.5.0 (2026-11-21)
+
+A minor version: it adds five graph facts, an optional key of a repository's registry and a section of the guide. Every
+1.4.0 document is valid and keeps its meaning. The graph of a document that follows 1.4 or earlier is unchanged; a
+document that follows 1.5 gains the five facts.
+
+Graph
+- Five facts that follow from several statements in force (`graph.md`, "Facts from several statements";
+  `bigcontext_facts.yaml` 1.2.0): `row_of` (a table to the entity one row is), `refers_to` (a column to the entity it
+  refers to), `held_in` (an entity to each table that holds it), `measures` (a metric to the entity it counts) and
+  `describes` (a dimension to the entity it describes). Each is written into the stated graph with one statement it
+  rests on. Case: `tests/graph/added-in-1-5/`.
+
+A repository
+- A kind's `links` in the registry says what a complete instance of the kind is linked to: by link role or by one of
+  the five facts, to or from which kinds, with alternatives, and with `worth: true` for a link worth having. A thing
+  that lacks one conforms; a check may note it (`conformance.md`, "A conforming repository").
+
+Guide
+- "What each thing is linked to": the statement and the field that carry each link between a table and its entity, a
+  column and the entity it refers to, two entities, a metric and what it is computed from, a segment and its rows, a
+  rule and what it is about, a thing and who answers for it, and a job and its tables.
+
 ## 1.4.0 (2026-11-21)
 
 A minor version: it adds allowed values and nothing else. Every 1.3.0 document is valid and

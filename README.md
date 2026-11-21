@@ -4,7 +4,7 @@
 responsibilities. People, software and AI agents all read it the same way, and every statement points back to the
 exact words it came from.**
 
-Status: version 1.4.0; version 1.4 adds a context repository and facts about systems, tools and columns (see `CHANGELOG.md`). Licence: Apache 2.0, free for anyone
+Status: version 1.5.0; version 1.5 adds five graph facts that link tables, columns, metrics and dimensions to entities, and the links a repository's registry asks of each kind (see `CHANGELOG.md`). Licence: Apache 2.0, free for anyone
 to use and build on.
 
 ---
@@ -237,7 +237,7 @@ Permanent address: `https://w3id.org/bigcontext-schema`.
 
 ## Citing
 
-Big Context & Company (2026). *BigContext Schema*, version 1.4.0. https://w3id.org/bigcontext-schema
+Big Context & Company (2026). *BigContext Schema*, version 1.5.0. https://w3id.org/bigcontext-schema
 
 `CITATION.cff` gives the same in a form citation tools read.
 

@@ -2,7 +2,7 @@
 id: https://w3id.org/bigcontext-schema/facts
 name: bigcontext_facts
 title: BigContext Schema facts
-version: 1.1.0
+version: 1.2.0
 description: >-
   The direct links a BigContext Schema graph projects from statements in force, and the logic a reasoner applies to
   them: which links are transitive, which are the inverse of which, and which chains of links imply another.
@@ -127,6 +127,22 @@ slots:
     description: A business concept is represented in data by a column, table or filter.
   has_member:
     description: A group (a data product, a segment, a region) has a member.
+
+  # tables, columns and the entities they hold: each follows from several statements in force (graph.md). Added in 1.5.
+  row_of:
+    description: >-
+      One row of a table is one of an entity: the table's grain names the entity, or the table's key is the entity's
+      key.
+  refers_to:
+    description: >-
+      A column refers to an entity: it identifies one, an ImplementedBy of the entity names it, it is the one key
+      column of a table whose row is one, or a join pairs it with a column that refers to one.
+  held_in:
+    description: "An entity is held in a table: one row of the table is one, or a column of the table refers to it."
+  measures:
+    description: "A metric counts or sums an entity: one row of the metric's base table is one."
+  describes:
+    description: "A dimension describes an entity: one row of the table of the dimension's column is one."
 
   # metrics
   depends_on:

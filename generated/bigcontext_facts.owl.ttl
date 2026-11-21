@@ -120,6 +120,10 @@ bcf:derived_from a owl:ObjectProperty , owl:TransitiveProperty ;
 	rdfs:label "derived_from" ;
 	skos:definition "An element is built or sourced from another (lineage)." ;
 	skos:inScheme <https://w3id.org/bigcontext-schema/facts> .
+bcf:describes a owl:ObjectProperty ;
+	rdfs:label "describes" ;
+	skos:definition "A dimension describes an entity: one row of the table of the dimension's column is one." ;
+	skos:inScheme <https://w3id.org/bigcontext-schema/facts> .
 bcf:dotted_line_to a owl:ObjectProperty ;
 	rdfs:label "dotted_line_to" ;
 	skos:definition "A dotted reporting line. Reasoning does not follow it." ;
@@ -191,6 +195,10 @@ bcf:heads a owl:ObjectProperty ;
 	owl:inverseOf bcf:headed_by ;
 	skos:definition "A person or post heads a unit, team or organization." ;
 	skos:inScheme <https://w3id.org/bigcontext-schema/facts> .
+bcf:held_in a owl:ObjectProperty ;
+	rdfs:label "held_in" ;
+	skos:definition "An entity is held in a table: one row of the table is one, or a column of the table refers to it." ;
+	skos:inScheme <https://w3id.org/bigcontext-schema/facts> .
 bcf:holds_role a owl:ObjectProperty ;
 	rdfs:label "holds_role" ;
 	skos:definition "A person, agent or post holds a role or a post." ;
@@ -228,6 +236,10 @@ bcf:manages a owl:ObjectProperty ;
 	rdfs:label "manages" ;
 	rdfs:subPropertyOf bcf:answers_for , bcf:responsible_for ;
 	skos:inScheme <https://w3id.org/bigcontext-schema/facts> .
+bcf:measures a owl:ObjectProperty ;
+	rdfs:label "measures" ;
+	skos:definition "A metric counts or sums an entity: one row of the metric's base table is one." ;
+	skos:inScheme <https://w3id.org/bigcontext-schema/facts> .
 bcf:member_of a owl:ObjectProperty ;
 	rdfs:label "member_of" ;
 	owl:inverseOf bcf:has_party_member ;
@@ -251,6 +263,10 @@ bcf:performs a owl:ObjectProperty ;
 	rdfs:label "performs" ;
 	rdfs:subPropertyOf bcf:responsible_for ;
 	skos:inScheme <https://w3id.org/bigcontext-schema/facts> .
+bcf:refers_to a owl:ObjectProperty ;
+	rdfs:label "refers_to" ;
+	skos:definition "A column refers to an entity: it identifies one, an ImplementedBy of the entity names it, it is the one key column of a table whose row is one, or a join pairs it with a column that refers to one." ;
+	skos:inScheme <https://w3id.org/bigcontext-schema/facts> .
 bcf:reports_to a owl:ObjectProperty , owl:TransitiveProperty ;
 	rdfs:label "reports_to" ;
 	owl:inverseOf bcf:has_report ;
@@ -269,6 +285,10 @@ bcf:responsible_for a owl:ObjectProperty ;
 bcf:reviews a owl:ObjectProperty ;
 	rdfs:label "reviews" ;
 	rdfs:subPropertyOf bcf:responsible_for ;
+	skos:inScheme <https://w3id.org/bigcontext-schema/facts> .
+bcf:row_of a owl:ObjectProperty ;
+	rdfs:label "row_of" ;
+	skos:definition "One row of a table is one of an entity: the table's grain names the entity, or the table's key is the entity's key." ;
 	skos:inScheme <https://w3id.org/bigcontext-schema/facts> .
 bcf:same_as a owl:ObjectProperty , owl:SymmetricProperty , owl:TransitiveProperty ;
 	rdfs:label "same_as" ;
@@ -290,7 +310,7 @@ bcf:worked_out_by a owl:DatatypeProperty ;
 	skos:inScheme <https://w3id.org/bigcontext-schema/facts> .
 <https://w3id.org/bigcontext-schema/facts> dcterms:license "Apache-2.0" ;
 	dcterms:title "BigContext Schema facts" ;
-	pav:version "1.1.0" ;
+	pav:version "1.2.0" ;
 	a owl:Ontology ;
 	rdfs:label "bigcontext_facts" ;
 	skos:definition "The direct links a BigContext Schema graph projects from statements in force, and the logic a reasoner applies to them: which links are transitive, which are the inverse of which, and which chains of links imply another. Statements stay the record of what was said, with their conditions, dates and quotes; facts are what reasoning follows. graph.md says which statements become which facts. A chain is written as the annotation property_chain (several separated by \";\"), which generation turns into OWL property chains." .

@@ -773,6 +773,36 @@ text). An agent may propose links (`proposed_by`, `decision_status: proposed`); 
 (`decided_by`, `decided_on`, `decision_status: decided`). Only a decided exact match becomes a `same_as` fact in the
 graph. A prefix may not be one the graph already uses: bcs, linkml, odrl, org, skos, prov, dcat, dqv, oa, dcterms.
 
+## What each thing is linked to
+
+A reader goes from one element to another only through a field that names it. Give each link below once, in the
+statement named, when the text says it. Do not state it a second time from the other side: a reader follows a link
+both ways. Some links follow from others and are not written: `graph.md` ("Facts from several statements") lists them.
+
+- **A table and the entity one row is.** `HasGrain` names the entity in `members`, a concept of type `entity_type`
+  ("the shipments table has one row per shipment": the entity shipment). A grain of several things names each ("one
+  row per product, store and day"). The table whose grain is one entity alone is where that entity is kept, so no
+  second statement says so. When several tables have the same grain and the text says which one is the source,
+  that is an `ImplementedBy` from the entity to that table with `primary: true`.
+- **A column and the entity it refers to.** A key pair of a `JoinsTo` says it: the column of one table that matches
+  the key of another refers to that table's entity. When the text says what a column refers to and gives no join
+  ("BUYER_ID is the customer who paid"), write an `ImplementedBy` from the entity to the column. A table joined
+  twice to the same entity gives each key pair its `role` (buyer, recipient).
+- **An entity and another entity.** `Has` with its cardinality ("an order has one or more lines").
+- **A metric and what it is computed from.** Its `ComputedAs` gives the table in `base`, the time column in
+  `time_dimension`, a filter's column in `filters`, and in `inputs` every column and every other metric its
+  expression names.
+- **A segment or a category value and its rows.** An `ImplementedBy` to the table with the `filters` that say which
+  rows, and for a segment an `IsA` to the entity it is part of.
+- **A rule and what it is about.** The metric, table, column, entity or segment goes in `scope` or in the action's
+  `objects`. Who must comply goes in `binds` when the text names them ("Finance must tell...": Finance), and whom
+  the action reaches in the action's `to`.
+- **A thing and who answers for it.** `ResponsibleFor` with the responsibility the text gives (owns, approves,
+  maintains), from the person, team or post to the thing. An owner the text gives for a whole set ("my team owns
+  these tables") is one statement for each thing of the set.
+- **A job and its tables.** `Triggers` with the table it writes in the action's `objects`, a source in `objects` and
+  the target in `to`, and the table's own `DerivedFrom` with the job in `via`.
+
 ## Before you finish
 
 Check the document against the JSON Schema and the rules in `conformance.md`, and fix everything that fails. The

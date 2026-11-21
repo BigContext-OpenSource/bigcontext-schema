@@ -1,0 +1,8 @@
+The orders table has one row per order.
+ORDER_ID identifies a row of the orders table.
+CUSTOMER_ID identifies a row of the customers table.
+An order is one purchase, identified by ORDER_ID of the orders table.
+A customer is someone who has bought from us, identified by CUSTOMER_ID of the customers table.
+The orders table joins to the customers table on CUSTOMER_ID of the orders table.
+Orders is the number of rows of the orders table.
+City is the CITY column of the customers table.

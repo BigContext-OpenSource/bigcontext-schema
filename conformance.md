@@ -219,8 +219,15 @@ the `mode` of the procedures it holds (`procedures`); thing types declared insid
 note uses for it. An item is a statement type about the file's element or procedure (`ComputedAs`), with `(object)`
 when the element is the statement's object (`Heads(object)`); a statement type with a field it gives, or with a word
 it gives as the value of a field (`ComputedAs.time_dimension`, `HasProperty.unit`); or a field of the file's own
-element, procedure or statement (`physical_name`, `trigger`). Items joined by `|` are alternatives. The registry is
-the repository's own: this specification names no kind.
+element, procedure or statement (`physical_name`, `trigger`). Items joined by `|` are alternatives. A kind may give
+`links` too: what a complete instance of the kind is linked to, as a list of items. A thing is linked to another when a
+statement of its view names both in fields, by the field's link role (`graph.md`, the roles table), or by a fact that
+follows from several statements (`graph.md`, "Facts from several statements"). An item gives `words` (what a note
+calls the link) and a test: `by`, the roles or facts of which one is enough, a role alone (`part_of`) or with its
+statement type (`HasGrain.members`); `to`, the kinds of what the thing names; `from`, the kinds of what names the
+thing (`any` for every kind); `any`, several tests of which one is enough; `of`, the element or statement types the
+item is asked of. An item with `worth: true` is a link worth having, which a check lists and does not note. Added in
+1.5. The registry is the repository's own: this specification names no kind.
 
 A repository conforms when:
 
@@ -274,7 +281,8 @@ beside the others.
 A check may give notes that keep no repository from conforming. The reference check gives five: a team's statement
 that the org's stands in place of; a team's statement that says what the org's says; two statements of one level
 with one key and the same `valid_from`; a team's rule about the action of an org rule; and a file that does not hold
-what its kind's `complete_with` lists, looked for among the statements of the file's view.
+what its kind's `complete_with` lists, or whose thing lacks a link its kind's `links` lists, looked for among the
+statements of the file's view.
 
 ## The cases
 

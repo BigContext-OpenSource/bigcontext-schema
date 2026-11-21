@@ -1,0 +1,129 @@
+source:
+  id: added-in-1-5
+  title: What BigContext Schema 1.5 adds
+things:
+- id: t.shop.orders
+  label: orders
+  thing_type: table
+  evidence:
+  - quote: The orders table
+- id: t.shop.orders.order_id
+  label: ORDER_ID
+  thing_type: field
+  evidence:
+  - quote: ORDER_ID
+- id: t.shop.orders.customer_id
+  label: CUSTOMER_ID
+  thing_type: field
+  evidence:
+  - quote: CUSTOMER_ID of the orders table
+- id: t.shop.customers
+  label: customers
+  thing_type: table
+  evidence:
+  - quote: the customers table
+- id: t.shop.customers.customer_id
+  label: CUSTOMER_ID
+  thing_type: field
+  evidence:
+  - quote: CUSTOMER_ID
+- id: t.shop.customers.city
+  label: CITY
+  thing_type: field
+  evidence:
+  - quote: the CITY column
+concepts:
+- id: c.order
+  label: order
+  concept_type: entity_type
+  evidence:
+  - quote: An order
+- id: c.customer
+  label: customer
+  concept_type: entity_type
+  evidence:
+  - quote: A customer
+- id: c.orders
+  label: Orders
+  concept_type: metric
+  evidence:
+  - quote: Orders is the number of rows
+- id: c.city
+  label: City
+  concept_type: dimension
+  evidence:
+  - quote: City is
+statements:
+- id: s.B.1
+  predicate: HasGrain
+  subject: t.shop.orders
+  text: one row per order
+  members:
+  - c.order
+  evidence:
+  - quote: The orders table has one row per order.
+- id: s.B.2
+  predicate: IdentifiedBy
+  subject: t.shop.orders
+  members:
+  - t.shop.orders.order_id
+  evidence:
+  - quote: ORDER_ID identifies a row of the orders table.
+- id: s.B.3
+  predicate: IdentifiedBy
+  subject: t.shop.customers
+  members:
+  - t.shop.customers.customer_id
+  evidence:
+  - quote: CUSTOMER_ID identifies a row of the customers table.
+- id: s.B.4
+  predicate: Definition
+  subject: c.order
+  text: one purchase
+  evidence:
+  - quote: An order is one purchase
+- id: s.B.5
+  predicate: IdentifiedBy
+  subject: c.order
+  members:
+  - t.shop.orders.order_id
+  evidence:
+  - quote: identified by ORDER_ID of the orders table.
+- id: s.B.6
+  predicate: Definition
+  subject: c.customer
+  text: someone who has bought from us
+  evidence:
+  - quote: A customer is someone who has bought from us
+- id: s.B.7
+  predicate: IdentifiedBy
+  subject: c.customer
+  members:
+  - t.shop.customers.customer_id
+  evidence:
+  - quote: identified by CUSTOMER_ID of the customers table.
+- id: s.B.8
+  predicate: JoinsTo
+  subject: t.shop.orders
+  object: t.shop.customers
+  key_pairs:
+  - from_field: t.shop.orders.customer_id
+    to_field: t.shop.customers.customer_id
+  evidence:
+  - quote: The orders table joins to the customers table on CUSTOMER_ID of the orders table.
+- id: s.B.9
+  predicate: ComputedAs
+  subject: c.orders
+  metric_type: simple
+  aggregation: count
+  expression: '*'
+  base: t.shop.orders
+  evidence:
+  - quote: Orders is the number of rows of the orders table.
+- id: s.B.10
+  predicate: ImplementedBy
+  subject: c.city
+  object: t.shop.customers.city
+  evidence:
+  - quote: City is the CITY column of the customers table.
+schema_version: 1.5.0
